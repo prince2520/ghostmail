@@ -8,7 +8,7 @@ const server = new SMTPSERVER({
     
     onData(stream, session, cb) {
         stream.on('data', (data) => {
-            simpleParser(data, options, async (err, parsed) => {
+            simpleParser(data, async (err, parsed) => {
                 console.log("Parsed email data: ", parsed);
                 try {
                     await fetch(
