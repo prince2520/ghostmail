@@ -8,7 +8,8 @@ const server = new SMTPSERVER({
     
     onData(stream, session, cb) {
         stream.on('data', (data) => {
-            simpleParser(source, options, async (err, parsed) => {
+            simpleParser(data, options, async (err, parsed) => {
+                console.log("Parsed email data: ", parsed);
                 try {
                     await fetch(
                         `${process.env.REACT_APP_SERVER_URL}/get-mail`,
