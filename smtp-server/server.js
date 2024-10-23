@@ -16,7 +16,7 @@ const server = new SMTPSERVER({
 
                 try {
                     await fetch(
-                        `${process.env.SERVERURL}/get-mail`,
+                        `${process.env.SERVERURL}/mail/get-mail`,
                         {
                           method: "POST",
                           headers: {
