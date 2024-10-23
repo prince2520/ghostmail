@@ -1,23 +1,22 @@
-const SMTPSERVER = require('smtp-server').SMTPServer;
+const express = require("express");
+const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
 
-const server = new SMTPSERVER({
-    allowInsecureAuth: true,
-    authOptional: true,
-    onConnect(session, cb){
-        console.log("onConnect", session.id);
-        cb();
-    },
-    onMailFrom(address, session, cb){ 
-        console.log('onMailFrom', address.address, session.id);
-    },
-    onRcptTo(address, session, cb){
-        console.log("onRcptTo", address.address, session.id);
-        cb();
-    },
-    onData(stream, session, cb){
-        stream.on('data', (data)=> console.log(`onData ${data.toString()}`));
-        stream.on('end', cb);
-    }
-});
+const mailRoute = require("./routes/mail.route");
+const {cors} = require("./middleware/cors.middleware");
 
-server.listen(25, ()=> console.log("server running on 25"));
+const bodyParser = require("body-parser");
+const helmet = require("helmet");
+
+require("dotenv").config();
+require("./services/connectDB").connectDB(server);
+
+app.use(helmet());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// cors error handling 
+app.use(cors);
+
+app.use("/mail", mailRoute);

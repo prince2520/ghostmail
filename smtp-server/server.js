@@ -1,22 +1,32 @@
 const SMTPSERVER = require('smtp-server').SMTPServer;
+const simpleParser = require('mailparser').simpleParser;
+
 
 const server = new SMTPSERVER({
     allowInsecureAuth: true,
     authOptional: true,
-
-    onConnect(session, cb) {
-        console.log("onConnect", session.id);
-        cb();
-    },
-    onMailFrom(address, session, cb) {
-        console.log('onMailFrom', address.address, session.id);
-    },
-    onRcptTo(address, session, cb) {
-        console.log("onRcptTo", address.address, session.id);
-        cb();
-    },
+    
     onData(stream, session, cb) {
-        stream.on('data', (data) => console.log(`onData ${data.toString()}`));
+        stream.on('data', (data) => {
+            simpleParser(source, options, async (err, parsed) => {
+                try {
+                    await fetch(
+                        `${process.env.REACT_APP_SERVER_URL}/get-mail`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(parsed),
+                        }
+                    );
+
+                }catch(err){
+                    console.log(err);
+                }
+                
+            });
+        });
         stream.on('end', cb);
     }
 });
