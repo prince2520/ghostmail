@@ -1,6 +1,7 @@
 const SMTPSERVER = require('smtp-server').SMTPServer;
 const simpleParser = require('mailparser').simpleParser;
 
+require("dotenv").config();
 
 const server = new SMTPSERVER({
     allowInsecureAuth: true,
@@ -9,10 +10,13 @@ const server = new SMTPSERVER({
     onData(stream, session, cb) {
         stream.on('data', (data) => {
             simpleParser(data, async (err, parsed) => {
+                
                 console.log("Parsed email data: ", parsed);
+                console.log("Server Url", process.env.SERVERURL);
+
                 try {
                     await fetch(
-                        `${process.env.REACT_APP_SERVER_URL}/get-mail`,
+                        `${process.env.SERVERURL}/get-mail`,
                         {
                           method: "POST",
                           headers: {
