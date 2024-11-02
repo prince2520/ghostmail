@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
+
+const {errorHandler} = require("./middleware/error.middleware");
 
 const mailRoute = require("./routes/mail.route");
+const authRoute = require("./routes/auth.route")
 const {cors} = require("./middleware/cors.middleware");
 
 const bodyParser = require("body-parser");
@@ -20,3 +22,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors);
 
 app.use("/mail", mailRoute);
+app.use("/auth", authRoute)
+
+app.use(errorHandler);

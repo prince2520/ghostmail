@@ -10,10 +10,7 @@ const server = new SMTPSERVER({
     onData(stream, session, cb) {
         stream.on('data', (data) => {
             simpleParser(data, async (err, parsed) => {
-
-                console.log("Parsed email data: ", parsed);
-                console.log("Server Url", process.env.SERVERURL);
-
+               
                 const data = {
                     headers: parsed.headers,
                     subject: parsed.subject,
