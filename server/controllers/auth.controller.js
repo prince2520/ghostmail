@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const {DB} = require("../services/connectDB");
-const User = DB.user;
+const User = require("../models/user.model").User();
+console.log("user", User)
 
 const { StatusCodes } = require("http-status-codes");
 
@@ -14,8 +14,6 @@ exports.signup = async (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  console.log("signup ", req.body)
-  console.log("DB", DB)
 
   try {
     if (password !== confirmPassword) {
@@ -24,17 +22,13 @@ exports.signup = async (req, res, next) => {
       throw error;
     }
 
-    const userFound = await User.findOne({ where: { email: email}});
-    console.log("userfound ", userFound);
+    const userCount = await User.count({ where: { email: email}});
 
-
-    if (userFound!=null) {
+    if (userCount>0) {
       let error = new Error("User with this email already exists");
       error.statusCode = StatusCodes.BAD_REQUEST;
       throw error;
     }
-
-
 
     const hashedPw = await bcrypt.hash(password, 12);
 
@@ -49,8 +43,6 @@ exports.signup = async (req, res, next) => {
         email: email,
         password: hashedPw
     });
-
-
 
     return res
       .status(StatusCodes.OK)

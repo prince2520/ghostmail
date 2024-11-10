@@ -2,39 +2,41 @@ const { Sequelize } = require('sequelize');
 
 const db = {};
 
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+  host:  process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT
+});
+
+exports.sequelize = sequelize;
+
 module.exports.connectDB = (server) => {
 
-  const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
-    host:  process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT
-  });
-
-  sequelize.authenticate().then(()=>{
+  sequelize.authenticate().then(async ()=>{
     console.log('Connection has been established successfully.');
 
-    db.Sequelize = Sequelize;
-    db.sequelize = sequelize;
-
     // Models 
-    db.mail = require("../models/mail.model").Mail(sequelize);
-    db.user = require("../models/user.model").User(sequelize);
-    db.message = require("../models/message.model").Message(sequelize);
-    db.messageFrom = require("../models/message.model").MessageFrom(sequelize);
+    const mail = require("../models/mail.model").Mail();
+    const user = require("../models/user.model").User();
+    const message = require("../models/message.model").Message();
+    const messageFrom = require("../models/message.model").MessageFrom();
 
     // Association
     // One user have many mails - ( One to Many Relation )
-    db.user.hasMany(db.mail);
-    db.mail.belongsTo(db.user);
+    user.hasMany(mail);
+    mail.belongsTo(user);
 
     // One mail have many messages - ( One to Many Relation )
-    db.mail.hasMany(db.message);
-    db.message.belongsTo(db.mail);
+    mail.hasMany(message);
+    message.belongsTo(mail);
 
     // One user can send many messages - ( One to Many Relation )
-    db.messageFrom.hasMany(db.message);
-    db.message.belongsTo(db.messageFrom);
+    messageFrom.hasMany(message);
+    message.belongsTo(messageFrom);
 
-    db.sequelize.sync();
+    await sequelize.sync({force:true});
+
+    db.Sequelize = Sequelize;
+    db.sequelize = sequelize;
 
     server.listen(process.env.PORT || 5000, () => {
       console.log("Server Connected!!");
@@ -44,5 +46,5 @@ module.exports.connectDB = (server) => {
   });
 };
 
-module.exports.DB = db;
+module.exports.db = db;
 

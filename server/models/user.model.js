@@ -1,7 +1,9 @@
 const { DataTypes } = require('sequelize');
 
+const {sequelize}  = require("../services/connectDB")
+
 // MODEL - USER
-module.exports.User = (sequelize) => {
+module.exports.User = () => {
     const User = sequelize.define("user", {
         name: {
             type: DataTypes.STRING
@@ -13,5 +15,6 @@ module.exports.User = (sequelize) => {
             type: DataTypes.STRING
         }
     });
+    
     return User;
 };

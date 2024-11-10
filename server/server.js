@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const server = require("http").Server(app);
 
+require("dotenv").config();
+require("./services/connectDB").connectDB(server);
+
+
 const {errorHandler} = require("./middleware/error.middleware");
 
 const mailRoute = require("./routes/mail.route");
@@ -11,8 +15,6 @@ const {cors} = require("./middleware/cors.middleware");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 
-require("dotenv").config();
-require("./services/connectDB").connectDB(server);
 
 app.use(helmet());
 app.use(express.json());
