@@ -9,7 +9,8 @@ require("./services/connectDB").connectDB(server);
 const {errorHandler} = require("./middleware/error.middleware");
 
 const mailRoute = require("./routes/mail.route");
-const authRoute = require("./routes/auth.route")
+const authRoute = require("./routes/auth.route");
+const messageRoute = require("./routes/message.route")
 const {cors} = require("./middleware/cors.middleware");
 
 const bodyParser = require("body-parser");
@@ -24,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors);
 
 app.use("/mail", mailRoute);
-app.use("/auth", authRoute)
+app.use("/auth", authRoute);
+app.use("/message", messageRoute);
+
 
 app.use(errorHandler);
