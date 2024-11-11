@@ -57,7 +57,7 @@ exports.createMail = async (req, res, next) => {
     const address = req.body.address;
     const mailAdminAddress = req.body.mailAdminAddress;
 
-    console.log(req.body);
+    console.log('req.body => ', req.body);
 
     try {
         let date = new Date();
@@ -72,19 +72,30 @@ exports.createMail = async (req, res, next) => {
             }
         }
 
-        const userFound = mailAdminAddress ? (await User.findOne({where: { email: mailAdminAddress }})) : null;
+        if (mailAdminAddress) {
+            const userFound = await User.findOne({where: { email: mailAdminAddress }});
 
-        if (userFound) {
+            if (!userFound) {
+                let error = new Error("Admin not found!");
+                error.statusCode = StatusCodes.UNAUTHORIZED;
+                throw error;
+            }
+
             cond.defaults = {
                 address: address,
                 expires: null,
                 userId: userFound.id
             }
+
+            console.log("cond", cond);
+
         }
 
-        console.log("cond ", cond);
 
         const [mail, created] = await Mail.findOrCreate(cond);
+
+
+        console.log("mail => ", mail);
 
         if (!created) {
             let error = new Error("Mail already exist! Please try another mail.");

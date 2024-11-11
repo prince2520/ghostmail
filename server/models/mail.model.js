@@ -11,7 +11,15 @@ module.exports.Mail = () => {
         expires: {
             type: DataTypes.DATE,
             allowNull: true
-        }
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'users',
+                key: 'id',
+            },
+            allowNull: true
+        },
     });
     return Mail;
 };

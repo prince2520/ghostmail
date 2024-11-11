@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-const {sequelize}  = require("../services/connectDB")
+const { sequelize } = require("../services/connectDB")
 
 // MODEL - MESSAGEFROM
 module.exports.MessageFrom = () => {
@@ -19,14 +19,30 @@ module.exports.MessageFrom = () => {
 // MODEL - MESSAGE
 module.exports.Message = () => {
     const Message = sequelize.define("message", {
+        mailId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'mails',
+                key: 'id'
+            },
+            allowNull: false
+        },
         subject: {
             type: DataTypes.STRING
         },
-        text : {
+        text: {
             type: DataTypes.STRING
         },
         time: {
             type: DataTypes.DATE
+        },
+        messageFromId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'messageFroms',
+                key: 'id'
+            },
+            allowNull: false
         }
     });
     return Message;
