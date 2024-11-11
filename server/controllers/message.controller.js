@@ -6,6 +6,8 @@ const MessageFrom = require("../models/message.model").MessageFrom();
 
 exports.saveMessage = async (req, res, next) => {
     console.log("Req.body => ", req.body);
+    //     const mailFromAddress = req.body.from.value[0].address;
+    
     // try {
     //     const address = req.body.to.value[0].address;
     //     const mailFromAddress = req.body.from.value[0].address;

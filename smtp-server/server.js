@@ -10,24 +10,6 @@ const server = new SMTPSERVER({
     onData(stream, session, cb) {
         stream.on('data', (data) => {
             simpleParser(data, async (err, parsed) => {
-               
-                const data = {
-                    headers: parsed.headers,
-                    subject: parsed.subject,
-                    from: parsed.from,
-                    to: parsed.to,
-                    cc: parsed.cc,
-                    bcc: parsed.bcc,
-                    date: parsed.date,
-                    messageId: parsed.messageId,
-                    inReplyTo: parsed.inReplyTo,
-                    references: parsed.references,
-                    html: parsed.html,
-                    text: parsed.text,
-                    textAsHtml: parsed.textAsHtml,
-                    attachments: parsed.attachments
-                }
-
                 try {
                     await fetch(
                         `${process.env.SERVERURL}/message/save-message`,
@@ -36,7 +18,7 @@ const server = new SMTPSERVER({
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify(data),
+                            body: JSON.stringify(parsed),
                         }
                     );
 
