@@ -4,49 +4,42 @@ const User = require("../models/user.model").User();
 
 const MessageFrom = require("../models/message.model").MessageFrom();
 
+const { StatusCodes } = require("http-status-codes");
+
+// Save incoming message 
 exports.saveMessage = async (req, res, next) => {
-    console.log("Req.body => ", req.body);
-    //     const mailFromAddress = req.body.from.value[0].address;
-    
-    // try {
-    //     const address = req.body.to.value[0].address;
-    //     const mailFromAddress = req.body.from.value[0].address;
+    try {
+        
+        const from = { ...req.body.from.value[0] };
+        const to = { ...req.body.to.value[0] };
 
-    //     let mailFound = await Mail.findOne({where: { address: address }});
-    //     let messageFrom = await MailFrom.findOne({ address: mailFromAddress })
+        const mailFound = await Mail.findOne({ where: { address: to.address } });
 
-    //     if (!mailFound) {
-    //         mailFound = await User.create({
-    //             address: address
-    //         });
-    //     }
+        if (!mailFound) {
+            let error = new Error("User address not Found!");
+            error.statusCode = StatusCodes.NOT_FOUND;
+            throw error;
+        }
 
-    //     if (!messageFrom) {
-    //         messageFrom = await User.create({
-    //             address: mailFromAddress,
-    //             name: req.body.from?.value[0].name
-    //         });
-    //     }
+        const [messageFromFound, created] = await MessageFrom.findOrCreate({
+            where: { address: from.address },
+            defaults: {
+                address: from.address,
+                name: from.name
+            }
+        });
 
-    //     const data = {
-    //         from: {
-    //             address: req.body.from.value[0].address,
-    //             name: req.body.from?.value[0].name
-    //         },
-    //         to: mailFound.id,
-    //         subject: req.body.subject,
-    //         text: req.body.text,
-    //         time: new Date(req.body.date)
-    //     };
+        const data = {
+            mailId: mailFound.id,
+            subject: req.body.subject,
+            text: req.body.text,
+            createdAt: new Date(req.body.date),
+            messageFromId: messageFromFound.id
+        }
 
-    //     const createMessage = new Message(data);
-    //     await createMessage.save();
+        await Message.create(data);
 
-    //     mailFound.messages?.push(createMessage);
-
-    //     await mailFound.save();
-    // } catch (err) {
-    //     console.log(err);
-    //     next(err);
-    // }
+    } catch (err) {
+        next(err);
+    }
 }
