@@ -2,9 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user.model").User();
-console.log("user", User)
 
 const { StatusCodes } = require("http-status-codes");
+const { use } = require("../routes/mail.route");
 
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
@@ -13,7 +13,6 @@ exports.signup = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-
 
   try {
     if (password !== confirmPassword) {
@@ -55,11 +54,12 @@ exports.signup = async (req, res, next) => {
 
 // POST - Login
 exports.login = async (req, res, next) => {
+ 
   const email = req.body.email;
   const password = req.body.password;
 
   try {
-    const userFound = await User.findOne({ email: email }).select("+password");
+    const userFound = await User.findOne({where : { email: email }})
 
     if (!userFound) {
       let error = new Error("User not found!");
@@ -67,30 +67,22 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
+    console.log('userFound', userFound);
+
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
+
       let error = new Error("Password incorrect!");
       error.statusCode = StatusCodes.UNAUTHORIZED;
       throw error;
+
     } else {
-      const loadedUser = await User.findOne({ email: email })
-        .populate({
-          path: "privates",
-          populate: [{ path: "messages", populate: "user" }, "users"],
-        })
-        .populate({
-          path: "groups",
-          populate: [
-            { path: "blockList", populate: "user" },
-            { path: "messages", populate: "user" },
-          ],
-        });
 
       const token = jwt.sign(
         {
-          email: loadedUser.email,
-          userId: loadedUser._id.toString(),
+          email: userFound.email,
+          userId: userFound.id,
         },
         process.env.JWT_SECRET_KEY,
         { expiresIn: "5h" }
@@ -99,7 +91,7 @@ exports.login = async (req, res, next) => {
       return res.status(StatusCodes.OK).json({
         success: true,
         token: token,
-        user: loadedUser,
+        user: userFound
       });
     }
   } catch (err) {

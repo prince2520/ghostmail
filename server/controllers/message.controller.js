@@ -8,8 +8,8 @@ const { StatusCodes } = require("http-status-codes");
 
 // Save incoming message 
 exports.saveMessage = async (req, res, next) => {
+    
     try {
-        
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
 
@@ -19,7 +19,7 @@ exports.saveMessage = async (req, res, next) => {
             let error = new Error("User address not Found!");
             error.statusCode = StatusCodes.NOT_FOUND;
             throw error;
-        }
+        };
 
         const [messageFromFound, created] = await MessageFrom.findOrCreate({
             where: { address: from.address },
@@ -35,7 +35,7 @@ exports.saveMessage = async (req, res, next) => {
             text: req.body.text,
             createdAt: new Date(req.body.date),
             messageFromId: messageFromFound.id
-        }
+        };
 
         await Message.create(data);
 

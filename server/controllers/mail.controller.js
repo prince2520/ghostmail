@@ -8,61 +8,15 @@ const User = require("../models/user.model").User();
 const MessageFrom = require("../models/message.model").MessageFrom();
 
 
-exports.getMail = async (req, res, next) => {
-    try {
-        const address = req.body.to.value[0].address;
-        const mailFromAddress = req.body.from.value[0].address;
-
-        let mailFound = await Mail.findOne({ address: address });
-        let messageFrom = await MailFrom.findOne({ address: mailFromAddress })
-
-        if (!mailFound) {
-            mailFound = await User.create({
-                address: address
-            });
-        }
-
-        if (!messageFrom) {
-            messageFrom = await User.create({
-                address: mailFromAddress,
-                name: req.body.from?.value[0].name
-            });
-        }
-
-        const data = {
-            from: {
-                address: req.body.from.value[0].address,
-                name: req.body.from?.value[0].name
-            },
-            to: mailFound.id,
-            subject: req.body.subject,
-            text: req.body.text,
-            time: new Date(req.body.date)
-        };
-
-        const createMessage = new Message(data);
-        await createMessage.save();
-
-        mailFound.messages?.push(createMessage);
-
-        await mailFound.save();
-    } catch (err) {
-        console.log(err);
-        next(err);
-    }
-}
-
 // Create a ghost mail 
 exports.createMail = async (req, res, next) => {
     const address = req.body.address;
     const mailAdminAddress = req.body.mailAdminAddress;
 
-    console.log('req.body => ', req.body);
-
     try {
+
         let date = new Date();
         date.setDate(date.getDate() + 1);
-
 
         const cond = {
             where: { address: address },
@@ -86,16 +40,9 @@ exports.createMail = async (req, res, next) => {
                 expires: null,
                 userId: userFound.id
             }
-
-            console.log("cond", cond);
-
         }
 
-
         const [mail, created] = await Mail.findOrCreate(cond);
-
-
-        console.log("mail => ", mail);
 
         if (!created) {
             let error = new Error("Mail already exist! Please try another mail.");

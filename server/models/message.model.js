@@ -33,7 +33,7 @@ module.exports.Message = () => {
         text: {
             type: DataTypes.STRING
         },
-        time: {
+        createdAt: {
             type: DataTypes.DATE
         },
         messageFromId: {
