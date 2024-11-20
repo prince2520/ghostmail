@@ -3,12 +3,12 @@ import Lottie from "lottie-react"
 
 const HomeInboxNoMails = () => {
     return (
-        <div className="flex gap-y-6 items-center justify-center">
-            <div className="w-16">
+        <div className="flex flex-col w-full gap-y-2 items-center justify-center">
+            <div className="w-48">
                 <Lottie animationData={InboxAnimation} loop={true} />
             </div>
-            <h1>Your Inbox is empty</h1>
-            <p>Waiting for incoming emails</p>
+            <h1 className="font-semibold">Your Inbox is empty</h1>
+            <p className="text-sm">Waiting for incoming emails</p>
         </div>
     );
 };

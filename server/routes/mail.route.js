@@ -1,11 +1,11 @@
 const express = require("express");
 
 const {
-    createMail
+    generateNewGhostMail
 } = require("../controllers/mail.controller.js")
 
 const router = express.Router();
 
-router.post('/create-mail', createMail);
+router.get('/generate-new-mail', generateNewGhostMail);
 
 module.exports = router;

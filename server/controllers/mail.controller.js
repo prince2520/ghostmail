@@ -1,17 +1,39 @@
 const { StatusCodes } = require("http-status-codes");
+var randomstring = require("randomstring");
 const { DATE } = require("sequelize");
 
 const Mail = require("../models/mail.model").Mail();
 const Message = require("../models/message.model").Message();
 const User = require("../models/user.model").User();
 
+
 const MessageFrom = require("../models/message.model").MessageFrom();
 
+// Generate a new ghost mail 
+exports.generateNewGhostMail = async (req, res, next) => {
+    console.log("generateNewGhostMail called! ")
+    const mailAdminAddress = req.query.mailAdminAddress === 'undefined' ? undefined :  req.query.mailAdminAddress;
 
-// Create a ghost mail 
-exports.createMail = async (req, res, next) => {
-    const address = req.body.address;
-    const mailAdminAddress = req.body.mailAdminAddress;
+    console.log("mailAdminAddress", typeof(mailAdminAddress));
+
+    let address = null;
+
+    // Generate a new mail until we get a address which does not exist in database;
+    while(!address){
+
+        let newAddress = randomstring.generate({
+            length: 12,
+            charset: ['alphabetic', 'numeric']
+        });
+        
+        newAddress+=`@${process.env.MAIL_DOMAIN_ADDRESS}`;
+
+        const newAddressFound = await Mail.findOne({where: {address:newAddress}});
+
+        if(!newAddressFound){
+            address =  newAddress;
+        }
+    }
 
     try {
 
@@ -52,7 +74,7 @@ exports.createMail = async (req, res, next) => {
 
         return res
             .status(StatusCodes.OK)
-            .json({ success: true, message: "Mail Created!" });
+            .json({ success: true, address: mail.address,  message: "Mail Created!" });
 
     } catch (err) {
         next(err);
