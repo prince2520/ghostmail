@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 
 import {login, signup} from '../api/auth';
 
-
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
     signUpHandler: (userName, email, password, confirmPassword) => { },
