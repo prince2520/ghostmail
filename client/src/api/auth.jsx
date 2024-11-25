@@ -1,6 +1,6 @@
 // POST -> Sign up
 export const signup = async (name, email, password, confirmPassword) => {
-    const result = await fetch(`${import.meta.env.REACT_APP_SERVER_URL}/auth/signup`, {
+    const result = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export const signup = async (name, email, password, confirmPassword) => {
 
 // POST -> Login
 export const login = async (email, password) => {
-    const result = await fetch(`${import.meta.env.REACT_APP_SERVER_URL}/auth/login`, {
+    const result = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

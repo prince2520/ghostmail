@@ -15,11 +15,15 @@ import { z } from "zod";
 
 import { LoginSchema } from "../../../schema/login";
 
+import AuthContext from "../../../context/authContext.jsx";
+
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
+import { useContext } from 'react';
 
 const AuthenticationLogin = () => {
+    const authCtx = useContext(AuthContext);
     // define your form
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
@@ -34,10 +38,11 @@ const AuthenticationLogin = () => {
     // submit your form
     function onSubmit(values: z.infer<typeof LoginSchema>) {
         console.log("onSubmit", values);
+        authCtx.loginHandler(values.email, values.password);
     }
 
     return (
-        <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-8 ">
+        <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-2 ">
             <h1 className="text-2xl	font-bold"> Login your account </h1>
 
             <Button className="w-full" variant="outline">

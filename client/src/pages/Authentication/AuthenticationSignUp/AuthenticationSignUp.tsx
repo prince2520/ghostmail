@@ -18,8 +18,11 @@ import { SignUpSchema } from "../../../schema/signup";
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
+import { useContext } from 'react';
+import AuthContext from "../../../context/authContext.jsx";
 
 const AuthenticationSignUp = () => {
+    const authCtx = useContext(AuthContext);
     // define your form
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
@@ -34,10 +37,11 @@ const AuthenticationSignUp = () => {
     // submit your form
     function onSubmit(values: z.infer<typeof SignUpSchema>) {
         console.log("onSubmit", values);
+        authCtx.signUpHandler(values.name, values.email, values.password, values.confirmPassword);
     }
 
     return (
-        <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-8 ">
+        <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-2">
             <h1 className="text-2xl	font-bold"> Create your account </h1>
 
             <Button className="w-full" variant="outline">

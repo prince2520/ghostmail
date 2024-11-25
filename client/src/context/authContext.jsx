@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import {login, signup} from '../api/auth';
+import { login, signup } from '../api/auth';
+import { useToast } from "@/hooks/use-toast"
 
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
@@ -15,6 +16,8 @@ const AuthContext = React.createContext({
 
 
 export const AuthContextProvider = (props) => {
+    const { toast } = useToast()
+
     const [token, setToken] = useState();
     const [userId, setUserId] = useState();
     const [isAuth, setIsAuth] = useState();
@@ -40,18 +43,25 @@ export const AuthContextProvider = (props) => {
 
     // Sign Up
     const signUpHandler = useCallback(
-        (userName, email, password, confirmPassword) => {
-            signup(userName, email, password, confirmPassword)
+        (name, email, password, confirmPassword) => {
+            signup(name, email, password, confirmPassword)
                 .then((result) => {
+                    toast({
+                        title: "Sign Up",
+                        description: result.message,
+                    });
                     if (result.success) {
                         navigate("/auth/login");
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    toast({
+                        title: "Sign Up",
+                        description: err,
+                    });
                 })
                 .finally(() => {
-                   
+
                 });
         },
         [navigate]
@@ -60,12 +70,14 @@ export const AuthContextProvider = (props) => {
     // Login
     const loginHandler = useCallback(
         (email, password, setLoading) => {
-            setLoading(true);
             login(email, password)
                 .then((result) => {
+                    toast({
+                        title: "Login",
+                        description: result.message,
+                    });
+
                     if (result.success) {
-
-
                         setToken(result.token);
                         setUserId(result.user?._id);
                         setIsAuth(true);
@@ -80,16 +92,16 @@ export const AuthContextProvider = (props) => {
                         );
                         localStorage.setItem("expiryDate", expiryDate.toISOString());
                         autoLogout(remainingMilliseconds);
-                        navigate("/chat");
-                    } else {
-                        toast.error(result.message);
+                        navigate("/home");
                     }
                 })
                 .catch((err) => {
-                    toast.error(err);
+                    toast({
+                        title: "Login",
+                        description: err,
+                    });
                 })
                 .finally(() => {
-                    setLoading(false);
                 });
         },
         [autoLogout, navigate]

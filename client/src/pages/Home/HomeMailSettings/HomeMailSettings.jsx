@@ -55,7 +55,7 @@ const HomeMailSettings = () => {
     return (
         <div className="flex gap-x-4">
             {options.map(option => (
-                <Button onClick={()=>option.onClick("prince2520p@gmail.com")} id={option.id} variant="outline">{option.icon}{option.title}</Button>
+                <Button key={option.id} onClick={()=>option.onClick("prince2520p@gmail.com")} id={option.id} variant="outline">{option.icon}{option.title}</Button>
             ))}
         </div>
     );

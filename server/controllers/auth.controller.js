@@ -8,7 +8,6 @@ const { use } = require("../routes/mail.route");
 
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
-
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -24,7 +23,7 @@ exports.signup = async (req, res, next) => {
     const userCount = await User.count({ where: { email: email}});
 
     if (userCount>0) {
-      let error = new Error("User with this email already exists");
+      let error = new Error("User with this email already exists!!");
       error.statusCode = StatusCodes.BAD_REQUEST;
       throw error;
     }
@@ -45,7 +44,7 @@ exports.signup = async (req, res, next) => {
 
     return res
       .status(StatusCodes.OK)
-      .json({ success: true, message: "User Created" });
+      .json({ success: true, message: "User Created!" });
 
   } catch (err) {
     next(err);
@@ -91,7 +90,8 @@ exports.login = async (req, res, next) => {
       return res.status(StatusCodes.OK).json({
         success: true,
         token: token,
-        user: userFound
+        user: userFound,
+        message: "Login Successfull!"
       });
     }
   } catch (err) {

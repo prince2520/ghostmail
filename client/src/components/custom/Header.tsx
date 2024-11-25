@@ -2,15 +2,12 @@ import Lottie from "lottie-react";
 
 import { Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLocation } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { useLocation, Link } from 'react-router-dom';
 
 import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
 
 const Header = () => {
     const location = useLocation();
-
-    console.log("location -> ", location.pathname)
 
     return (
         <div className="flex justify-between w-full">
