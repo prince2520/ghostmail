@@ -1,9 +1,28 @@
 // Method - Description
 
-// GET - generate a new mail 
-export const generateGhostMail = async (mailAdminAddress) => {
-    const result = await fetch(
-      `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail?mailAdminAddress=${mailAdminAddress}`,
-    );
-    return result.json();
-  };
+// POST - generate a new mail for authorized user
+export const authorizedGenerateGhostMail = async (token) => {
+  const result = await fetch(
+    `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      }
+    }
+  );
+
+  return result.json();
+};
+
+// GET - generate a new mail for unauthorized user
+export const unauthorizedGenerateGhostMail = async () => {
+  
+  const result = await fetch(
+    `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail`,
+  );
+
+  return result.json();
+};
+

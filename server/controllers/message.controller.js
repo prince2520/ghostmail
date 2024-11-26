@@ -15,6 +15,9 @@ exports.saveMessage = async (req, res, next) => {
 
         const mailFound = await Mail.findOne({ where: { address: to.address } });
 
+        console.log("to address -> ", mailFound);
+        console.log("mailfound -> ", to);
+
         if (!mailFound) {
             let error = new Error("User address not Found!");
             error.statusCode = StatusCodes.NOT_FOUND;

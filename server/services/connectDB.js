@@ -33,14 +33,15 @@ module.exports.connectDB = (server) => {
     messageFrom.hasMany(message);
     message.belongsTo(messageFrom);
 
-    await sequelize.sync({force:true});
+    await sequelize.sync();
 
     db.Sequelize = Sequelize;
     db.sequelize = sequelize;
 
     server.listen(process.env.PORT || 5000, () => {
       console.log("Server Connected!!");
-    })
+    });
+    
   }).catch(err=>{
     console.error('Unable to connect to the database:', err);
   });
