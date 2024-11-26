@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useLocation, Link } from 'react-router-dom';
 
 import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
+import { useContext } from "react";
+import AuthContext from "../../context/authContext.jsx";
 
 const Header = () => {
     const location = useLocation();
+    const authCtx = useContext(AuthContext)
 
     return (
         <div className="flex justify-between w-full">
@@ -19,7 +22,9 @@ const Header = () => {
             </div>
             <div className="flex gap-x-4 items-center justify-center">
                 <Moon />
-                {location.pathname === "/home"? <Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link> : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
+                {location.pathname === "/home" ? 
+                !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link> ) : (<Button onClick={()=>authCtx.logoutHandler()}>Logout</Button>)
+                : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
             </div>
         </div>
     );

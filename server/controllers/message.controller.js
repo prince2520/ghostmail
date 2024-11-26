@@ -8,6 +8,11 @@ const { StatusCodes } = require("http-status-codes");
 
 // Save incoming message 
 exports.saveMessage = async (req, res, next) => {
+
+    console.log("Message Received");
+
+    console.log("Message Data ", req.body);
+
     
     try {
         const from = { ...req.body.from.value[0] };

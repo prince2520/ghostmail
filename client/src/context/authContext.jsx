@@ -25,10 +25,16 @@ export const AuthContextProvider = (props) => {
     const navigate = useNavigate();
 
     const logoutHandler = useCallback(() => {
-        navigate("/auth/login");
+        navigate("/home");
         setToken(null);
         setIsAuth(false);
         localStorage.clear();
+
+        toast({
+            title: "Logout",
+            description: "Successfully Logout!",
+        });
+
     }, [navigate]);
 
     const autoLogout = useCallback(
