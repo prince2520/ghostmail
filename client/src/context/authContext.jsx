@@ -10,7 +10,6 @@ const AuthContext = React.createContext({
     signUpHandler: (userName, email, password, confirmPassword) => { },
     logoutHandler: () => { },
     token: "",
-    userId: "",
     isAuth: false,
 });
 
@@ -85,11 +84,9 @@ export const AuthContextProvider = (props) => {
 
                     if (result.success) {
                         setToken(result.token);
-                        setUserId(result.user?._id);
                         setIsAuth(true);
 
                         localStorage.setItem("token", result.token);
-                        localStorage.setItem("userId", result.user._id);
 
                         const remainingMilliseconds = 5 * 60 * 60 * 1000;
 
@@ -117,8 +114,6 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {
         const localToken = localStorage.getItem("token");
         setToken(localToken);
-        const localUserId = localStorage.getItem("userId");
-        setUserId(localUserId);
 
         const localExpiryDate = localStorage.getItem("expiryDate");
 
@@ -148,8 +143,7 @@ export const AuthContextProvider = (props) => {
                 signUpHandler: signUpHandler,
                 logoutHandler: logoutHandler,
                 token: token,
-                userId: userId,
-                isAuth: isAuth,
+                isAuth: isAuth
             }}
         >
             {props.children}

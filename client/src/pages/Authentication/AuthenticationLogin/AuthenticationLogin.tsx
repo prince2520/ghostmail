@@ -37,9 +37,8 @@ const AuthenticationLogin = () => {
 
     // submit your form
     function onSubmit(values: z.infer<typeof LoginSchema>) {
-        console.log("onSubmit", values);
         authCtx.loginHandler(values.email, values.password);
-    }
+    };
 
     return (
         <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-2 ">

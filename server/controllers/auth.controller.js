@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model").User();
 
 const { StatusCodes } = require("http-status-codes");
-const { use } = require("../routes/mail.route");
 
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
@@ -66,8 +65,6 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
-    console.log('userFound', userFound);
-
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
@@ -84,13 +81,12 @@ exports.login = async (req, res, next) => {
           userId: userFound.id,
         },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "5h" }
+        { expiresIn: "24h" }
       );
 
       return res.status(StatusCodes.OK).json({
         success: true,
         token: token,
-        user: userFound,
         message: "Login Successfull!"
       });
     }

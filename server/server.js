@@ -1,10 +1,14 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
+const initSocket = require('./services/socket/socketIO');
 
-require("dotenv").config();
+initSocket.init(server);
+
 require("./services/connectDB").connectDB(server);
-
+require("./services/socket/socket")();
 
 const {errorHandler} = require("./middleware/error.middleware");
 
@@ -27,6 +31,5 @@ app.use(cors);
 app.use("/mail", mailRoute);
 app.use("/auth", authRoute);
 app.use("/message", messageRoute);
-
 
 app.use(errorHandler);

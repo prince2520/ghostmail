@@ -1,27 +1,24 @@
 const Mail = require("../models/mail.model").Mail();
-const Message = require("../models/message.model").Message();
 const User = require("../models/user.model").User();
+const Message = require("../models/message.model").Message();
+
 
 const MessageFrom = require("../models/message.model").MessageFrom();
 
 const { StatusCodes } = require("http-status-codes");
 
+const {SOCKET_EVENT} = require("../utils/socket_event");
+
+const io = require("../services/socket/socketIO").getIO();
+
 // Save incoming message 
 exports.saveMessage = async (req, res, next) => {
-
-    console.log("Message Received");
-
-    console.log("Message Data ", req.body);
-
     
     try {
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
 
         const mailFound = await Mail.findOne({ where: { address: to.address } });
-
-        console.log("to address -> ", mailFound);
-        console.log("mailfound -> ", to);
 
         if (!mailFound) {
             let error = new Error("User address not Found!");
@@ -45,7 +42,11 @@ exports.saveMessage = async (req, res, next) => {
             messageFromId: messageFromFound.id
         };
 
-        await Message.create(data);
+        const saveMessage = await Message.create(data);
+
+        console.log("SOCKET SERVER - sending message to client MailId=", mailFound.id);
+
+        io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data : saveMessage});
 
     } catch (err) {
         next(err);

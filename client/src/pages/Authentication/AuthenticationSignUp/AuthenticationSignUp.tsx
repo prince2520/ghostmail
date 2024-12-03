@@ -36,7 +36,6 @@ const AuthenticationSignUp = () => {
 
     // submit your form
     function onSubmit(values: z.infer<typeof SignUpSchema>) {
-        console.log("onSubmit", values);
         authCtx.signUpHandler(values.name, values.email, values.password, values.confirmPassword);
     }
 

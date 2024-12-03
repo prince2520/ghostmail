@@ -5,6 +5,12 @@ const { sequelize } = require("../services/connectDB")
 // MODEL - MAIL
 module.exports.Mail = () => {
     const Mail = sequelize.define("mail", {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+        },
         address: {
             type: DataTypes.STRING
         },
@@ -13,7 +19,7 @@ module.exports.Mail = () => {
             allowNull: true
         },
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
                 model: 'users',
                 key: 'id',

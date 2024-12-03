@@ -5,6 +5,12 @@ const { sequelize } = require("../services/connectDB")
 // MODEL - MESSAGEFROM
 module.exports.MessageFrom = () => {
     const MessageFrom = sequelize.define("messageFrom", {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+        },
         address: {
             type: DataTypes.STRING
         },
@@ -19,8 +25,14 @@ module.exports.MessageFrom = () => {
 // MODEL - MESSAGE
 module.exports.Message = () => {
     const Message = sequelize.define("message", {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+        },
         mailId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
                 model: 'mails',
                 key: 'id'
@@ -37,7 +49,7 @@ module.exports.Message = () => {
             type: DataTypes.DATE
         },
         messageFromId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             references: {
                 model: 'messageFroms',
                 key: 'id'

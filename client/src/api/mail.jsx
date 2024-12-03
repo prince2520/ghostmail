@@ -12,7 +12,7 @@ export const authorizedGenerateGhostMail = async (token) => {
       }
     }
   );
-
+  
   return result.json();
 };
 

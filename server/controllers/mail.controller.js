@@ -66,16 +66,17 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
         throw error;
     }
 
-    return { success: true, address: mail.address, message: "Mail Created!" };
+    const data = mail.dataValues;
 
+    const result = { success: true, data: data, message: "Mail Created!" };
+
+    return result;
 }
 
 // Generate a new ghost mail 
 exports.generateNewGhostMail = async (req, res, next) => {
-    console.log("UnAuthorized Generate Ghost Mail");
-
     try {
-        const result = newGhostMail();
+        const result = await newGhostMail();
 
         return res
             .status(StatusCodes.OK)
@@ -88,12 +89,10 @@ exports.generateNewGhostMail = async (req, res, next) => {
 
 
 exports.authorizedGenerateGhostMail = async (req, res, next) => {
-    console.log("Authorized Generate Ghost Mail")
-
     const mailAdminAddress = req.email;
 
     try {
-        const result = newGhostMail(mailAdminAddress);
+        const result = await newGhostMail(mailAdminAddress);
 
         return res
             .status(StatusCodes.OK)
