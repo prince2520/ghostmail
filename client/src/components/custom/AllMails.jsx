@@ -36,7 +36,7 @@ const AllMails = () => {
             className="w-full justify-between"
           >
             {value
-              ? user.mailAddressAndIds.find((mailAddressAndId) => mailAddressAndId.address === value)
+              ? user.mailAddressAndIds.find((mailAddressAndId) => mailAddressAndId.address === value).address
               : "Select Temp Mail..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -52,7 +52,7 @@ const AllMails = () => {
                     key={mailAddressAndId.id}
                     value={mailAddressAndId.address}
                     onSelect={(currentValue) => {
-                      console.log(currentValue);
+                      console.log('currentValue' , currentValue);
                       setValue(currentValue === value ? "" : currentValue)
                       setOpen(false)
                     }}
