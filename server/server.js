@@ -14,7 +14,9 @@ const {errorHandler} = require("./middleware/error.middleware");
 
 const mailRoute = require("./routes/mail.route");
 const authRoute = require("./routes/auth.route");
-const messageRoute = require("./routes/message.route")
+const messageRoute = require("./routes/message.route");
+const userRoute = require('./routes/user.route');
+
 const {cors} = require("./middleware/cors.middleware");
 
 const bodyParser = require("body-parser");
@@ -31,5 +33,6 @@ app.use(cors);
 app.use("/mail", mailRoute);
 app.use("/auth", authRoute);
 app.use("/message", messageRoute);
+app.use("/user", userRoute);
 
 app.use(errorHandler);

@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.get('/generate-new-mail', generateNewGhostMail);
 
-router.get('/auth-generate-new-mail', isAuth,  authorizedGenerateGhostMail);
+router.get('/auth-generate-new-mail', isAuth, authorizedGenerateGhostMail);
 
 module.exports = router;

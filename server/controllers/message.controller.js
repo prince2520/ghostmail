@@ -12,8 +12,7 @@ const {SOCKET_EVENT} = require("../utils/socket_event");
 const io = require("../services/socket/socketIO").getIO();
 
 // Save incoming message 
-exports.saveMessage = async (req, res, next) => {
-    
+exports.saveMessage = async (req, res, next) => {    
     try {
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };

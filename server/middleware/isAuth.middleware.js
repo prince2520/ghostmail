@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { StatusCodes } = require("http-status-codes");
 
 module.exports = (req ,res ,next ) =>{
+
     const authHeader = req.get('Authorization');
 
     if(!authHeader){
@@ -11,6 +12,7 @@ module.exports = (req ,res ,next ) =>{
     }
 
     const token = authHeader.split(' ')[1];
+
     let decodedToken;
     try {
         decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -27,5 +29,7 @@ module.exports = (req ,res ,next ) =>{
 
     req.userId = decodedToken.userId;
     req.email = decodedToken.email;
+
+    console.log("isAuth middleware", req.email, req.userId);
     next();
 }

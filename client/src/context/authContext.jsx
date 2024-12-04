@@ -1,9 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { login, signup } from '../api/auth';
+import { fetchUserData } from '../api/user';
+
 import { useToast } from "@/hooks/use-toast"
+import { UserActions } from "../store/userSlice";
 
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
@@ -18,8 +22,9 @@ export const AuthContextProvider = (props) => {
     const { toast } = useToast()
 
     const [token, setToken] = useState();
-    const [userId, setUserId] = useState();
     const [isAuth, setIsAuth] = useState();
+
+    const dispatch = useDispatch()
 
     const navigate = useNavigate();
 
@@ -72,9 +77,13 @@ export const AuthContextProvider = (props) => {
         [navigate]
     );
 
+    // Save user data
+    const saveUserData = (result) => dispatch(UserActions.saveUserData(result));
+
+
     // Login
     const loginHandler = useCallback(
-        (email, password, setLoading) => {
+        (email, password) => {
             login(email, password)
                 .then((result) => {
                     toast({
@@ -83,6 +92,7 @@ export const AuthContextProvider = (props) => {
                     });
 
                     if (result.success) {
+                        saveUserData(result);
                         setToken(result.token);
                         setIsAuth(true);
 
@@ -132,6 +142,13 @@ export const AuthContextProvider = (props) => {
 
         autoLogout(remainingMilliseconds);
         setIsAuth(true);
+        fetchUserData(localToken).then(result => {
+            if (result.success) {
+                saveUserData(result);
+            }
+        }).catch(err => {
+            console.log(err);
+        });
 
     }, [autoLogout, logoutHandler]);
 
