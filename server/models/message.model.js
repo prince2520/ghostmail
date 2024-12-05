@@ -47,14 +47,6 @@ module.exports.Message = () => {
         },
         createdAt: {
             type: DataTypes.DATE
-        },
-        messageFromId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'messageFroms',
-                key: 'id'
-            },
-            allowNull: false
         }
     });
     return Message;

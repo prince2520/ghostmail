@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 
-const User = require("../models/user.model").User();
-const Mail = require("../models/mail.model").Mail();
+const {User} = require("../services/connectDB").db;
+const {Mail} = require("../services/connectDB").db;
 
 exports.fetchUserData = async (req, res, next) => {
     console.log("Get user data -> ", req.email);

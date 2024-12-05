@@ -1,10 +1,10 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/user.model").User();
+const {User} = require("../services/connectDB").db;
 
 const { StatusCodes } = require("http-status-codes");
-const Mail = require("../models/mail.model").Mail();
+const {Mail} = require("../services/connectDB").db;
 
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {

@@ -1,13 +1,9 @@
 const { StatusCodes } = require("http-status-codes");
 var randomstring = require("randomstring");
-const { DATE } = require("sequelize");
 
-const Mail = require("../models/mail.model").Mail();
-const Message = require("../models/message.model").Message();
-const User = require("../models/user.model").User();
-
-
-const MessageFrom = require("../models/message.model").MessageFrom();
+const {Mail} = require("../services/connectDB").db;
+const {Message} = require("../services/connectDB").db;
+const {User} = require("../services/connectDB").db;
 
 
 const newGhostMail = async (mailAdminAddress = undefined) => {
@@ -57,6 +53,8 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
             userId: userFound.id
         }
     }
+
+    console.log("Cond => ", cond);
 
     const [mail, created] = await Mail.findOrCreate(cond);
 

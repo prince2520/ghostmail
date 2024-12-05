@@ -1,9 +1,6 @@
-const Mail = require("../models/mail.model").Mail();
-const User = require("../models/user.model").User();
-const Message = require("../models/message.model").Message();
-
-
-const MessageFrom = require("../models/message.model").MessageFrom();
+const {Mail} = require("../services/connectDB").db;
+const {Message} = require("../services/connectDB").db;
+const {MessageFrom} = require("../services/connectDB").db;
 
 const { StatusCodes } = require("http-status-codes");
 
