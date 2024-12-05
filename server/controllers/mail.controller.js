@@ -102,3 +102,30 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
         next(err);
     };
 }
+
+
+// get mail data  
+exports.getMailData = async (req, res, next) => {
+    const mailAddress = req.query.mailAddress;
+    console.log("get Mail data", mailAddress)
+
+    try {
+        const mail = await Mail.findOne({
+            where: { address: mailAddress }, 
+            include:
+            {
+                model: Message,
+                required: false
+            }
+        })
+
+        return res
+            .status(StatusCodes.OK)
+            .json(mail);
+
+    } catch (err) {
+        next(err);
+    };
+}
+
+

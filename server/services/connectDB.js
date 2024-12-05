@@ -22,18 +22,20 @@ module.exports.connectDB = (server) => {
 
     // Association
     // One user have many mails - ( One to Many Relation )
-    user.hasMany(mail);
-    mail.belongsTo(user);
+    user.hasMany(mail, {foreignKey : 'userId', as: "mails"});
+    mail.belongsTo(user, {foreignKey : 'userId'});
 
     // One mail have many messages - ( One to Many Relation )
-    mail.hasMany(message);
-    message.belongsTo(mail);
+    mail.hasMany(message, {foreignKey : "mailId", as: 'messages'});
+    message.belongsTo(mail, {foreignKey : "mailId"});
 
     // One user can send many messages - ( One to Many Relation )
-    messageFrom.hasMany(message);
-    message.belongsTo(messageFrom);
+    messageFrom.hasMany(message, {foreignKey : "messageFromId"});
+    message.belongsTo(messageFrom, {foreignKey: "messageFromId" });
 
+    //await sequelize.sync({force : true});
     await sequelize.sync();
+
 
     db.Sequelize = Sequelize;
     db.sequelize = sequelize;

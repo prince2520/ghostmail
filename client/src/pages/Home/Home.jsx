@@ -3,15 +3,17 @@ import HomeGhostMails from "./HomeGhostMails/HomeGhostMails";
 import AllMails  from "../../components/custom/AllMails";
 import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
 import { useSelector } from "react-redux";
+import { useContext } from "react";
+import AuthContext from "../../context/authContext";
 
 const Home = () => {
-    const user = useSelector((state) => state.user);
+    const authCtx = useContext(AuthContext);
 
     return (
         <div className='flex flex-col gap-y-6 items-center justify-center w-full'>
             <HomeGhostMails/>
             <HomeMailSettings/>
-            <AllMails/>
+            {authCtx.isAuth && <AllMails/>}
             <HomeInbox/>
         </div>
     );
