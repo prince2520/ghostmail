@@ -9,7 +9,6 @@ const {User} = require("../services/connectDB").db;
 const newGhostMail = async (mailAdminAddress = undefined) => {
     let address = null;
 
-    // Generate a new mail until we get a address which does not exist in database;
     while (!address) {
 
         let newAddress = randomstring.generate({

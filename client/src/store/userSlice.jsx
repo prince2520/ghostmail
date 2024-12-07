@@ -4,7 +4,7 @@ const initialUserState = {
     id: "",
     name: "",
     email: "",
-    mailAddressAndIds: []
+    mails: []
 };
 
 const UserSlice = createSlice({
@@ -12,11 +12,10 @@ const UserSlice = createSlice({
     initialState: initialUserState,
     reducers: {
         saveUserData(state, action) {
-            console.log('Action ', action.payload)
             state.id = action.payload.id;
             state.name = action.payload.name;
             state.email = action.payload.email,
-            state.mailAddressAndIds = action.payload.mailAddressAndIds;
+            state.mails = action.payload.mails;
         }
     }
 });

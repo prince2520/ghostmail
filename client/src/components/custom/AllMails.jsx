@@ -42,7 +42,7 @@ const AllMails = () => {
           className="w-full justify-between"
         >
           {value
-            ? user.mailAddressAndIds.find((mailAddressAndId) => mailAddressAndId.address === value).address
+            ? user.mails.find((mail) => mail.address === value).address
             : "Select Temp Mail..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -53,10 +53,10 @@ const AllMails = () => {
           <CommandList>
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
             <CommandGroup>
-              {user.mailAddressAndIds.map((mailAddressAndId) => (
+              {user.mails.map((mail) => (
                 <CommandItem
-                  key={mailAddressAndId.id}
-                  value={mailAddressAndId.address}
+                  key={mail.id}
+                  value={mail.address}
                   onSelect={(currentValue) => {
                     console.log('currentValue', currentValue);
                     if (!mail.mails.find(m => m.address === currentValue)) {
@@ -71,10 +71,10 @@ const AllMails = () => {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === mailAddressAndId.address ? "opacity-100" : "opacity-0"
+                      value === mail.address ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {mailAddressAndId.address}
+                  {mail.address}
                 </CommandItem>
               ))}
             </CommandGroup>

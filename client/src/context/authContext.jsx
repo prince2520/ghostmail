@@ -90,9 +90,9 @@ export const AuthContextProvider = (props) => {
                         title: "Login",
                         description: result.message,
                     });
-
+                    console.log("login -> ", result);
                     if (result.success) {
-                        saveUserData(result);
+                        saveUserData(result.data);
                         setToken(result.token);
                         setIsAuth(true);
 
@@ -144,7 +144,7 @@ export const AuthContextProvider = (props) => {
         setIsAuth(true);
         fetchUserData(localToken).then(result => {
             if (result.success) {
-                saveUserData(result);
+                saveUserData(result.data);
             }
         }).catch(err => {
             console.log(err);

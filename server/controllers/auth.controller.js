@@ -1,10 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const {User} = require("../services/connectDB").db;
+const { User } = require("../services/connectDB").db;
 
 const { StatusCodes } = require("http-status-codes");
-const {Mail} = require("../services/connectDB").db;
+const { Mail } = require("../services/connectDB").db;
+
+
 
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
@@ -58,7 +60,15 @@ exports.login = async (req, res, next) => {
   const password = req.body.password;
 
   try {
-    const userFound = await User.findOne({ where: { email: email } })
+    const userFound = await User.findOne({
+      where: { email: email },
+      include:
+      {
+        model: Mail,
+        required: false
+      }
+    });
+
 
     if (!userFound) {
       let error = new Error("User not found!");
@@ -85,20 +95,16 @@ exports.login = async (req, res, next) => {
         { expiresIn: "24h" }
       );
 
-      const userMails = await Mail.findAll({ 
-        where: { userId: userFound.id },
-        attributes: ['id', 'address']
-      });
-
       return res.status(StatusCodes.OK).json({
         success: true,
         token: token,
         message: "Login Successfull!",
-
-        id : userFound.id, 
-        name : userFound.name,
-        email : userFound.email,
-        mailAddressAndIds : userMails
+        data: {
+          id: userFound.id,
+          name: userFound.name,
+          email: userFound.email,
+          mails: userFound.mails
+        }
       });
     }
   } catch (err) {
