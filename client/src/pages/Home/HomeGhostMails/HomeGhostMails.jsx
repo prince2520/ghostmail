@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { uid } from 'uid';
 import { QrCode, Copy, BadgePlus } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const ghostMailOptions = [
     {
@@ -22,11 +23,13 @@ const ghostMailOptions = [
 ]
 
 const HomeGhostMails = () => {
+    const currMail = useSelector(state=>state.mail.currMail);
+    console.log()
     return (
         <div className="rounded-md px-36 py-24 flex gap-y-6 flex-col items-center justify-center border-2">
             <h1 className="font-bold text-2xl">Your Temporary Email Address</h1>
             <div className="flex gap-x-6 w-4/5">
-                <Input disabled type="email" className="" />
+                <Input disabled type="email" defaultValue={currMail} />
                 {ghostMailOptions.map(option => {
                     return <span key={option.id} className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">{option.icon}</span>
                 })}

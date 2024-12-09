@@ -40,8 +40,6 @@ exports.saveMessage = async (req, res, next) => {
 
         const saveMessage = await Message.create(data);
 
-        console.log("SOCKET SERVER - sending message to client MailId=", mailFound.id);
-
         io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data : saveMessage});
 
     } catch (err) {

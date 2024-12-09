@@ -53,8 +53,6 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
         }
     }
 
-    console.log("Cond => ", cond);
-
     const [mail, created] = await Mail.findOrCreate(cond);
 
     if (!created) {
@@ -103,12 +101,12 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 
 // get mail data  
 exports.getMailData = async (req, res, next) => {
-    const mailAddress = req.query.mailAddress;
-    console.log("get Mail data", mailAddress)
-
+    const mailId = req.query.mailId;
+    
     try {
+      
         const mail = await Mail.findOne({
-            where: { address: mailAddress }, 
+            where: { id: mailId }, 
             include:
             {
                 model: Message,

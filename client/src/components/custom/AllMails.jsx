@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/popover";
 
 import { useSelector } from "react-redux";
-import { mailData } from "../../api/mail"
 import AuthContext from "../../context/authContext";
-import { useContext } from "react"
+import { useContext } from "react";
+import { fetchMailDetail } from "../../store/mailSlice";
+import { useDispatch } from "react-redux"
 
 
 const AllMails = () => {
@@ -30,7 +31,8 @@ const AllMails = () => {
   const user = useSelector((state) => state.user);
   const authCtx = useContext(AuthContext);
 
-  const mail = useSelector(state => state.mail);
+  const mails = useSelector(state => state.mail.mails);
+  const dispatch = useDispatch();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,7 +44,7 @@ const AllMails = () => {
           className="w-full justify-between"
         >
           {value
-            ? user.mails.find((mail) => mail.address === value).address
+            ? user.mails.find((m) => m.address === value).address
             : "Select Temp Mail..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -53,16 +55,17 @@ const AllMails = () => {
           <CommandList>
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
             <CommandGroup>
-              {user.mails.map((mail) => (
+              {user.mails.map((m) => (
                 <CommandItem
-                  key={mail.id}
-                  value={mail.address}
+                  key={m.id}
+                  value={m.address}
                   onSelect={(currentValue) => {
-                    console.log('currentValue', currentValue);
-                    if (!mail.mails.find(m => m.address === currentValue)) {
-                      mailData(authCtx.token, currentValue).then(result => {
-                        console.log('Get mail Data', result)
-                      }).catch(err => console.log(err));
+//                    const foundMail = mails?.find(x => x.address === currentValue);
+                    if (!false) {
+                      const argsObj = { token: authCtx.token, mailId: m.id };
+                      console.log("argsObj -> ", argsObj);
+
+                      dispatch(fetchMailDetail(argsObj));
                     }
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
@@ -71,10 +74,10 @@ const AllMails = () => {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === mail.address ? "opacity-100" : "opacity-0"
+                      value === m.address ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {mail.address}
+                  {m.address}
                 </CommandItem>
               ))}
             </CommandGroup>

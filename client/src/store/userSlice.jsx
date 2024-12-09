@@ -16,6 +16,8 @@ const UserSlice = createSlice({
             state.name = action.payload.name;
             state.email = action.payload.email,
             state.mails = action.payload.mails;
+        },
+        updateMailAddress(state, action) {
         }
     }
 });
