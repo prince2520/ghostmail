@@ -3,7 +3,7 @@ import AuthenticationImg from '../../assets/images/Authentication.svg';
 
 const Authentication = () => {
     return (
-        <div className='container flex justify-center content-center gap-x-12'>
+        <div className='flex  gap-x-12 w-full'>
             <Outlet/>
             <div className="basis-3/6">
                 <img className='max-w-150' src={AuthenticationImg} alt="Authentication" />

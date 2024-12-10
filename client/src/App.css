@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-* {
-  font-family: "Work Sans", sans-serif;
-  box-sizing: border-box;
-  font-style: normal;
+
+.root {
+  display: flex;
+  justify-content:  center;
 }

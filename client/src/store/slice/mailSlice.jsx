@@ -54,8 +54,8 @@ const MailSlice = createSlice({
                 console.log("action payload", action.payload);
             })
             .addCase(fetchMailDetail.fulfilled, (state, action) => {
-                console.log('success ', action.payload)
                 state.currMailId = action.payload.mailId;
+                
                 if (!action.payload.alreadyExitMail) {
                     state.mails.push(action.payload.mail);
                 }
