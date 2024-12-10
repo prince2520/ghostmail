@@ -5,6 +5,7 @@ const {MessageFrom} = require("../services/connectDB").db;
 const { StatusCodes } = require("http-status-codes");
 
 const {SOCKET_EVENT} = require("../utils/socket_event");
+const { where } = require("sequelize");
 
 const io = require("../services/socket/socketIO").getIO();
 
@@ -40,7 +41,15 @@ exports.saveMessage = async (req, res, next) => {
 
         const saveMessage = await Message.create(data);
 
-        io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data : saveMessage});
+        const getMessage = await Message.findOne({
+            where : {id : saveMessage.id},
+            include : {
+                model: MessageFrom,
+                required: false,
+            }
+        });
+
+        io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data :getMessage });
 
     } catch (err) {
         next(err);

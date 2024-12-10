@@ -45,11 +45,11 @@ const AuthenticationSignUp = () => {
 
             <Button className="w-full" variant="outline">
                 <Icon icon="flat-color-icons:google" />
-                <h3>Sign up with Google</h3>
+                <p>Sign up with Google</p>
             </Button>
 
             <div className="w-full relative flex items-center justify-center">
-                <span className="z-10">or</span>
+                <span className="z-10 text-xs font-semibold	">or</span>
                 <hr className="absolute w-full" />
             </div>
             <Form {...form}>
@@ -108,7 +108,7 @@ const AuthenticationSignUp = () => {
                     </div>
                 </form>
             </Form>
-            <p className="text-sm">Already have an account? <Link to={"/auth/login"} className="link">Login</Link></p>
+            <p className="text-xs">Already have an account? <Link to={"/auth/login"} className="link">Login</Link></p>
         </div>
     );
 };

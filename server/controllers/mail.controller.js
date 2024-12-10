@@ -1,22 +1,25 @@
 const { StatusCodes } = require("http-status-codes");
 var randomstring = require("randomstring");
 
-const {Mail} = require("../services/connectDB").db;
-const {Message} = require("../services/connectDB").db;
-const {User} = require("../services/connectDB").db;
+const { Mail } = require("../services/connectDB").db;
+const { Message } = require("../services/connectDB").db;
+const { User } = require("../services/connectDB").db;
+const { MessageFrom } = require("../services/connectDB").db;
 
 const getMailFromDatabase = async (mailId) => {
     const result = await Mail.findOne({
         where: { id: mailId },
-        include:
-        {
+        include: {
             model: Message,
-            required: false
+            required: false,
+            include: {
+                model: MessageFrom,
+                required: false
+            }
         }
     });
 
     return result;
-
 }
 
 const newGhostMail = async (mailAdminAddress = undefined) => {
@@ -115,9 +118,8 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 // get mail data  
 exports.getMailData = async (req, res, next) => {
     const mailId = req.query.mailId;
-    
+
     try {
-      
         const mail = await getMailFromDatabase(mailId);
         return res
             .status(StatusCodes.OK)

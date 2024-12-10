@@ -2,7 +2,6 @@ import HomeInbox from "./HomeInbox/HomeInbox";
 import HomeGhostMails from "./HomeGhostMails/HomeGhostMails";
 import AllMails  from "../../components/custom/AllMails";
 import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
-import { useSelector } from "react-redux";
 import { useContext } from "react";
 import AuthContext from "../../context/authContext";
 

@@ -22,7 +22,7 @@ const HomeGhostMails = () => {
     const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
 
     return (
-        <div className="rounded-md px-36 py-24 flex gap-y-6 flex-col items-center justify-center border-2">
+        <div className="rounded-md px-36 py-24 flex gap-y-6 flex-col items-center justify-center border">
             <h1 className="font-bold text-2xl">Your Temporary Email Address</h1>
             <div className="flex gap-x-6 w-4/5">
                 <Input disabled type="email" defaultValue={mailDetail?.address} />
@@ -50,7 +50,7 @@ const HomeGhostMails = () => {
 
 
             </div>
-            <p className="text-center text-sm" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
+            <p className="text-center text-xs" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
         </div>
     );
 };
