@@ -10,18 +10,19 @@ export const fetchMailDetail = createAsyncThunk(
 
         const state = getState();
 
-        const alreadyExitMail = state.mail.mails.find(m => m.id === mailId);
-
-        if (alreadyExitMail) {
-            return rejectWithValue('Mail already exists, so no need to fetch data'); // Reject if mail is found
-        }
+        const alreadyExitMail = state.mail.mails.some(m => m.id === mailId);
 
         try {
-            const result = await mailData(token, mailId);
+            let result = null;
 
-            return { mailId, mail: result };
+            if (!alreadyExitMail) {
+                result = await mailData(token, mailId);
+            }
+
+
+            return { mailId, mail: result, alreadyExitMail };
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error.ymessage);
         }
     }
 );
@@ -43,7 +44,7 @@ const MailSlice = createSlice({
             const mailId = action.payload.mailId;
             state.mails.find(mail => mail.id === mailId)?.messages.push(action.payload);
         },
-        addNewMail(state, action){
+        addNewMail(state, action) {
             state.mails.push(action.payload);
         }
     },
@@ -55,7 +56,9 @@ const MailSlice = createSlice({
             .addCase(fetchMailDetail.fulfilled, (state, action) => {
                 console.log('success ', action.payload)
                 state.currMailId = action.payload.mailId;
-                state.mails.push(action.payload.mail);
+                if (!action.payload.alreadyExitMail) {
+                    state.mails.push(action.payload.mail);
+                }
             })
             .addCase(fetchMailDetail.rejected, (state, action) => {
                 console.log('Rejected action payload:', action);

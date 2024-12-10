@@ -60,12 +60,9 @@ const AllMails = () => {
                   key={m.id}
                   value={m.address}
                   onSelect={(currentValue) => {
-                    const foundMail = mails?.find(x => x.address === currentValue);
-                    if (!foundMail) {
-                      const argsObj = { token: authCtx.token, mailId: m.id };
-                      dispatch(fetchMailDetail(argsObj));
-                    }
-                    setValue(currentValue === value ? "" : currentValue)
+                    const argsObj = { token: authCtx.token, mailId: m.id };
+                    dispatch(fetchMailDetail(argsObj));
+                    setValue(currentValue)
                     setOpen(false)
                   }}
                 >
