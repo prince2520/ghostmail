@@ -7,7 +7,7 @@ import { login, signup } from '../api/auth';
 import { fetchUserData } from '../api/user';
 
 import { useToast } from "@/hooks/use-toast"
-import { UserActions } from "../store/userSlice";
+import { UserActions } from "../store/slice/userSlice";
 import { socketJoinAllMail } from "../services/socket";
 
 const AuthContext = React.createContext({

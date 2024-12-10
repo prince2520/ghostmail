@@ -20,7 +20,7 @@ import {
 import { useSelector } from "react-redux";
 import AuthContext from "../../context/authContext";
 import { useContext } from "react";
-import { fetchMailDetail } from "../../store/mailSlice";
+import { fetchMailDetail } from "../../store/slice/mailSlice";
 import { useDispatch } from "react-redux"
 
 
@@ -63,8 +63,6 @@ const AllMails = () => {
                     const foundMail = mails?.find(x => x.address === currentValue);
                     if (!foundMail) {
                       const argsObj = { token: authCtx.token, mailId: m.id };
-                      console.log("argsObj -> ", argsObj);
-
                       dispatch(fetchMailDetail(argsObj));
                     }
                     setValue(currentValue === value ? "" : currentValue)

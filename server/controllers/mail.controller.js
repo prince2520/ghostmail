@@ -5,6 +5,19 @@ const {Mail} = require("../services/connectDB").db;
 const {Message} = require("../services/connectDB").db;
 const {User} = require("../services/connectDB").db;
 
+const getMailFromDatabase = async (mailId) => {
+    const result = await Mail.findOne({
+        where: { id: mailId },
+        include:
+        {
+            model: Message,
+            required: false
+        }
+    });
+
+    return result;
+
+}
 
 const newGhostMail = async (mailAdminAddress = undefined) => {
     let address = null;
@@ -61,7 +74,7 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
         throw error;
     }
 
-    const data = mail.dataValues;
+    const data = await getMailFromDatabase(mail.id);
 
     const result = { success: true, data: data, message: "Mail Created!" };
 
@@ -105,15 +118,7 @@ exports.getMailData = async (req, res, next) => {
     
     try {
       
-        const mail = await Mail.findOne({
-            where: { id: mailId }, 
-            include:
-            {
-                model: Message,
-                required: false
-            }
-        })
-
+        const mail = await getMailFromDatabase(mailId);
         return res
             .status(StatusCodes.OK)
             .json(mail);

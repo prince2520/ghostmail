@@ -17,7 +17,8 @@ const UserSlice = createSlice({
             state.email = action.payload.email,
             state.mails = action.payload.mails;
         },
-        updateMailAddress(state, action) {
+        addNewMail(state, action){
+            state.mails.push(action.payload);
         }
     }
 });

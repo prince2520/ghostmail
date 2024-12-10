@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { socketInitiate, socketGetSendMessage, socketDisconnect} from "../services/socket";
 import { useDispatch } from "react-redux";
-import { MailActions } from "../store/mailSlice";
+import { MailActions } from "../store/slice/mailSlice";
 
 const SocketContext = React.createContext({});
 

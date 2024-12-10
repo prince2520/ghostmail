@@ -6,6 +6,9 @@ import AuthContext from '../../../context/authContext';
 
 import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../../../api/mail';
 import { socketJoinNewMail } from '../../../services/socket';
+import { useDispatch } from 'react-redux';
+import {  MailActions } from '../../../store/slice/mailSlice';
+import { UserActions } from '../../../store/slice/userSlice';
 
 
 const options = [
@@ -54,14 +57,14 @@ const options = [
     }
 ];
 
-const displayGhostMailOptions = (title, icon, apiFunction, token, callBackFunction,  tempMail) => {
+const displayGhostMailOptions = (title, icon, apiFunction, token, callBackFunction, tempMail) => {
     return (
         <Button
             key={uid(8)}
             onClick={async () => {
-                 apiFunction(token, tempMail).then(result=>{
+                apiFunction(token, tempMail).then(result => {
                     callBackFunction(result.data);
-                }).catch(err=>console.log(err));
+                }).catch(err => console.log(err));
             }}
             variant="outline">{icon}{title}</Button>
     )
@@ -70,9 +73,17 @@ const displayGhostMailOptions = (title, icon, apiFunction, token, callBackFuncti
 
 const HomeMailSettings = () => {
     const authCtx = useContext(AuthContext);
+    const dispatch = useDispatch();
 
     const newMailData = (data) => {
-        socketJoinNewMail(data.id)
+        socketJoinNewMail(data.id);
+        console.log('data', data);
+
+        dispatch(MailActions.addNewMail(data));
+        dispatch(UserActions.addNewMail({
+            id: data.id,
+            address: data.address
+        }));
     }
 
     return (

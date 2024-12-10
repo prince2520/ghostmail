@@ -12,16 +12,13 @@ export const socketInitiate = () => {
 
 export const socketJoinNewMail= (mailId) => {
   if (socket) {
-    console.log("SOCKET CLIENT - joining MailId=", mailId);
     socket.emit(SOCKET_EVENT.JOIN_NEW_MAIL, { mailId });
   }
 };
 
 export const socketJoinAllMail = (mails) => {
   if(socket) {
-    console.log("SOCKET CLIENT - ALL MAILS ", mails);
     socket.emit(SOCKET_EVENT.JOIN_ALL_MAIL, {mails});
-
   }
 }
 
@@ -29,7 +26,6 @@ export const socketJoinAllMail = (mails) => {
 export const socketGetSendMessage = (cb) => {
   if (socket) {
     socket.on(SOCKET_EVENT.GET_SEND_MESSSAGE, ({ data }) => {
-      console.log('data', data);
       cb(null, { data });
     });
   }

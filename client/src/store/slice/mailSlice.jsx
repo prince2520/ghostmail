@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { mailData } from "../api/mail";
-import { act } from "react";
+import { mailData } from "../../api/mail";
 
 
 export const fetchMailDetail = createAsyncThunk(
     'mail/fetchMailDetail',
-    async ({mailId, token}, { getState, rejectWithValue }) => {
+    async ({ mailId, token }, { getState, rejectWithValue }) => {
 
 
         const state = getState();
@@ -28,6 +27,7 @@ export const fetchMailDetail = createAsyncThunk(
 );
 
 
+
 const initialMailState = {
     currMailId: null,
     mails: []
@@ -39,16 +39,18 @@ const MailSlice = createSlice({
     name: "mail",
     initialState: initialMailState,
     reducers: {
-        saveMessage(state, action){
+        saveMessage(state, action) {
             const mailId = action.payload.mailId;
-            state.mails.find(mail=>mail.id === mailId)?.messages.push(action.payload);
-
+            state.mails.find(mail => mail.id === mailId)?.messages.push(action.payload);
+        },
+        addNewMail(state, action){
+            state.mails.push(action.payload);
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchMailDetail.pending, (state, action) => {
-                console.log("action payload", action.payload); 
+                console.log("action payload", action.payload);
             })
             .addCase(fetchMailDetail.fulfilled, (state, action) => {
                 console.log('success ', action.payload)
