@@ -8,6 +8,7 @@ import { fetchUserData } from '../api/user';
 
 import { useToast } from "@/hooks/use-toast"
 import { UserActions } from "../store/userSlice";
+import { socketJoinAllMail } from "../services/socket";
 
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
@@ -92,6 +93,8 @@ export const AuthContextProvider = (props) => {
                     });
                     console.log("login -> ", result);
                     if (result.success) {
+                        console.log('login',result.data.mails )
+                        socketJoinAllMail(result.data.mails);
                         saveUserData(result.data);
                         setToken(result.token);
                         setIsAuth(true);
@@ -144,6 +147,7 @@ export const AuthContextProvider = (props) => {
         setIsAuth(true);
         fetchUserData(localToken).then(result => {
             if (result.success) {
+                socketJoinAllMail(result.data.mails)
                 saveUserData(result.data);
             }
         }).catch(err => {

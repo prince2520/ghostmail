@@ -17,6 +17,14 @@ export const socketJoinNewMail= (mailId) => {
   }
 };
 
+export const socketJoinAllMail = (mails) => {
+  if(socket) {
+    console.log("SOCKET CLIENT - ALL MAILS ", mails);
+    socket.emit(SOCKET_EVENT.JOIN_ALL_MAIL, {mails});
+
+  }
+}
+
 // Message - get send message
 export const socketGetSendMessage = (cb) => {
   if (socket) {

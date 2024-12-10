@@ -14,9 +14,9 @@ module.exports = () => {
         });
 
         // MAIL - join all mails 
-        socket.on(SOCKET_EVENT.JOIN_ALL_MAIL, ({mailIds}) => {
-            for(let mailId in mailIds){
-                socket.join(mailId);
+        socket.on(SOCKET_EVENT.JOIN_ALL_MAIL, ({mails}) => {
+            for(let mail of mails){
+                socket.join(mail.id);
             }    
         });
 

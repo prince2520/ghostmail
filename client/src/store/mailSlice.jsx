@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { mailData } from "../api/mail";
+import { act } from "react";
 
 
 export const fetchMailDetail = createAsyncThunk(
@@ -38,6 +39,11 @@ const MailSlice = createSlice({
     name: "mail",
     initialState: initialMailState,
     reducers: {
+        saveMessage(state, action){
+            const mailId = action.payload.mailId;
+            state.mails.find(mail=>mail.id === mailId)?.messages.push(action.payload);
+
+        }
     },
     extraReducers: (builder) => {
         builder
