@@ -8,6 +8,12 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import GenerateQRCode from "../../../components/custom/GenerateQRCode";
 
@@ -29,9 +35,20 @@ const HomeGhostMails = () => {
                     <PopoverContent className="max-w-40"><GenerateQRCode mailAddress={mailDetail?.address} /></PopoverContent>
                 </Popover>
 
-                <span className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
-                    <Copy size={18} />
-                </span>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <span onClick={() => navigator.clipboard.writeText(mailDetail?.address) } className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
+                                <Copy size={18} />
+                            </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Copy to clipboard</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
+
             </div>
             <p className="text-center text-sm" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
         </div>
