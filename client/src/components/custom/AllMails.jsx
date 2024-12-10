@@ -60,8 +60,8 @@ const AllMails = () => {
                   key={m.id}
                   value={m.address}
                   onSelect={(currentValue) => {
-//                    const foundMail = mails?.find(x => x.address === currentValue);
-                    if (!false) {
+                    const foundMail = mails?.find(x => x.address === currentValue);
+                    if (!foundMail) {
                       const argsObj = { token: authCtx.token, mailId: m.id };
                       console.log("argsObj -> ", argsObj);
 
