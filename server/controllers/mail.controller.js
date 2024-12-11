@@ -130,4 +130,30 @@ exports.getMailData = async (req, res, next) => {
     };
 }
 
+exports.deleteMail = async (req, res, next) => {
+    const mailId = req.body.mailId;
+    console.log("deleteMail -> ", req.body);
 
+
+
+    try {
+        await Mail.destroy({
+            where: { id: mailId }
+        });
+
+        const data = {
+            mailId: mailId,
+            isDeleted: true
+        }
+
+        return res
+            .status(StatusCodes.OK)
+            .json({data});
+
+
+    } catch (err) {
+        next(err);
+    }
+
+
+}

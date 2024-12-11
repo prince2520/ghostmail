@@ -43,3 +43,24 @@ export const mailData = async (token, mailId ) => {
   );
   return result.json();
 };
+
+// GET - MAIL DATA
+export const deleteMail = async (token, mailId ) => {
+  console.log("MailData -> ", token , mailId);
+
+  const result = await fetch(
+    `${import.meta.env.VITE_API_SERVER_URL}/mail/delete-mail`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        mailId: mailId
+    }),
+    }
+  );
+  return result.json();
+};
+

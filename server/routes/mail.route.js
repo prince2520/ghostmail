@@ -3,7 +3,8 @@ const express = require("express");
 const {
     generateNewGhostMail,
     authorizedGenerateGhostMail,
-    getMailData
+    getMailData,
+    deleteMail
 } = require("../controllers/mail.controller.js");
 
 const isAuth = require("../middleware/isAuth.middleware.js")
@@ -15,5 +16,8 @@ router.get('/generate-new-mail', generateNewGhostMail);
 router.get('/auth-generate-new-mail', isAuth, authorizedGenerateGhostMail);
 
 router.get('/get-mail-data', isAuth, getMailData);
+
+router.delete('/delete-mail', isAuth, deleteMail);
+
 
 module.exports = router;
