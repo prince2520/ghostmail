@@ -43,7 +43,7 @@ const AllMails = () => {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value
+          {value && user.mails.some((m) => m.address === value)
             ? user.mails.find((m) => m.address === value)?.address
             : "Select Temp Mail..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
