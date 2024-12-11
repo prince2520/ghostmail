@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import AuthContext from '../../../context/authContext';
 
 import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../../../api/mail';
-import { socketJoinNewMail } from '../../../services/socket';
+import { socketJoinNewMail, socketLeaveMail } from '../../../services/socket';
 import { useDispatch } from 'react-redux';
 import { MailActions } from '../../../store/slice/mailSlice';
 import { UserActions } from '../../../store/slice/userSlice';
@@ -78,6 +78,7 @@ const HomeMailSettings = () => {
     const deleteMAilHandler = (data) => {
         console.log("Delete Mail Handler -> ", data);
         if (data.isDeleted) {
+            socketLeaveMail(data.mailId);
             dispatch(MailActions.deleteMail({ mailId: data.mailId }))
             dispatch(UserActions.deleteMail({ mailId: data.mailId }))
         }

@@ -22,6 +22,7 @@ module.exports = () => {
 
         // MAIL - leave mail id
         socket.on(SOCKET_EVENT.LEAVE_MAIL, ({mailId}) => {
+            console.log("SOCKET LEAVE MAIL ", mailId)
             socket.leave(mailId);
         });
         
