@@ -64,3 +64,21 @@ export const deleteMail = async (token, mailId ) => {
   return result.json();
 };
 
+
+
+export const changeMailAddress = async(token, mailId) => {
+  const result = await fetch(
+    `${import.meta.env.VITE_API_SERVER_URL}/mail/change-address`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        mailId: mailId
+    }),
+    }
+  );
+  return result.json();
+}

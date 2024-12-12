@@ -22,7 +22,7 @@ const getMailFromDatabase = async (mailId) => {
     return result;
 }
 
-const newGhostMail = async (mailAdminAddress = undefined) => {
+const generateMail = async () => {
     let address = null;
 
     while (!address) {
@@ -41,6 +41,11 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
         }
     }
 
+    return address;
+}
+
+const newGhostMail = async (mailAdminAddress = undefined) => {
+    let address = await generateMail();
 
     let date = new Date();
     date.setDate(date.getDate() + 1);
@@ -132,9 +137,6 @@ exports.getMailData = async (req, res, next) => {
 
 exports.deleteMail = async (req, res, next) => {
     const mailId = req.body.mailId;
-    console.log("deleteMail -> ", req.body);
-
-
 
     try {
         await Mail.destroy({
@@ -148,12 +150,38 @@ exports.deleteMail = async (req, res, next) => {
 
         return res
             .status(StatusCodes.OK)
-            .json({data});
+            .json({ data });
+    } catch (err) {
+        next(err);
+    }
+}
 
+
+
+exports.changeAddress = async (req, res, next) => {
+    const userId = req.userId;
+    const mailId = req.body.mailId;
+
+    try {
+
+        const address = await generateMail();
+
+        await Mail.update(
+            { address: address },
+            { where: { id: mailId, userId: userId } }
+        );
+
+        const data = {
+            mailId: mailId,
+            updatedMailAddress : address,
+            isChangeAddress: true
+        };
+
+        return res
+            .status(StatusCodes.OK)
+            .json({ data });
 
     } catch (err) {
         next(err);
     }
-
-
 }

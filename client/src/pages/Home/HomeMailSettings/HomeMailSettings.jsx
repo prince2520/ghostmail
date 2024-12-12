@@ -11,7 +11,7 @@ import { MailActions } from '../../../store/slice/mailSlice';
 import { UserActions } from '../../../store/slice/userSlice';
 import { useSelector } from 'react-redux';
 
-import { deleteMail } from '../../../api/mail';
+import { deleteMail, changeMailAddress } from '../../../api/mail';
 
 const options = [
     {
@@ -76,11 +76,18 @@ const HomeMailSettings = () => {
     const copyToClipBoard = () => navigator.clipboard.writeText(mailDetail?.address);
 
     const deleteMAilHandler = (data) => {
-        console.log("Delete Mail Handler -> ", data);
         if (data.isDeleted) {
             socketLeaveMail(data.mailId);
             dispatch(MailActions.deleteMail({ mailId: data.mailId }))
             dispatch(UserActions.deleteMail({ mailId: data.mailId }))
+        }
+    };
+
+    const changeAddressHandler = (data) => {
+        if (data.isChangeAddress) {
+            console.log("change address handler data -> ", data);
+            dispatch(MailActions.changeMailAddress(data));
+            dispatch(UserActions.changeMailAddress(data));
         }
     };
 
@@ -89,6 +96,7 @@ const HomeMailSettings = () => {
             {displayGhostMailOptions("New Mail", <Mails />, authCtx.isAuth ? authorizedGenerateGhostMail : unauthorizedGenerateGhostMail, authCtx.token, newMailData, null, true)}
             {displayGhostMailOptions("Copy to Clipboard", <Files />, null, null, copyToClipBoard, null, false)}
             {authCtx.isAuth && displayGhostMailOptions("Delete", <Trash />, deleteMail, authCtx.token, deleteMAilHandler, mailDetail?.id, true)}
+            {authCtx.isAuth && displayGhostMailOptions("Change", <SquarePen />, changeMailAddress, authCtx.token, changeAddressHandler, mailDetail?.id, true)}
         </div>
     );
 }

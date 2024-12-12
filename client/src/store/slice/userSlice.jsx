@@ -22,6 +22,14 @@ const UserSlice = createSlice({
         },
         deleteMail(state, action) {
             state.mails = state.mails.filter(mail => mail.id!=action.payload.mailId);
+        },
+        changeMailAddress(state, action){
+            console.log('userAction change mail address -> ', action.payload)
+            state.mails.map(mail => {
+                if(mail.id === action.payload.mailId){
+                    mail.address = action.payload.updatedMailAddress;
+                }
+            })
         }
     }
 });

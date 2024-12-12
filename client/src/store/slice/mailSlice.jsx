@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { mailData } from "../../api/mail";
+import { changeMailAddress, mailData } from "../../api/mail";
 
 
 export const fetchMailDetail = createAsyncThunk(
@@ -49,6 +49,13 @@ const MailSlice = createSlice({
         },
         deleteMail(state, action) {
             state.mails = state.mails.filter(mail => mail.id!=action.payload.mailId);
+        },
+        changeMailAddress(state, action){
+            state.mails.map(mail => {
+                if(mail.id === action.payload.mailId){
+                    mail.address = action.payload.updatedMailAddress;
+                }
+            })
         }
     },
     extraReducers: (builder) => {

@@ -31,7 +31,6 @@ const AllMails = () => {
   const user = useSelector((state) => state.user);
   const authCtx = useContext(AuthContext);
 
-  const mails = useSelector(state => state.mail.mails);
   const dispatch = useDispatch();
 
   return (
