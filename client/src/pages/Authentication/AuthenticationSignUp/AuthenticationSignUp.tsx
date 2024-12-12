@@ -1,29 +1,29 @@
-import { Icon } from '@iconify/react';
+import { useContext } from 'react';
 import { Link } from "react-router-dom";
 
-import { Button } from "@/components/ui/button"
+import { z } from "zod";
+import { Icon } from '@iconify/react';
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
     FormMessage
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form";
 
-import { z } from "zod";
+import AuthContext from "../../../context/authContext.jsx";
 
 import { SignUpSchema } from "../../../schema/signup";
 
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form";
-import { useContext } from 'react';
-import AuthContext from "../../../context/authContext.jsx";
-
 const AuthenticationSignUp = () => {
     const authCtx = useContext(AuthContext);
-    // define your form
+    
+    // Define your form
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
@@ -34,7 +34,7 @@ const AuthenticationSignUp = () => {
         }
     });
 
-    // submit your form
+    // Submit your sign up form 
     function onSubmit(values: z.infer<typeof SignUpSchema>) {
         authCtx.signUpHandler(values.name, values.email, values.password, values.confirmPassword);
     }

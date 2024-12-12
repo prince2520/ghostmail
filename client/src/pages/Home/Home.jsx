@@ -2,9 +2,9 @@ import { useContext } from "react";
 
 import AuthContext from "../../context/authContext";
 
+import HomeMail from "./HomeMail/HomeMail";
 import HomeInbox from "./HomeInbox/HomeInbox";
 import AllMails  from "../../components/custom/AllMails";
-import HomeGhostMails from "./HomeGhostMails/HomeGhostMails";
 import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
 
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
 
     return (
         <div className='flex flex-col gap-y-6 items-center justify-center w-full'>
-            <HomeGhostMails/>
+            <HomeMail/>
             <HomeMailSettings/>
             {authCtx.isAuth && <AllMails/>}
             <HomeInbox/>

@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { QrCode, Copy } from "lucide-react";
 import { useSelector } from "react-redux";
+import { QrCode, Copy } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 import {
     Popover,
@@ -17,7 +17,7 @@ import {
 
 import GenerateQRCode from "../../../components/custom/GenerateQRCode";
 
-const HomeGhostMails = () => {
+const HomeMail = () => {
     const mail = useSelector(state => state.mail);
     const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
 
@@ -34,11 +34,10 @@ const HomeGhostMails = () => {
                     </PopoverTrigger>
                     <PopoverContent className="max-w-40"><GenerateQRCode mailAddress={mailDetail?.address} /></PopoverContent>
                 </Popover>
-
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>
-                            <span onClick={() => navigator.clipboard.writeText(mailDetail?.address) } className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
+                            <span onClick={() => navigator.clipboard.writeText(mailDetail?.address)} className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
                                 <Copy size={18} />
                             </span>
                         </TooltipTrigger>
@@ -47,12 +46,10 @@ const HomeGhostMails = () => {
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-
-
             </div>
             <p className="text-center text-xs" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
         </div>
     );
 };
 
-export default HomeGhostMails;
+export default HomeMail;

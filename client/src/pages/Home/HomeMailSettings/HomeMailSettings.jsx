@@ -110,8 +110,8 @@ const HomeMailSettings = () => {
             callBackFunction: changeAddressHandler,
             tempMail: mailDetail?.id,
             callingServer: true
-        },
-    ]
+        }
+    ];
 
     return (
         <div className="flex gap-x-4">

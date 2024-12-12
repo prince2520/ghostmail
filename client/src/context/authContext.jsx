@@ -1,12 +1,11 @@
-import React, { useState, useCallback, useEffect } from "react";
-
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useCallback, useEffect } from "react";
+
+import { useToast } from "@/hooks/use-toast";
 
 import { login, signup } from '../api/auth';
 import { fetchUserData } from '../api/user';
-
-import { useToast } from "@/hooks/use-toast"
 import { UserActions } from "../store/slice/userSlice";
 import { socketJoinAllMail } from "../services/socket";
 
@@ -20,14 +19,13 @@ const AuthContext = React.createContext({
 
 
 export const AuthContextProvider = (props) => {
-    const { toast } = useToast()
-
     const [token, setToken] = useState();
     const [isAuth, setIsAuth] = useState();
 
-    const dispatch = useDispatch()
-
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const { toast } = useToast();
 
     const logoutHandler = useCallback(() => {
         navigate("/home");
@@ -79,7 +77,7 @@ export const AuthContextProvider = (props) => {
     );
 
     // Save user data
-    const saveUserData = (result) => dispatch(UserActions.saveUserData(result));
+    const saveUserDataHandler = (result) => dispatch(UserActions.saveUserData(result));
 
 
     // Login
@@ -95,7 +93,7 @@ export const AuthContextProvider = (props) => {
                     if (result.success) {
                         console.log('login',result.data.mails )
                         socketJoinAllMail(result.data.mails);
-                        saveUserData(result.data);
+                        saveUserDataHandler(result.data);
                         setToken(result.token);
                         setIsAuth(true);
 

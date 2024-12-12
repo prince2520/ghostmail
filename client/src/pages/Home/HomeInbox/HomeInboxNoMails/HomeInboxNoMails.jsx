@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
-import InboxAnimation from "../../../../assets/lottifies/InboxAnimation.json";
 import Lottie from "lottie-react"
 
-const HomeInboxNoMails = () => {
+import InboxAnimation from "../../../../assets/lottifies/InboxAnimation.json";
 
+const HomeInboxNoMails = () => {
     return (
         <div className="flex flex-col w-full gap-y-2 items-center justify-center">
             <div className="w-48">

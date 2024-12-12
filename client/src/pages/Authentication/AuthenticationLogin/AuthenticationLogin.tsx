@@ -1,7 +1,12 @@
-import { Icon } from '@iconify/react';
+import { useContext } from 'react';
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button"
+import { z } from "zod";
+import { Icon } from '@iconify/react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
@@ -9,22 +14,16 @@ import {
     FormItem,
     FormMessage
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
 
-import { z } from "zod";
-
-import { LoginSchema } from "../../../schema/login";
 
 import AuthContext from "../../../context/authContext.jsx";
 
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form";
-import { useContext } from 'react';
+import { LoginSchema } from "../../../schema/login";
 
 const AuthenticationLogin = () => {
     const authCtx = useContext(AuthContext);
-    // define your form
+
+    // Define your form
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -35,7 +34,7 @@ const AuthenticationLogin = () => {
         }
     });
 
-    // submit your form
+    // Submit your login form
     function onSubmit(values: z.infer<typeof LoginSchema>) {
         authCtx.loginHandler(values.email, values.password);
     };
@@ -80,7 +79,7 @@ const AuthenticationLogin = () => {
                                 </FormItem>
                             )}
                         />
-                       
+
                         <Button type="submit" className='w-full'>Submit</Button>
                     </div>
                 </form>
