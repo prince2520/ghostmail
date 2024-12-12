@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+// INITIAL STATE
 const initialUserState = {
     id: "",
     name: "",
@@ -17,16 +19,15 @@ const UserSlice = createSlice({
             state.email = action.payload.email,
             state.mails = action.payload.mails;
         },
-        addNewMail(state, action){
+        addNewMail(state, action) {
             state.mails.push(action.payload);
         },
         deleteMail(state, action) {
-            state.mails = state.mails.filter(mail => mail.id!=action.payload.mailId);
+            state.mails = state.mails.filter(mail => mail.id != action.payload.mailId);
         },
-        changeMailAddress(state, action){
-            console.log('userAction change mail address -> ', action.payload)
+        changeMailAddress(state, action) {
             state.mails.map(mail => {
-                if(mail.id === action.payload.mailId){
+                if (mail.id === action.payload.mailId) {
                     mail.address = action.payload.updatedMailAddress;
                 }
             })

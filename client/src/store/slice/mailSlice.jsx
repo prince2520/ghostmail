@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { changeMailAddress, mailData } from "../../api/mail";
+import { mailData } from "../../api/mail";
 
 
+// REDUX THUNK -  Fetch The mail detail 
 export const fetchMailDetail = createAsyncThunk(
     'mail/fetchMailDetail',
     async ({ mailId, token }, { getState, rejectWithValue }) => {
@@ -19,7 +20,6 @@ export const fetchMailDetail = createAsyncThunk(
                 result = await mailData(token, mailId);
             }
 
-
             return { mailId, mail: result, alreadyExitMail };
         } catch (error) {
             return rejectWithValue(error.ymessage);
@@ -29,11 +29,11 @@ export const fetchMailDetail = createAsyncThunk(
 
 
 
+// INITIAL STATE
 const initialMailState = {
     currMailId: null,
     mails: []
 };
-
 
 
 const MailSlice = createSlice({
@@ -48,11 +48,11 @@ const MailSlice = createSlice({
             state.mails.push(action.payload);
         },
         deleteMail(state, action) {
-            state.mails = state.mails.filter(mail => mail.id!=action.payload.mailId);
+            state.mails = state.mails.filter(mail => mail.id != action.payload.mailId);
         },
-        changeMailAddress(state, action){
+        changeMailAddress(state, action) {
             state.mails.map(mail => {
-                if(mail.id === action.payload.mailId){
+                if (mail.id === action.payload.mailId) {
                     mail.address = action.payload.updatedMailAddress;
                 }
             })
@@ -65,7 +65,7 @@ const MailSlice = createSlice({
             })
             .addCase(fetchMailDetail.fulfilled, (state, action) => {
                 state.currMailId = action.payload.mailId;
-                
+
                 if (!action.payload.alreadyExitMail) {
                     state.mails.push(action.payload.mail);
                 }

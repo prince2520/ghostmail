@@ -1,43 +1,28 @@
+import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { uid } from 'uid';
 import { Button } from "@/components/ui/button";
-import { Mails, Files, SquareChevronRight, RotateCw, SquarePen, Trash } from "lucide-react";
-import { useContext } from 'react';
+import { Mails, Files, SquarePen, Trash } from "lucide-react";
+
 import AuthContext from '../../../context/authContext';
 
-import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../../../api/mail';
 import { socketJoinNewMail, socketLeaveMail } from '../../../services/socket';
-import { useDispatch } from 'react-redux';
+import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../../../api/mail';
+
 import { MailActions } from '../../../store/slice/mailSlice';
 import { UserActions } from '../../../store/slice/userSlice';
-import { useSelector } from 'react-redux';
-
 import { deleteMail, changeMailAddress } from '../../../api/mail';
 
-const options = [
-    {
-        id: uid(8),
-        title: "Forward",
-        icon: <SquareChevronRight />,
-        onClick: function () { }
-    },
-    {
-        id: uid(8),
-        title: "Refresh",
-        icon: <RotateCw />,
-        onClick: function () { }
 
-    }
-];
-
-const displayGhostMailOptions = (title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false) => {
+// COMPONENT FOR DISPLAYING MAIL OPTION 
+const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false }) => {
     return (
         <Button
             key={uid(8)}
             onClick={async () => {
-                console.log("DisplayGhostMailOptions -> ", { title, icon, apiFunction, token, callBackFunction, tempMail, callingServer })
                 if (callingServer) {
                     apiFunction(token, tempMail).then(result => {
-                        console.log("api function", result)
                         callBackFunction(result.data);
                     }).catch(err => console.log(err));
                 } else {
@@ -47,16 +32,18 @@ const displayGhostMailOptions = (title, icon, apiFunction, token, callBackFuncti
             }}
             variant="outline">{icon}{title}</Button>
     )
-}
-
+};
 
 const HomeMailSettings = () => {
+    const dispatch = useDispatch();
+
     const authCtx = useContext(AuthContext);
     const mail = useSelector(state => state.mail);
-    const dispatch = useDispatch();
     const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
 
-    const newMailData = (data) => {
+
+    // CALLBACK FUNCTION - join to a room using socket and dispatch new mail to user and mail 
+    const newMailHandler = (data) => {
         socketJoinNewMail(data.id);
 
         dispatch(MailActions.addNewMail(data));
@@ -66,9 +53,11 @@ const HomeMailSettings = () => {
         }));
     }
 
-    const copyToClipBoard = () => navigator.clipboard.writeText(mailDetail?.address);
+    // CALLBACK FUNCTION - clip the current mail address 
+    const copyToClipBoardHandler = () => navigator.clipboard.writeText(mailDetail?.address);
 
-    const deleteMAilHandler = (data) => {
+    // CALLBACK FUNCTION - delete the current mail and leave the socket for mail 
+    const deleteMailHandler = (data) => {
         if (data.isDeleted) {
             socketLeaveMail(data.mailId);
             dispatch(MailActions.deleteMail({ mailId: data.mailId }))
@@ -76,20 +65,59 @@ const HomeMailSettings = () => {
         }
     };
 
+    // CALLBACK FUNCTION - change the mail current address
     const changeAddressHandler = (data) => {
         if (data.isChangeAddress) {
-            console.log("change address handler data -> ", data);
             dispatch(MailActions.changeMailAddress(data));
             dispatch(UserActions.changeMailAddress(data));
         }
     };
 
+    // All mail options 
+    const mailOptions = [
+        {
+            title: "New Mail",
+            icon: <Mails />,
+            apiFunction: authCtx.isAuth ? authorizedGenerateGhostMail : unauthorizedGenerateGhostMail,
+            token: authCtx.token,
+            callBackFunction: newMailHandler,
+            tempMail: null,
+            callingServer: true
+        },
+        {
+            title: "Copy to Clipboard",
+            icon: <Files />,
+            apiFunction: null,
+            token: null,
+            callBackFunction: copyToClipBoardHandler,
+            tempMail: null,
+            callingServer: false
+        },
+        {
+            title: "Delete",
+            icon: <Trash />,
+            apiFunction: deleteMail,
+            token: authCtx.token,
+            callBackFunction: deleteMailHandler,
+            tempMail: mailDetail?.id,
+            callingServer: true
+        },
+        {
+            title: "Change",
+            icon: <SquarePen />,
+            apiFunction: changeMailAddress,
+            token: authCtx.token,
+            callBackFunction: changeAddressHandler,
+            tempMail: mailDetail?.id,
+            callingServer: true
+        },
+    ]
+
     return (
         <div className="flex gap-x-4">
-            {displayGhostMailOptions("New Mail", <Mails />, authCtx.isAuth ? authorizedGenerateGhostMail : unauthorizedGenerateGhostMail, authCtx.token, newMailData, null, true)}
-            {displayGhostMailOptions("Copy to Clipboard", <Files />, null, null, copyToClipBoard, null, false)}
-            {authCtx.isAuth && displayGhostMailOptions("Delete", <Trash />, deleteMail, authCtx.token, deleteMAilHandler, mailDetail?.id, true)}
-            {authCtx.isAuth && displayGhostMailOptions("Change", <SquarePen />, changeMailAddress, authCtx.token, changeAddressHandler, mailDetail?.id, true)}
+            {
+                mailOptions.map(option => <DisplayMailOption {...option} />)
+            }
         </div>
     );
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// FORM VALIDATION - check the validation of Sign up form 
 export const SignUpSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email address"

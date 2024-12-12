@@ -1,9 +1,11 @@
-import HomeInbox from "./HomeInbox/HomeInbox";
-import HomeGhostMails from "./HomeGhostMails/HomeGhostMails";
-import AllMails  from "../../components/custom/AllMails";
-import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
 import { useContext } from "react";
+
 import AuthContext from "../../context/authContext";
+
+import HomeInbox from "./HomeInbox/HomeInbox";
+import AllMails  from "../../components/custom/AllMails";
+import HomeGhostMails from "./HomeGhostMails/HomeGhostMails";
+import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
 
 const Home = () => {
     const authCtx = useContext(AuthContext);
