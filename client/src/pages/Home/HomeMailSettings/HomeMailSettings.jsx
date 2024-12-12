@@ -20,19 +20,12 @@ const options = [
         icon: <SquareChevronRight />,
         onClick: function () { }
     },
-
     {
         id: uid(8),
         title: "Refresh",
         icon: <RotateCw />,
         onClick: function () { }
 
-    },
-    {
-        id: uid(8),
-        title: "Change",
-        icon: <SquarePen />,
-        onClick: function () { }
     }
 ];
 

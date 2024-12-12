@@ -42,8 +42,8 @@ const AllMails = () => {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value && user.mails.some((m) => m.address === value)
-            ? user.mails.find((m) => m.address === value)?.address
+          {value && user.mails.some((m) => m.id === value.id)
+            ? user.mails.find((m) => m.id === value.id)?.address
             : "Select Temp Mail..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -57,18 +57,18 @@ const AllMails = () => {
               {user.mails.map((m) => (
                 <CommandItem
                   key={m.id}
-                  value={m.address}
-                  onSelect={(currentValue) => {
+                  value={m}
+                  onSelect={() => {
                     const argsObj = { token: authCtx.token, mailId: m.id };
                     dispatch(fetchMailDetail(argsObj));
-                    setValue(currentValue)
+                    setValue(m)
                     setOpen(false)
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === m.address ? "opacity-100" : "opacity-0"
+                      value.id === m.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {m.address}
