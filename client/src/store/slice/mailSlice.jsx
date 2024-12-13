@@ -46,6 +46,7 @@ const MailSlice = createSlice({
             state.mails.push(action.payload);
         },
         deleteMail(state, action) {
+            state.currMailId = null; 
             state.mails = state.mails.filter(mail => mail.id != action.payload.mailId);
         },
         changeMailAddress(state, action) {

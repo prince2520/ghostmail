@@ -17,7 +17,7 @@ import { fetchMailDetail } from '../../../store/slice/mailSlice';
 
 
 // COMPONENT FOR DISPLAYING MAIL OPTION 
-const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false }) => {
+const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false, disabled }) => {
     return (
         <Button
             key={uid(8)}
@@ -31,6 +31,7 @@ const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, 
                 }
 
             }}
+            disabled={disabled}
             variant="outline">{icon}{title}</Button>
     )
 };
@@ -59,7 +60,7 @@ const HomeMailSettings = () => {
             localStorage.setItem("token", token);
             localStorage.setItem("mailId", mailId);
             localStorage.setItem("isNotAuth", isNotAuth);
-            
+
             const remainingMilliseconds = 24 * 60 * 60 * 1000;
             const expiryDate = new Date(
                 new Date().getTime() + remainingMilliseconds
@@ -67,7 +68,7 @@ const HomeMailSettings = () => {
 
             localStorage.setItem("expiryDate", expiryDate.toISOString());
 
-            const argsObj = { token: token, mailId: mailId};
+            const argsObj = { token: token, mailId: mailId };
 
             dispatch(fetchMailDetail(argsObj));
         }
@@ -100,6 +101,7 @@ const HomeMailSettings = () => {
         }
     };
 
+    console.log("currMailId", mail.currMailId);
     // All mail options 
     const mailOptions = [
         {
@@ -110,7 +112,8 @@ const HomeMailSettings = () => {
             callBackFunction: newMailHandler,
             tempMail: null,
             callingServer: true,
-            showAuth: true
+            showAuth: true,
+            disabled: false
         },
         {
             title: "Copy to Clipboard",
@@ -120,7 +123,8 @@ const HomeMailSettings = () => {
             callBackFunction: copyToClipBoardHandler,
             tempMail: null,
             callingServer: false,
-            showAuth: true
+            showAuth: true,
+            disabled: !mail.currMailId
         },
         {
             title: "Delete",
@@ -130,7 +134,8 @@ const HomeMailSettings = () => {
             callBackFunction: deleteMailHandler,
             tempMail: mailDetail?.id,
             callingServer: true,
-            showAuth: authCtx.isAuth
+            showAuth: authCtx.isAuth,
+            disabled: !mail.currMailId
         },
         {
             title: "Change",
@@ -140,7 +145,8 @@ const HomeMailSettings = () => {
             callBackFunction: changeAddressHandler,
             tempMail: mailDetail?.id,
             callingServer: true,
-            showAuth: authCtx.isAuth
+            showAuth: authCtx.isAuth,
+            disabled: !mail.currMailId
         }
     ];
 
