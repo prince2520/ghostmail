@@ -13,6 +13,7 @@ import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../.
 import { MailActions } from '../../../store/slice/mailSlice';
 import { UserActions } from '../../../store/slice/userSlice';
 import { deleteMail, changeMailAddress } from '../../../api/mail';
+import { fetchMailDetail } from '../../../store/slice/mailSlice';
 
 
 // COMPONENT FOR DISPLAYING MAIL OPTION 
@@ -23,7 +24,7 @@ const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, 
             onClick={async () => {
                 if (callingServer) {
                     apiFunction(token, tempMail).then(result => {
-                        callBackFunction(result.data);
+                        callBackFunction(result);
                     }).catch(err => console.log(err));
                 } else {
                     callBackFunction();
@@ -43,13 +44,37 @@ const HomeMailSettings = () => {
 
 
     // CALLBACK FUNCTION - join to a room using socket and dispatch new mail to user and mail 
-    const newMailHandler = (data) => {
-        socketJoinNewMail(data.id);
+    const newMailHandler = (result) => {
+        socketJoinNewMail(result.data.id);
 
-        dispatch(MailActions.addNewMail(data));
+        if (result.isNotAuth) {
+            localStorage.clear();
+
+            const isNotAuth = result.isNotAuth;
+            const mailId = result.data.id;
+            const token = result.token;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("mailId", mailId);
+            localStorage.setItem("isNotAuth", isNotAuth);
+            
+            const remainingMilliseconds = 24 * 60 * 60 * 1000;
+            const expiryDate = new Date(
+                new Date().getTime() + remainingMilliseconds
+            );
+            
+            localStorage.setItem("expiryDate", expiryDate.toISOString());
+
+            const argsObj = { token: token, mailId: mailId};
+
+            dispatch(fetchMailDetail(argsObj));
+        }
+
+
+        dispatch(MailActions.addNewMail(result.data));
         dispatch(UserActions.addNewMail({
-            id: data.id,
-            address: data.address
+            id: result.data.id,
+            address: result.data.address
         }));
     }
 
@@ -57,19 +82,19 @@ const HomeMailSettings = () => {
     const copyToClipBoardHandler = () => navigator.clipboard.writeText(mailDetail?.address);
 
     // CALLBACK FUNCTION - delete the current mail and leave the socket for mail 
-    const deleteMailHandler = (data) => {
-        if (data.isDeleted) {
-            socketLeaveMail(data.mailId);
-            dispatch(MailActions.deleteMail({ mailId: data.mailId }))
-            dispatch(UserActions.deleteMail({ mailId: data.mailId }))
+    const deleteMailHandler = (result) => {
+        if (result.data.isDeleted) {
+            socketLeaveMail(result.data.mailId);
+            dispatch(MailActions.deleteMail({ mailId: result.data.mailId }))
+            dispatch(UserActions.deleteMail({ mailId: result.data.mailId }))
         }
     };
 
     // CALLBACK FUNCTION - change the mail current address
-    const changeAddressHandler = (data) => {
-        if (data.isChangeAddress) {
-            dispatch(MailActions.changeMailAddress(data));
-            dispatch(UserActions.changeMailAddress(data));
+    const changeAddressHandler = (result) => {
+        if (result.data.isChangeAddress) {
+            dispatch(MailActions.changeMailAddress(result.data));
+            dispatch(UserActions.changeMailAddress(result.data));
         }
     };
 
@@ -82,7 +107,8 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: newMailHandler,
             tempMail: null,
-            callingServer: true
+            callingServer: true,
+            showAuth: true
         },
         {
             title: "Copy to Clipboard",
@@ -91,7 +117,8 @@ const HomeMailSettings = () => {
             token: null,
             callBackFunction: copyToClipBoardHandler,
             tempMail: null,
-            callingServer: false
+            callingServer: false,
+            showAuth: true
         },
         {
             title: "Delete",
@@ -100,7 +127,8 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: deleteMailHandler,
             tempMail: mailDetail?.id,
-            callingServer: true
+            callingServer: true,
+            showAuth: authCtx.isAuth
         },
         {
             title: "Change",
@@ -109,14 +137,17 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: changeAddressHandler,
             tempMail: mailDetail?.id,
-            callingServer: true
+            callingServer: true,
+            showAuth: authCtx.isAuth
         }
     ];
 
     return (
         <div className="flex gap-x-4">
             {
-                mailOptions.map(option => <DisplayMailOption {...option} />)
+                mailOptions.map(option => {
+                    return option.showAuth ? <DisplayMailOption key={uid(8)} {...option} /> : null
+                })
             }
         </div>
     );

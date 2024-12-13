@@ -21,7 +21,8 @@ import { useSelector } from "react-redux";
 import AuthContext from "../../context/authContext";
 import { useContext } from "react";
 import { fetchMailDetail } from "../../store/slice/mailSlice";
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
+
 
 
 const AllMails = () => {

@@ -56,7 +56,7 @@ const MailSlice = createSlice({
                     mail.address = action.payload.updatedMailAddress;
                 }
             })
-        }
+        }       
     },
     extraReducers: (builder) => {
         builder
@@ -73,7 +73,7 @@ const MailSlice = createSlice({
             .addCase(fetchMailDetail.rejected, (state, action) => {
                 console.log('Rejected action payload:', action);
                 console.log('Rejected action error:', action.error.message);
-            })
+            });
     },
 });
 

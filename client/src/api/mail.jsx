@@ -2,6 +2,7 @@
 
 // POST - generate a new mail for authorized user
 export const authorizedGenerateGhostMail = async (token) => {
+  console.log("Authorized genrerate mail => ", token)
   const result = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
     {

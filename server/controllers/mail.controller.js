@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
-var randomstring = require("randomstring");
+const randomstring = require("randomstring");
+const jwt = require("jsonwebtoken");
+
 
 const { Mail } = require("../services/connectDB").db;
 const { Message } = require("../services/connectDB").db;
@@ -44,7 +46,7 @@ const generateMail = async () => {
     return address;
 }
 
-const newGhostMail = async (mailAdminAddress = undefined) => {
+const newGhostMail = async (authEmail = null) => {
     let address = await generateMail();
 
     let date = new Date();
@@ -58,8 +60,8 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
         }
     }
 
-    if (mailAdminAddress) {
-        const userFound = await User.findOne({ where: { email: mailAdminAddress } });
+    if (authEmail) {
+        const userFound = await User.findOne({ where: { email: authEmail } });
 
         if (!userFound) {
             let error = new Error("Admin not found!");
@@ -92,7 +94,21 @@ const newGhostMail = async (mailAdminAddress = undefined) => {
 // Generate a new ghost mail 
 exports.generateNewGhostMail = async (req, res, next) => {
     try {
-        const result = await newGhostMail();
+        let result = await newGhostMail();
+
+        if (!req.isAuthUser) {
+            const token = jwt.sign(
+                {
+                    isAuthUser: false,
+                    tempMailId: result.data.id
+                },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: "24h" }
+            );
+
+            result.token = token;
+            result.isNotAuth = true;
+        };
 
         return res
             .status(StatusCodes.OK)
@@ -105,10 +121,10 @@ exports.generateNewGhostMail = async (req, res, next) => {
 
 
 exports.authorizedGenerateGhostMail = async (req, res, next) => {
-    const mailAdminAddress = req.email;
+    const authEmail = req.email;
 
     try {
-        const result = await newGhostMail(mailAdminAddress);
+        const result = await newGhostMail(authEmail);
 
         return res
             .status(StatusCodes.OK)
@@ -122,7 +138,11 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 
 // get mail data  
 exports.getMailData = async (req, res, next) => {
-    const mailId = req.query.mailId;
+    let mailId = req.query.mailId;
+
+    if (req.isAuthUser) {
+        mailId = req.tempMailId;
+    }
 
     try {
         const mail = await getMailFromDatabase(mailId);
@@ -173,7 +193,7 @@ exports.changeAddress = async (req, res, next) => {
 
         const data = {
             mailId: mailId,
-            updatedMailAddress : address,
+            updatedMailAddress: address,
             isChangeAddress: true
         };
 

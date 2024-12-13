@@ -90,6 +90,7 @@ exports.login = async (req, res, next) => {
         {
           email: userFound.email,
           userId: userFound.id,
+          isAuthUser: true
         },
         process.env.JWT_SECRET_KEY,
         { expiresIn: "24h" }

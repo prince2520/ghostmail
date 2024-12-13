@@ -7,14 +7,18 @@ import { useToast } from "@/hooks/use-toast";
 import { login, signup } from '../api/auth';
 import { fetchUserData } from '../api/user';
 import { UserActions } from "../store/slice/userSlice";
-import { socketJoinAllMail } from "../services/socket";
+import { socketJoinAllMail, socketJoinNewMail } from "../services/socket";
+
+import { fetchMailDetail } from "../store/slice/mailSlice";
+import store from "../store/store";
+import { resetState } from "../store/resetAction";
 
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
     signUpHandler: (userName, email, password, confirmPassword) => { },
     logoutHandler: () => { },
     token: "",
-    isAuth: false,
+    isAuth: false
 });
 
 
@@ -28,10 +32,14 @@ export const AuthContextProvider = (props) => {
     const { toast } = useToast();
 
     const logoutHandler = useCallback(() => {
+        localStorage.clear();
+
         navigate("/home");
         setToken(null);
         setIsAuth(false);
-        localStorage.clear();
+
+        store.dispatch(resetState())
+
 
         toast({
             title: "Logout",
@@ -89,9 +97,9 @@ export const AuthContextProvider = (props) => {
                         title: "Login",
                         description: result.message,
                     });
-                    console.log("login -> ", result);
                     if (result.success) {
-                        console.log('login',result.data.mails )
+                        localStorage.clear();
+                        store.dispatch(resetState())
                         socketJoinAllMail(result.data.mails);
                         saveUserDataHandler(result.data);
                         setToken(result.token);
@@ -99,7 +107,7 @@ export const AuthContextProvider = (props) => {
 
                         localStorage.setItem("token", result.token);
 
-                        const remainingMilliseconds = 5 * 60 * 60 * 1000;
+                        const remainingMilliseconds = 24 * 60 * 60 * 1000;
 
                         const expiryDate = new Date(
                             new Date().getTime() + remainingMilliseconds
@@ -142,15 +150,28 @@ export const AuthContextProvider = (props) => {
             new Date(localExpiryDate).getTime() - new Date().getTime();
 
         autoLogout(remainingMilliseconds);
-        setIsAuth(true);
-        fetchUserData(localToken).then(result => {
-            if (result.success) {
-                socketJoinAllMail(result.data.mails)
-                saveUserData(result.data);
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+
+        const isNotAuth = localStorage.getItem("isNotAuth");
+
+        if (!isNotAuth) {
+            setIsAuth(true);
+            fetchUserData(localToken).then(result => {
+                if (result.success) {
+                    socketJoinAllMail(result.data.mails)
+                    saveUserDataHandler(result.data);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        } else {
+            const mailId = localStorage.getItem("mailId");
+            const argsObj = { token: localToken, mailId };
+           
+            socketJoinNewMail(mailId);
+            dispatch(fetchMailDetail(argsObj));
+        }
+
+
 
     }, [autoLogout, logoutHandler]);
 
