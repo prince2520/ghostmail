@@ -2,7 +2,6 @@
 
 // POST - generate a new mail for authorized user
 export const authorizedGenerateGhostMail = async (token) => {
-  console.log("Authorized genrerate mail => ", token)
   const result = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
     {
@@ -19,7 +18,6 @@ export const authorizedGenerateGhostMail = async (token) => {
 
 // GET - generate a new mail for unauthorized user
 export const unauthorizedGenerateGhostMail = async () => {
-
   const result = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail`,
   );
@@ -30,8 +28,6 @@ export const unauthorizedGenerateGhostMail = async () => {
 
 // GET - MAIL DATA
 export const mailData = async (token, mailId ) => {
-  console.log("MailData -> ", token , mailId);
-
   const result = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/get-mail-data?mailId=${mailId}`,
     {
@@ -47,8 +43,6 @@ export const mailData = async (token, mailId ) => {
 
 // GET - MAIL DATA
 export const deleteMail = async (token, mailId ) => {
-  console.log("MailData -> ", token , mailId);
-
   const result = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/delete-mail`,
     {

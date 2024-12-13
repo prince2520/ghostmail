@@ -38,8 +38,7 @@ export const AuthContextProvider = (props) => {
         setToken(null);
         setIsAuth(false);
 
-        store.dispatch(resetState())
-
+        store.dispatch(resetState());
 
         toast({
             title: "Logout",

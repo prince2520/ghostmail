@@ -48,6 +48,8 @@ const HomeMailSettings = () => {
         socketJoinNewMail(result.data.id);
 
         if (result.isNotAuth) {
+            const prevMailId = localStorage.getItem("mailId");
+            socketLeaveMail(prevMailId);
             localStorage.clear();
 
             const isNotAuth = result.isNotAuth;
@@ -62,7 +64,7 @@ const HomeMailSettings = () => {
             const expiryDate = new Date(
                 new Date().getTime() + remainingMilliseconds
             );
-            
+
             localStorage.setItem("expiryDate", expiryDate.toISOString());
 
             const argsObj = { token: token, mailId: mailId};

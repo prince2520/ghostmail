@@ -7,8 +7,6 @@ import { mailData } from "../../api/mail";
 export const fetchMailDetail = createAsyncThunk(
     'mail/fetchMailDetail',
     async ({ mailId, token }, { getState, rejectWithValue }) => {
-
-
         const state = getState();
 
         const alreadyExitMail = state.mail.mails.some(m => m.id === mailId);

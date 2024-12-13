@@ -8,6 +8,42 @@ import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
 import { useContext } from "react";
 import AuthContext from "../../context/authContext.jsx";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+const Logout = () => {
+    const authCtx = useContext(AuthContext);
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger><Button>Logout</Button></AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>
+                        Logout
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Are you sure you want to log out?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => authCtx.logoutHandler()}>Logout</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
+
 const Header = () => {
     const location = useLocation();
     const authCtx = useContext(AuthContext)
@@ -22,9 +58,9 @@ const Header = () => {
             </div>
             <div className="flex gap-x-4 items-center justify-center">
                 <Moon />
-                {location.pathname === "/home" ? 
-                !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link> ) : (<Button onClick={()=>authCtx.logoutHandler()}>Logout</Button>)
-                : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
+                {location.pathname === "/home" ?
+                    !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)
+                    : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
             </div>
         </div>
     );
