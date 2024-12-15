@@ -84,7 +84,9 @@ export const AuthContextProvider = (props) => {
     );
 
     // Save user data
-    const saveUserDataHandler = (result) => dispatch(UserActions.saveUserData(result));
+    const saveUserDataHandler = (result) => dispatch(UserActions.saveUserData({
+        ...result, isNotAuth: true
+    }));
 
 
     // Login
@@ -164,8 +166,8 @@ export const AuthContextProvider = (props) => {
             });
         } else {
             const mailId = localStorage.getItem("mailId");
-            const argsObj = { token: localToken, mailId };
-           
+            const argsObj = { token: localToken, mailId, isNotAuth: isNotAuth };
+
             socketJoinNewMail(mailId);
             dispatch(fetchMailDetail(argsObj));
         }

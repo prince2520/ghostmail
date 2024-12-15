@@ -23,8 +23,6 @@ import { useContext } from "react";
 import { fetchMailDetail } from "../../store/slice/mailSlice";
 import { useDispatch } from "react-redux";
 
-
-
 const AllMails = () => {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("");
@@ -41,7 +39,7 @@ const AllMails = () => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-fit justify-between"
         >
           {value && user.mails.some((m) => m.id === value.id)
             ? user.mails.find((m) => m.id === value.id)?.address
@@ -49,7 +47,7 @@ const AllMails = () => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className=" p-0">
         <Command>
           <CommandInput placeholder="Search Temp Mail..." />
           <CommandList>
@@ -60,7 +58,7 @@ const AllMails = () => {
                   key={m.id}
                   value={m}
                   onSelect={() => {
-                    const argsObj = { token: authCtx.token, mailId: m.id };
+                    const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false};
                     dispatch(fetchMailDetail(argsObj));
                     setValue(m)
                     setOpen(false)

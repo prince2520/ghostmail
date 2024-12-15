@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { z } from "zod";
-import { Icon } from '@iconify/react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +12,7 @@ import {
     FormField,
     FormItem,
     FormMessage
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
 
 import AuthContext from "../../../context/authContext.jsx";
@@ -82,7 +81,7 @@ const AuthenticationLogin = () => {
                     </div>
                 </form>
             </Form>
-            <p className="text-xs">Don't have an account?<Link to={"/auth/signup"} className="text-blue-950 hover:text-blue-800 active:text-blue-800"> Sign Up</Link></p>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">Don't have an account?<Link to={"/auth/signup"} className="font-medium text-blue-950 hover:text-blue-800 dark:text-blue-800 dark:hover:text-blue-700"> Sign Up</Link></p>
         </div>
     );
 };

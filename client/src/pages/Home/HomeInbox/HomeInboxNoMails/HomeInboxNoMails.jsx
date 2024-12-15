@@ -9,7 +9,7 @@ const HomeInboxNoMails = () => {
                 <Lottie animationData={InboxAnimation} loop={true} />
             </div>
             <h1 className="font-semibold">Your Inbox is empty</h1>
-            <p className="text-sm">Waiting for incoming emails</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">Waiting for incoming emails</p>
         </div>
     );
 };

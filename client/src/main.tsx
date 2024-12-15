@@ -10,6 +10,7 @@ import store from "./store/store.jsx";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthContextProvider } from "./context/authContext.jsx";
 import { SocketContextProvider } from "./context/socketContext.jsx";
+import { ThemeProvider } from "@/components/ui/theme-provider.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,12 +19,14 @@ createRoot(document.getElementById('root')!).render(
         <Provider store={store}>
           <AuthContextProvider>
             <SocketContextProvider>
-              <App />
+              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <App />
+              </ThemeProvider >
             </SocketContextProvider>
             <Toaster />
           </AuthContextProvider>
         </Provider>
-      </GoogleOAuthProvider>;
+      </GoogleOAuthProvider>
     </BrowserRouter>
   </StrictMode>,
 )

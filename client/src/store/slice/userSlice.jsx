@@ -20,6 +20,9 @@ const UserSlice = createSlice({
             state.mails = action.payload.mails;
         },
         addNewMail(state, action) {
+            if(action.payload.isNotAuth)
+                state.mails.length = 0;
+            
             state.mails.push(action.payload);
         },
         deleteMail(state, action) {

@@ -107,7 +107,7 @@ const AuthenticationSignUp = () => {
                     </div>
                 </form>
             </Form>
-            <p className="text-xs">Already have an account? <Link to={"/auth/login"} className="link">Login</Link></p>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">Already have an account? <Link to={"/auth/login"} className="font-medium text-blue-950 hover:text-blue-800 dark:text-blue-800 dark:hover:text-blue-700">Login</Link></p>
         </div>
     );
 };

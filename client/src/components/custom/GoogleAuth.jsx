@@ -23,7 +23,9 @@ const GoogleAuth = ({ text }) => {
             onError={() => {
                 console.log('Login Failed');
             }}
-            size='large'
+            theme='filled_black'
+            size='medium'
+            shape='circle'
             text={text}
             useOneTap
         />

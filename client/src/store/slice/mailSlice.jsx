@@ -6,7 +6,7 @@ import { mailData } from "../../api/mail";
 // REDUX THUNK -  Fetch The mail detail 
 export const fetchMailDetail = createAsyncThunk(
     'mail/fetchMailDetail',
-    async ({ mailId, token }, { getState, rejectWithValue }) => {
+    async ({ mailId, token, isNotAuth }, { getState, rejectWithValue }) => {
         const state = getState();
 
         const alreadyExitMail = state.mail.mails.some(m => m.id === mailId);
@@ -14,13 +14,13 @@ export const fetchMailDetail = createAsyncThunk(
         try {
             let result = null;
 
-            if (!alreadyExitMail) {
+            if (!alreadyExitMail ) {
                 result = await mailData(token, mailId);
             }
 
-            return { mailId, mail: result, alreadyExitMail };
+            return { mailId, mail: result, alreadyExitMail, isNotAuth };
         } catch (error) {
-            return rejectWithValue(error.ymessage);
+            return rejectWithValue(error.message);
         }
     }
 );
@@ -43,7 +43,9 @@ const MailSlice = createSlice({
             state.mails.find(mail => mail.id === mailId)?.messages.push(action.payload);
         },
         addNewMail(state, action) {
-            state.mails.push(action.payload);
+            if(!state.mails.some(mail=>mail.id === action.payload.id)){
+                state.mails.push(action.payload);
+            }
         },
         deleteMail(state, action) {
             state.currMailId = null; 
@@ -64,10 +66,15 @@ const MailSlice = createSlice({
             })
             .addCase(fetchMailDetail.fulfilled, (state, action) => {
                 state.currMailId = action.payload.mailId;
+                
+                if(action.payload.isNotAuth){
+                    state.mails.length = 0;
+                }
 
                 if (!action.payload.alreadyExitMail) {
                     state.mails.push(action.payload.mail);
                 }
+                
             })
             .addCase(fetchMailDetail.rejected, (state, action) => {
                 console.log('Rejected action payload:', action);

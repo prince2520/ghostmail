@@ -18,7 +18,9 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+
+import ModeToggle from "./ModeToggle"
 
 const Logout = () => {
     const authCtx = useContext(AuthContext);
@@ -54,10 +56,10 @@ const Header = () => {
                 <div className="w-16">
                     <Lottie animationData={LogoAnimation} loop={true} />
                 </div>
-                <h3 className="font-extrabold text-cyan-900">GHOSTMAIL</h3>
+                <h3 className="font-extrabold text-teal-700">GHOSTMAIL</h3>
             </div>
             <div className="flex gap-x-4 items-center justify-center">
-                <Moon />
+                <ModeToggle/>
                 {location.pathname === "/home" ?
                     !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)
                     : <Link to={"/home"} className="link"><Button>Home</Button></Link>}

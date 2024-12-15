@@ -18,9 +18,9 @@ const GenerateQRCode = ({ mailAddress }) => {
     }, []);
 
     return (
-        <div className='flex flex-col justify-center items-center'>
+        <div className='flex flex-col gap-y-2 justify-center items-center'>
             <img src={imgSrc}  className=''/>
-            <p className='text-center text-xs font-bold	 flex-col'>Scan QR and Compose an Email</p>
+            <p className='text-center text-xs font-bold flex-col text-neutral-600 dark:text-neutral-400'>Scan QR and Compose an Email</p>
         </div>
     );
 };

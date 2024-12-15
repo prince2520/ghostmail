@@ -48,6 +48,11 @@ const HomeMailSettings = () => {
     const newMailHandler = (result) => {
         socketJoinNewMail(result.data.id);
 
+        let userMailData = {
+            id: result.data.id,
+            address: result.data.address,
+        };
+
         if (result.isNotAuth) {
             const prevMailId = localStorage.getItem("mailId");
             socketLeaveMail(prevMailId);
@@ -68,17 +73,13 @@ const HomeMailSettings = () => {
 
             localStorage.setItem("expiryDate", expiryDate.toISOString());
 
-            const argsObj = { token: token, mailId: mailId };
+            const argsObj = { token: token, mailId: mailId, isNotAuth: true };
 
             dispatch(fetchMailDetail(argsObj));
+            userMailData.isNotAuth  = true;
+        }else{
+            dispatch(UserActions.addNewMail(userMailData)); 
         }
-
-
-        dispatch(MailActions.addNewMail(result.data));
-        dispatch(UserActions.addNewMail({
-            id: result.data.id,
-            address: result.data.address
-        }));
     }
 
     // CALLBACK FUNCTION - clip the current mail address 
@@ -101,7 +102,6 @@ const HomeMailSettings = () => {
         }
     };
 
-    console.log("currMailId", mail.currMailId);
     // All mail options 
     const mailOptions = [
         {

@@ -22,13 +22,13 @@ const HomeMail = () => {
     const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
 
     return (
-        <div className="rounded-md px-36 py-24 flex gap-y-6 flex-col items-center justify-center border">
+        <div className="bg-stone-50 dark:bg-zinc-900 rounded-md px-36 py-24 flex gap-y-6 flex-col items-center justify-center border shadow-sm">
             <h1 className="font-bold text-2xl">Your Temporary Email Address</h1>
             <div className="flex gap-x-6 w-4/5">
-                <Input disabled type="email" defaultValue={mailDetail?.address} />
+                <Input className="border-neutral-300 dark:border-neutral-500" disabled type="email" defaultValue={mailDetail?.address} />
                 <Popover>
                     <PopoverTrigger>
-                        <span className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
+                        <span className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-full">
                             <QrCode size={18} />
                         </span>
                     </PopoverTrigger>
@@ -37,7 +37,7 @@ const HomeMail = () => {
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>
-                            <span onClick={() => navigator.clipboard.writeText(mailDetail?.address)} className="cursor-pointer px-2 py-2 flex items-center justify-center bg-stone-100 rounded-full">
+                            <span onClick={() => navigator.clipboard.writeText(mailDetail?.address)} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-full">
                                 <Copy size={18} />
                             </span>
                         </TooltipTrigger>
@@ -47,7 +47,7 @@ const HomeMail = () => {
                     </Tooltip>
                 </TooltipProvider>
             </div>
-            <p className="text-center text-xs" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
+            <p className="text-center text-xs text-neutral-600 dark:text-neutral-400" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
         </div>
     );
 };
