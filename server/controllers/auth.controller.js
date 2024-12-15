@@ -6,8 +6,6 @@ const { User } = require("../services/connectDB").db;
 const { StatusCodes } = require("http-status-codes");
 const { Mail } = require("../services/connectDB").db;
 
-
-
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
   const name = req.body.name;
@@ -21,6 +19,7 @@ exports.signup = async (req, res, next) => {
       error.statusCode = StatusCodes.BAD_REQUEST;
       throw error;
     }
+
 
     const userCount = await User.count({ where: { email: email } });
 
@@ -79,7 +78,6 @@ exports.login = async (req, res, next) => {
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
-
       let error = new Error("Password incorrect!");
       error.statusCode = StatusCodes.UNAUTHORIZED;
       throw error;
@@ -110,5 +108,31 @@ exports.login = async (req, res, next) => {
     }
   } catch (err) {
     next(err);
+  }
+};
+
+exports.handleGoogleCallback = (req, res, next) => {
+  console.log("handleGoogleCallBack -> ", req.user)
+  try {
+    const data = {
+      googleId: req.user.googleId,
+      email: req.user.email,
+      userId: req.user.id,
+      isAuthUser: true,
+      isGoogleAuth: true
+    };
+
+    console.log("Data -> ", data);
+    const token = jwt.sign(data,
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "24h" });
+
+    return res.status(StatusCodes.OK).json({
+      message: "Login successful!",
+      token,
+      user: req.user
+    });
+  } catch (error) {
+    next(error);
   }
 };

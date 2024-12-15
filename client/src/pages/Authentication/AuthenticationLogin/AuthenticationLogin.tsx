@@ -17,6 +17,7 @@ import {
 
 
 import AuthContext from "../../../context/authContext.jsx";
+import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { LoginSchema } from "../../../schema/login";
 
@@ -43,10 +44,7 @@ const AuthenticationLogin = () => {
         <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-2 ">
             <h1 className="text-2xl	font-bold"> Login your account </h1>
 
-            <Button className="w-full" variant="outline">
-                <Icon icon="flat-color-icons:google" />
-                <p>Sign in with Google</p>
-            </Button>
+            <GoogleAuth text={"signin_with"}/>
 
             <div className="w-full relative flex items-center justify-center">
                 <span className="z-10 text-xs font-semibold	">or</span>

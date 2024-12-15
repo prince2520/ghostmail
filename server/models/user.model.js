@@ -5,6 +5,10 @@ const { sequelize } = require("../services/connectDB")
 // MODEL - USER
 module.exports.User = () => {
     const User = sequelize.define("user", {
+        googleId: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
