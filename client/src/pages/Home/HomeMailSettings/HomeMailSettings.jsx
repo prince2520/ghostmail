@@ -87,10 +87,10 @@ const HomeMailSettings = () => {
 
     // CALLBACK FUNCTION - delete the current mail and leave the socket for mail 
     const deleteMailHandler = (result) => {
-        if (result.data.isDeleted) {
-            socketLeaveMail(result.data.mailId);
-            dispatch(MailActions.deleteMail({ mailId: result.data.mailId }))
-            dispatch(UserActions.deleteMail({ mailId: result.data.mailId }))
+        if (result.success) {
+            socketLeaveMail(result.mailId);
+            dispatch(MailActions.deleteMail({ mailId: result.mailId }))
+            dispatch(UserActions.deleteMail({ mailId: result.mailId }))
         }
     };
 

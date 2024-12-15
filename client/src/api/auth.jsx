@@ -1,6 +1,8 @@
+import { throwError } from "./throwError";
+
 // POST -> Sign up
 export const signup = async (name, email, password, confirmPassword) => {
-    const result = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/signup`, {
+    const response = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -12,12 +14,14 @@ export const signup = async (name, email, password, confirmPassword) => {
             confirmPassword: confirmPassword
         })
     });
-    return result.json();
+
+    const result = throwError(response);
+    return result;
 };
 
 // POST -> Login
 export const login = async (email, password) => {
-    const result = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/login`, {
+    const response = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -27,6 +31,6 @@ export const login = async (email, password) => {
             password: password
         }),
     });
-
-    return result.json();
+    const result = throwError(response);
+    return result;
 }

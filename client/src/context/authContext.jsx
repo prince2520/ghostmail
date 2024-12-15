@@ -42,7 +42,7 @@ export const AuthContextProvider = (props) => {
 
         toast({
             title: "Logout",
-            description: "Successfully Logout!",
+            description: "Successfully Logout!"
         });
 
     }, [navigate]);
@@ -63,8 +63,9 @@ export const AuthContextProvider = (props) => {
             signup(name, email, password, confirmPassword)
                 .then((result) => {
                     toast({
-                        title: "Sign Up",
+                        title: "Success",
                         description: result.message,
+                        variant: "success"
                     });
                     if (result.success) {
                         navigate("/auth/login");
@@ -72,13 +73,11 @@ export const AuthContextProvider = (props) => {
                 })
                 .catch((err) => {
                     toast({
-                        title: "Sign Up",
-                        description: err,
+                        title: "Error",
+                        description: err.message,
+                        variant: "destructive"
                     });
                 })
-                .finally(() => {
-
-                });
         },
         [navigate]
     );
@@ -94,10 +93,6 @@ export const AuthContextProvider = (props) => {
         (email, password) => {
             login(email, password)
                 .then((result) => {
-                    toast({
-                        title: "Login",
-                        description: result.message,
-                    });
                     if (result.success) {
                         localStorage.clear();
                         store.dispatch(resetState())
@@ -116,16 +111,20 @@ export const AuthContextProvider = (props) => {
                         localStorage.setItem("expiryDate", expiryDate.toISOString());
                         autoLogout(remainingMilliseconds);
                         navigate("/home");
+                        toast({
+                            title: "Success",
+                            description: result.message,
+                            variant : "success"
+                        });
                     }
                 })
                 .catch((err) => {
                     toast({
-                        title: "Login",
-                        description: err,
+                        title: "Error",
+                        description: err.message,
+                        variant: "destructive"
                     });
                 })
-                .finally(() => {
-                });
         },
         [autoLogout, navigate]
     );
@@ -170,10 +169,7 @@ export const AuthContextProvider = (props) => {
 
             socketJoinNewMail(mailId);
             dispatch(fetchMailDetail(argsObj));
-        }
-
-
-
+        };
     }, [autoLogout, logoutHandler]);
 
 

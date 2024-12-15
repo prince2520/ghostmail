@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Link } from "react-router-dom";
 
 import { z } from "zod";
-import { Icon } from '@iconify/react';
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

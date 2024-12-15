@@ -20,7 +20,6 @@ exports.signup = async (req, res, next) => {
       throw error;
     }
 
-
     const userCount = await User.count({ where: { email: email } });
 
     if (userCount > 0) {
@@ -112,7 +111,6 @@ exports.login = async (req, res, next) => {
 };
 
 exports.handleGoogleCallback = (req, res, next) => {
-  console.log("handleGoogleCallBack -> ", req.user)
   try {
     const data = {
       googleId: req.user.googleId,

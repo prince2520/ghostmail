@@ -4,9 +4,7 @@ import {jwtDecode} from "jwt-decode";
 const GoogleAuth = ({ text }) => {
     return (
         <GoogleLogin
-            onSuccess={credentialResponse => {
-                console.log('jwt-decode -> ', jwtDecode(credentialResponse.credential));
-                
+            onSuccess={credentialResponse => {                
                 fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/google/callback`, {
                     method: "POST",
                     headers: {

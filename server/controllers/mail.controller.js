@@ -21,6 +21,12 @@ const getMailFromDatabase = async (mailId) => {
         }
     });
 
+    if (!result) {
+        let error = new Error("Mail not Found!");
+        error.statusCode = StatusCodes.NOT_FOUND;
+        throw error;
+    }
+
     return result;
 }
 
@@ -43,8 +49,14 @@ const generateMail = async () => {
         }
     }
 
+    if (!address) {
+        let error = new Error("New temp mail not generated!");
+        error.statusCode = StatusCodes.NOT_IMPLEMENTED;
+        throw error;
+    }
+
     return address;
-}
+};
 
 const newGhostMail = async (authEmail = null) => {
     let address = await generateMail();
@@ -62,12 +74,6 @@ const newGhostMail = async (authEmail = null) => {
 
     if (authEmail) {
         const userFound = await User.findOne({ where: { email: authEmail } });
-
-        if (!userFound) {
-            let error = new Error("Admin not found!");
-            error.statusCode = StatusCodes.UNAUTHORIZED;
-            throw error;
-        }
 
         cond.defaults = {
             address: address,
@@ -145,7 +151,9 @@ exports.getMailData = async (req, res, next) => {
     }
 
     try {
+
         const mail = await getMailFromDatabase(mailId);
+        
         return res
             .status(StatusCodes.OK)
             .json(mail);
@@ -155,22 +163,30 @@ exports.getMailData = async (req, res, next) => {
     };
 }
 
+// DELETE -> delete the mail for auth user
 exports.deleteMail = async (req, res, next) => {
     const mailId = req.body.mailId;
 
     try {
-        await Mail.destroy({
+        const isDeletedMail =  await Mail.destroy({
             where: { id: mailId }
         });
 
+        if (!isDeletedMail) {
+            let error = new Error("Mail not deleted!");
+            error.statusCode = StatusCodes.NOT_IMPLEMENTED;
+            throw error;
+        }
+
         const data = {
+            success: true,
             mailId: mailId,
-            isDeleted: true
+            message: "Mail deleted Successfully!"
         }
 
         return res
             .status(StatusCodes.OK)
-            .json({ data });
+            .json(data);
     } catch (err) {
         next(err);
     }
