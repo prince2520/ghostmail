@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
+const { where } = require("sequelize");
 
 
 const { Mail } = require("../services/connectDB").db;
@@ -28,7 +29,7 @@ const getMailFromDatabase = async (mailId) => {
     }
 
     return result;
-}
+};
 
 const generateMail = async () => {
     let address = null;
@@ -75,12 +76,27 @@ const newGhostMail = async (authEmail = null) => {
     if (authEmail) {
         const userFound = await User.findOne({ where: { email: authEmail } });
 
+        if (!userFound) {
+            let error = new Error(`${authEmail} is not Found!`);
+            error.statusCode = StatusCodes.NOT_FOUND;
+            throw error;
+        }
+
         cond.defaults = {
             address: address,
             expires: null,
             userId: userFound.id
         }
+
+        const countMail = await Mail.count({where:{userId: userFound.id}});
+
+        if(countMail >= 10){
+            let error = new Error(`You can only generate only 10 mails!`);
+            error.statusCode = StatusCodes.NOT_FOUND;
+            throw error;
+        }
     }
+
 
     const [mail, created] = await Mail.findOrCreate(cond);
 
@@ -92,7 +108,7 @@ const newGhostMail = async (authEmail = null) => {
 
     const data = await getMailFromDatabase(mail.id);
 
-    const result = { success: true, data: data, message: "Mail Created!" };
+    const result = { success: true, data: data, message: `new ${address} mail created!` };
 
     return result;
 }
@@ -151,9 +167,7 @@ exports.getMailData = async (req, res, next) => {
     }
 
     try {
-
         const mail = await getMailFromDatabase(mailId);
-        
         return res
             .status(StatusCodes.OK)
             .json(mail);
@@ -166,6 +180,8 @@ exports.getMailData = async (req, res, next) => {
 // DELETE -> delete the mail for auth user
 exports.deleteMail = async (req, res, next) => {
     const mailId = req.body.mailId;
+    const mailAddress = req.body.mailAddress;
+
 
     try {
         const isDeletedMail =  await Mail.destroy({
@@ -181,7 +197,7 @@ exports.deleteMail = async (req, res, next) => {
         const data = {
             success: true,
             mailId: mailId,
-            message: "Mail deleted Successfully!"
+            message: `${mailAddress} is deleted successfully!`
         }
 
         return res
@@ -197,6 +213,7 @@ exports.deleteMail = async (req, res, next) => {
 exports.changeAddress = async (req, res, next) => {
     const userId = req.userId;
     const mailId = req.body.mailId;
+    const mailAddress = req.body.mailAddress;
 
     try {
 
@@ -208,14 +225,16 @@ exports.changeAddress = async (req, res, next) => {
         );
 
         const data = {
+            success: true,
             mailId: mailId,
             updatedMailAddress: address,
-            isChangeAddress: true
+            isChangeAddress: true,
+            message: `${mailAddress} changed to ${address}`
         };
 
         return res
             .status(StatusCodes.OK)
-            .json({ data });
+            .json( data );
 
     } catch (err) {
         next(err);

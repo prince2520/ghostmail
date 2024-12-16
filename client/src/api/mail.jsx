@@ -1,8 +1,10 @@
 // Method - Description
 
+import { throwError } from "./throwError";
+
 // POST - generate a new mail for authorized user
 export const authorizedGenerateGhostMail = async (token) => {
-  const result = await fetch(
+  const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
     {
       method: "GET",
@@ -13,22 +15,26 @@ export const authorizedGenerateGhostMail = async (token) => {
     }
   );
 
-  return result.json();
+  const result = throwError(response);
+
+  return result;
 };
 
 // GET - generate a new mail for unauthorized user
 export const unauthorizedGenerateGhostMail = async () => {
-  const result = await fetch(
+  const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail`,
   );
 
-  return result.json();
+  const result = throwError(response);
+
+  return result;
 };
 
 
 // GET - MAIL DATA
 export const mailData = async (token, mailId ) => {
-  const result = await fetch(
+  const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/get-mail-data?mailId=${mailId}`,
     {
       method: "GET",
@@ -38,12 +44,15 @@ export const mailData = async (token, mailId ) => {
       }
     }
   );
-  return result.json();
+
+  const result = throwError(response);
+
+  return result;
 };
 
 // GET - MAIL DATA
-export const deleteMail = async (token, mailId ) => {
-  const result = await fetch(
+export const deleteMail = async (token, mailId, mailAddress ) => {
+  const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/delete-mail`,
     {
       method: "DELETE",
@@ -52,17 +61,20 @@ export const deleteMail = async (token, mailId ) => {
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        mailId: mailId
+        mailId: mailId,
+        mailAddress: mailAddress
     }),
     }
   );
-  return result.json();
+  const result = throwError(response);
+
+  return result;
 };
 
 
 
-export const changeMailAddress = async(token, mailId) => {
-  const result = await fetch(
+export const changeMailAddress = async(token, mailId, mailAddress) => {
+  const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/change-address`,
     {
       method: "PATCH",
@@ -71,9 +83,13 @@ export const changeMailAddress = async(token, mailId) => {
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        mailId: mailId
+        mailId: mailId,
+        mailAddress: mailAddress
     }),
     }
   );
-  return result.json();
+
+  const result = throwError(response);
+
+  return result;
 }

@@ -1,10 +1,15 @@
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
+import { useToast } from "@/hooks/use-toast";
+
 
 const GoogleAuth = ({ text }) => {
+    const { toast } = useToast();
+
     return (
         <GoogleLogin
-            onSuccess={credentialResponse => {                
+            onSuccess={credentialResponse => {
                 fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/google/callback`, {
                     method: "POST",
                     headers: {
@@ -16,7 +21,11 @@ const GoogleAuth = ({ text }) => {
                     .then((data) => {
                         console.log("User data from backend:", data);
                     })
-                    .catch((err) => console.error("Authentication error:", err));
+                    .catch((err) => toast({
+                        title: "Error",
+                        description: err.message,
+                        variant: "destructive"
+                    }));
             }}
             onError={() => {
                 console.log('Login Failed');

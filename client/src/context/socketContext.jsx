@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MailActions } from "../store/slice/mailSlice";
 import { socketInitiate, socketGetSendMessage, socketDisconnect} from "../services/socket";
-
+import { useToast } from "@/hooks/use-toast";
 
 const SocketContext = React.createContext({});
 
 export const SocketContextProvider = ({ children }) => {
     const dispatch = useDispatch();
+    const {toast} = useToast();
     const userId = useSelector(state=>state.user.id);
 
     useEffect(() => {
@@ -19,6 +20,11 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(()=>{
         socketGetSendMessage((err, { data }) => {
+            toast({
+                title : "New Message", 
+                description: `${data.messageFrom.name} sended you a message!`
+            })
+
             dispatch(MailActions.saveMessage(data));
         });
     },[userId])

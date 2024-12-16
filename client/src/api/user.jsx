@@ -1,6 +1,8 @@
+import { throwError } from "./throwError";
+
 // POST - generate a new mail for authorized user
 export const fetchUserData = async (token) => {
-    const result = await fetch(
+    const response = await fetch(
         `${import.meta.env.VITE_API_SERVER_URL}/user/user-data`,
         {
             method: "GET",
@@ -11,5 +13,7 @@ export const fetchUserData = async (token) => {
         }
     );
 
-    return result.json();
+    const result = throwError(response)
+
+    return result;
 };

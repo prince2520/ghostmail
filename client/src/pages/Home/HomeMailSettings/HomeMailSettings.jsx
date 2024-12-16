@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { uid } from 'uid';
 import { Button } from "@/components/ui/button";
 import { Mails, Files, SquarePen, Trash } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 import AuthContext from '../../../context/authContext';
 
@@ -16,16 +17,32 @@ import { deleteMail, changeMailAddress } from '../../../api/mail';
 import { fetchMailDetail } from '../../../store/slice/mailSlice';
 
 
+
 // COMPONENT FOR DISPLAYING MAIL OPTION 
-const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false, disabled }) => {
+const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false, disabled, tempMailAddress }) => {
+    const { toast } = useToast();
+
     return (
         <Button
             key={uid(8)}
             onClick={async () => {
                 if (callingServer) {
-                    apiFunction(token, tempMail).then(result => {
+                    apiFunction(token, tempMail, tempMailAddress).then(result => {
+                        if(result.success){
+                            toast({
+                                title: "Success",
+                                description : result.message,
+                                variant : 'success'
+                            })
+                        }
                         callBackFunction(result);
-                    }).catch(err => console.log(err));
+                    }).catch(err => {
+                        toast({
+                            title: "Error",
+                            description: err.message,
+                            variant: "destructive"
+                        });
+                    });
                 } else {
                     callBackFunction();
                 }
@@ -42,6 +59,8 @@ const HomeMailSettings = () => {
     const authCtx = useContext(AuthContext);
     const mail = useSelector(state => state.mail);
     const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
+
+    const { toast } = useToast();
 
 
     // CALLBACK FUNCTION - join to a room using socket and dispatch new mail to user and mail 
@@ -76,14 +95,20 @@ const HomeMailSettings = () => {
             const argsObj = { token: token, mailId: mailId, isNotAuth: true };
 
             dispatch(fetchMailDetail(argsObj));
-            userMailData.isNotAuth  = true;
-        }else{
-            dispatch(UserActions.addNewMail(userMailData)); 
+            userMailData.isNotAuth = true;
+        } else {
+            dispatch(UserActions.addNewMail(userMailData));
         }
     }
 
     // CALLBACK FUNCTION - clip the current mail address 
-    const copyToClipBoardHandler = () => navigator.clipboard.writeText(mailDetail?.address);
+    const copyToClipBoardHandler = () => {
+        toast({
+            description: `${mailDetail?.address} copied to clipboard!`
+        })
+
+        navigator.clipboard.writeText(mailDetail?.address)
+    };
 
     // CALLBACK FUNCTION - delete the current mail and leave the socket for mail 
     const deleteMailHandler = (result) => {
@@ -96,9 +121,9 @@ const HomeMailSettings = () => {
 
     // CALLBACK FUNCTION - change the mail current address
     const changeAddressHandler = (result) => {
-        if (result.data.isChangeAddress) {
-            dispatch(MailActions.changeMailAddress(result.data));
-            dispatch(UserActions.changeMailAddress(result.data));
+        if (result.isChangeAddress) {
+            dispatch(MailActions.changeMailAddress(result));
+            dispatch(UserActions.changeMailAddress(result));
         }
     };
 
@@ -111,6 +136,7 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: newMailHandler,
             tempMail: null,
+            tempMailAddress : null,
             callingServer: true,
             showAuth: true,
             disabled: false
@@ -122,6 +148,7 @@ const HomeMailSettings = () => {
             token: null,
             callBackFunction: copyToClipBoardHandler,
             tempMail: null,
+            tempMailAddress : null,
             callingServer: false,
             showAuth: true,
             disabled: !mail.currMailId
@@ -133,6 +160,7 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: deleteMailHandler,
             tempMail: mailDetail?.id,
+            tempMailAddress : mailDetail?.address,
             callingServer: true,
             showAuth: authCtx.isAuth,
             disabled: !mail.currMailId
@@ -144,6 +172,7 @@ const HomeMailSettings = () => {
             token: authCtx.token,
             callBackFunction: changeAddressHandler,
             tempMail: mailDetail?.id,
+            tempMailAddress : mailDetail?.address,
             callingServer: true,
             showAuth: authCtx.isAuth,
             disabled: !mail.currMailId

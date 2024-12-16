@@ -10,8 +10,9 @@ import { UserActions } from "../store/slice/userSlice";
 import { socketJoinAllMail, socketJoinNewMail } from "../services/socket";
 
 import { fetchMailDetail } from "../store/slice/mailSlice";
-import store from "../store/store";
 import { resetState } from "../store/resetAction";
+
+import store from "../store/store";
 
 const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
@@ -41,7 +42,6 @@ export const AuthContextProvider = (props) => {
         store.dispatch(resetState());
 
         toast({
-            title: "Logout",
             description: "Successfully Logout!"
         });
 
@@ -161,7 +161,11 @@ export const AuthContextProvider = (props) => {
                     saveUserDataHandler(result.data);
                 }
             }).catch(err => {
-                console.log(err);
+                toast({
+                    title: "Error",
+                    description: err.message,
+                    variant: "destructive"
+                });
             });
         } else {
             const mailId = localStorage.getItem("mailId");
