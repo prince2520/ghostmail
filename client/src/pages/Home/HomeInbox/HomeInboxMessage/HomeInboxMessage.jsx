@@ -18,7 +18,7 @@ const HomeInboxMessages = ({ messages }) => {
         <>
             <ScrollArea className="max-h-[30rem] h-fit w-full">
                 {messages.map(msg =>
-                    <div className="hover:bg-stone-50 dark:hover:bg-zinc-900 rounded-md flex flex-row gap-x-4 items-center border-b py-2 px-4 last:border-0" key={msg.id}>
+                    <div className="cursor-pointer hover:bg-stone-50 dark:hover:bg-zinc-900 rounded-md flex flex-row gap-x-4 items-center border-b py-2 px-4 last:border-0" key={msg.id}>
                         <span className="flex text-white justify-center items-center w-12 h-12 rounded-full" style={{ backgroundColor: generateRandomColorHandler() }}>
                             <h1 className='text-xl font-bold'>{msg.messageFrom?.name.charAt(0)}</h1>
                         </span>

@@ -40,7 +40,7 @@ const AuthenticationLogin = () => {
     };
 
     return (
-        <div className="basis-1/2 max-w-5xl flex justify-center items-center flex-col gap-y-2 ">
+        <div className="w-full sm:w-[90%] md:basis-1/2  max-w-5xl  flex justify-center items-center flex-col gap-y-2 ">
             <h1 className="text-2xl	font-bold"> Login your account </h1>
 
             <GoogleAuth text={"signin_with"}/>

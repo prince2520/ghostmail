@@ -56,7 +56,7 @@ const Header = () => {
                 <div className="w-16">
                     <Lottie animationData={LogoAnimation} loop={true} />
                 </div>
-                <h3 className="font-extrabold text-teal-700">GHOSTMAIL</h3>
+                <h3 className="hidden md:block font-extrabold text-teal-700">GHOSTMAIL</h3>
             </div>
             <div className="flex gap-x-4 items-center justify-center">
                 <ModeToggle/>

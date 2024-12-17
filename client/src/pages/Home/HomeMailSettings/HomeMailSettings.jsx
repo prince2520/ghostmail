@@ -180,7 +180,7 @@ const HomeMailSettings = () => {
     ];
 
     return (
-        <div className="flex gap-x-4">
+        <div className="flex gap-x-4 gap-y-4 flex-wrap">
             {
                 mailOptions.map(option => {
                     return option.showAuth ? <DisplayMailOption key={uid(8)} {...option} /> : null
