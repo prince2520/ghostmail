@@ -55,3 +55,37 @@ exports.saveMessage = async (req, res, next) => {
         next(err);
     }
 }
+
+
+// Delete Message 
+exports.deleteMessage = async (req, res, next) => {
+    let mailId = req.body.mailId;
+    const messageId = req.body.messageId;
+
+    if (req.isAuthUser) {
+        mailId = req.tempMailId;
+    } 
+
+    try {
+        const isDeletedMsgSuccess = await Message.destroy({where: { id : messageId, mailId : mailId}});
+
+        if(!isDeletedMsgSuccess){
+            let error = new Error("Message not deleted, Something goes wrong. Please try again!")
+            error.statusCode = StatusCodes.NOT_IMPLEMENTED;
+            throw Error;
+        }
+
+        const data = {
+            success : true, 
+            mailId : mailId,
+            messageId : messageId,
+            message : `Message deleted successfully!`
+        }
+
+        return res.status(StatusCodes.OK).json(data);
+
+    }catch(err){
+        next(err);
+    }
+
+}

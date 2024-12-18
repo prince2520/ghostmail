@@ -25,8 +25,6 @@ export const fetchMailDetail = createAsyncThunk(
     }
 );
 
-
-
 // INITIAL STATE
 const initialMailState = {
     currMailId: null,
@@ -57,7 +55,15 @@ const MailSlice = createSlice({
                     mail.address = action.payload.updatedMailAddress;
                 }
             })
-        }       
+        },
+        deleteMessageFromMail(state, action){
+            state.mails.map(mail => {
+                if(mail.id == action.payload.mailId){
+                    console.log("Delete from state ", action.payload)
+                    mail.messages = mail.messages.filter(message => message.id !== action.payload.messageId);
+                }
+            })
+        }
     },
     extraReducers: (builder) => {
         builder

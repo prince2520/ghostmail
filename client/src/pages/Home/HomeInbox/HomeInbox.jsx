@@ -9,7 +9,7 @@ const HomeInbox = () => {
 
     return (
         <div className="flex flex-col gap-y-4 px-4 py-6 w-full rounded-md border">
-            {currMailDetail?.messages.length > 0 ? <HomeInboxMessages messages={currMailDetail?.messages}/> : <HomeInboxNoMails/>}
+            {currMailDetail?.messages.length > 0 ? <HomeInboxMessages messages={currMailDetail?.messages} mailId={currMailDetail.id}/> : <HomeInboxNoMails/>}
         </div>
     );
 };
