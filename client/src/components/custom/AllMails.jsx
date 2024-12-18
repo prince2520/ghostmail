@@ -22,6 +22,8 @@ import AuthContext from "../../context/authContext";
 import { useContext } from "react";
 import { fetchMailDetail } from "../../store/slice/mailSlice";
 import { useDispatch } from "react-redux";
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 
 const AllMails = () => {
   const [open, setOpen] = React.useState(false)
@@ -52,28 +54,24 @@ const AllMails = () => {
           <CommandInput placeholder="Search Temp Mail..." />
           <CommandList>
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
-            <CommandGroup>
-              {user.mails.map((m) => (
-                <CommandItem
-                  key={m.id}
-                  value={m}
-                  onSelect={() => {
-                    const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false};
-                    dispatch(fetchMailDetail(argsObj));
-                    setValue(m)
-                    setOpen(false)
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value.id === m.id ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {m.address}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <ScrollArea className="h-[200px] rounded-md px-4 py">
+              <CommandGroup>
+                {user.mails.map((m) => (
+                  <CommandItem
+                    key={m.id}
+                    value={m}
+                    onSelect={() => {
+                      const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false };
+                      dispatch(fetchMailDetail(argsObj));
+                      setValue(m)
+                      setOpen(false)
+                    }}
+                  >
+                    {m.address}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
           </CommandList>
         </Command>
       </PopoverContent>
