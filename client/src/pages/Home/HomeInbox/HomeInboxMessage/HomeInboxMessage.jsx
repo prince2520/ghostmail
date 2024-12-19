@@ -73,10 +73,10 @@ const HomeInboxMessages = ({ messages, mailId }) => {
             <ScrollArea className="max-h-[30rem] h-fit w-full">
                 {messages.map((msg, idx) =>
                     <>
-                        {checkShowDateCondition(msg.createdAt, idx) && <div className="w-full flex items-center justify-center"><span className="px-2 rounded-sm mb-2 font-medium text-xs bg-stone-50 dark:bg-zinc-900">{dateFormat(msg.createdAt, "ddd, dd mmm yyyy")}</span></div>}
+                        {checkShowDateCondition(msg.createdAt, idx) && <div className="w-full flex items-center justify-center"><span className="px md:px-2 rounded-sm mb-2 font-medium text-xs bg-stone-50 dark:bg-zinc-900">{dateFormat(msg.createdAt, "ddd, dd mmm yyyy")}</span></div>}
                         <Dialog key={msg.id}>
                             <DialogTrigger className="w-full cursor-pointer hover:bg-stone-50 dark:hover:bg-zinc-900 border-b last:border-0 mb-2">
-                                <div className="flex flex-row gap-x-4 items-center py-2 px-4" key={msg.id}>
+                                <div className="flex flex-row gap-x-4 items-center py px-2 md:py-2 md:px-4" key={msg.id}>
                                     <span className="flex text-white justify-center items-center w-12 h-12 rounded-full" style={{ backgroundColor: generateRandomColorHandler() }}>
                                         <h1 className='text-xl font-bold'>{msg.messageFrom?.name.charAt(0)}</h1>
                                     </span>
@@ -85,8 +85,8 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                             <p className="text-xs font-semibold  text-neutral-900 dark:text-neutral-300">{msg?.messageFrom?.name}</p>
                                             <p className="text-xs font-semibold  text-neutral-900 dark:text-neutral-300">{dateFormat(msg.createdAt, "hh:MMtt")} </p>
                                         </div>
-                                        <h1 className="font-medium">{msg.subject.length > 30 ? msg.subject.slice(0, 50) + '...' : msg.subject}</h1>
-                                        <p className="text-sm font-normal  text-neutral-600 dark:text-neutral-400">{msg.text.length > 30 ? msg.text.slice(0, 50) + '...' : msg.text}</p>
+                                        <h1 className="text-sm md:text-md">{msg.subject.length > 30 ? msg.subject.slice(0, 50) + '...' : msg.subject}</h1>
+                                        <p className="text-xs md:text-sm font-normal text-neutral-600 dark:text-neutral-400">{msg.text.length > 30 ? msg.text.slice(0, 50) + '...' : msg.text}</p>
                                     </div>
                                 </div>
                             </DialogTrigger>
@@ -121,7 +121,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                     </div>
 
                                 </div>
-                                <DialogFooter className="sm:justify-end">
+                                <DialogFooter className="gap-y-2 sm:justify-end">
                                     <DialogClose asChild>
                                         <Button type="submit" variant="secondary">
                                             Close

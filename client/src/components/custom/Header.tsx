@@ -51,9 +51,9 @@ const Header = () => {
     const authCtx = useContext(AuthContext)
 
     return (
-        <div className="flex justify-between w-full">
+        <header className="flex justify-between w-full">
             <div className="flex items-center">
-                <div className="w-16">
+                <div className="w-14 md:w-16">
                     <Lottie animationData={LogoAnimation} loop={true} />
                 </div>
                 <h3 className="hidden md:block font-extrabold text-teal-700">GHOSTMAIL</h3>
@@ -64,7 +64,7 @@ const Header = () => {
                     !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)
                     : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
             </div>
-        </div>
+        </header>
     );
 };
 

@@ -28,9 +28,9 @@ const HomeMail = () => {
     return (
         <div className="bg-stone-50 flex items-center justify-center dark:bg-zinc-900 rounded-md w-full py-14 md:py-24  border shadow-sm">
             <div className="w-[95%] flex gap-y-6 flex-col items-center justify-center">
-                <h1 className="font-bold text-2xl text-center">Your Temporary Email Address</h1>
+                <h1 className="font-bold text-xl md:text-2xl text-center">Your Temporary Email Address</h1>
                 <div className="flex gap-x-6 gap-y-4 w-4/5 flex-col md:flex-row">
-                    <Input className="border-neutral-300 dark:border-neutral-500" disabled type="email" defaultValue={mailDetail?.address} />
+                    <Input className="text-sm md:text-md border-neutral-300 dark:border-neutral-500" disabled type="email" defaultValue={mailDetail?.address} />
                     <div className="flex flex-row gap-x-4 justify-center items-center">
                         <Popover>
                             <PopoverTrigger>
@@ -64,7 +64,7 @@ const HomeMail = () => {
 
                 </div>
 
-                <p className="text-center text-xs text-neutral-600 dark:text-neutral-400" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
+                <p className="text-center text-[0.65rem] md:text-xs text-neutral-600 dark:text-neutral-400" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
 
             </div>
 

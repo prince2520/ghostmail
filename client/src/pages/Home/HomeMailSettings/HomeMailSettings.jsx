@@ -25,6 +25,7 @@ const DisplayMailOption = ({ title, icon, apiFunction, token, callBackFunction, 
     return (
         <Button
             key={uid(8)}
+            className='text-xs md:text-sm'
             onClick={async () => {
                 if (callingServer) {
                     apiFunction(token, tempMail, tempMailAddress).then(result => {
