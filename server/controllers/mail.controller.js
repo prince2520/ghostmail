@@ -1,8 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
-const { where } = require("sequelize");
-
 
 const { Mail } = require("../services/connectDB").db;
 const { Message } = require("../services/connectDB").db;
@@ -162,10 +160,12 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 exports.getMailData = async (req, res, next) => {
     let mailId = req.query.mailId;
 
-    if (req.isAuthUser) {
+    if (!
+        req.isAuthUser) {
         mailId = req.tempMailId;
     }
 
+    console.log('mailId', mailId);
     try {
         const mail = await getMailFromDatabase(mailId);
         return res

@@ -1,25 +1,28 @@
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
-
 import { useToast } from "@/hooks/use-toast";
+import { useContext } from 'react';
+import AuthContext from '../../context/authContext';
 
 
 const GoogleAuth = ({ text }) => {
     const { toast } = useToast();
+    const authCtx = useContext(AuthContext);
 
     return (
         <GoogleLogin
             onSuccess={credentialResponse => {
-                fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/google/callback`, {
+                console.log("credential Response => ", credentialResponse);
+                fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/google-auth`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ token: credentialResponse }),
+                    body: JSON.stringify(credentialResponse),
                 })
                     .then((res) => res.json())
-                    .then((data) => {
-                        console.log("User data from backend:", data);
+                    .then((result) => {
+                        console.log("Google data from backend:", result);
+                        authCtx.saveloginDataHandler(result);
                     })
                     .catch((err) => toast({
                         title: "Error",

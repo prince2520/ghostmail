@@ -15,8 +15,7 @@ function App() {
 
   const location = useLocation();
   
-  console.log("Location -> ", location)
-  
+  console.log('google client id ', import.meta.env.VITE_API_GOOGLE_CLIENT_ID);
 
   return (
     <div className='flex  gap-y-4 flex-col my-4 md:my-6 w-full mx-2	md:mx-6 max-w-5xl'>

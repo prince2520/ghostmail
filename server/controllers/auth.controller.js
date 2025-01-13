@@ -6,6 +6,9 @@ const { User } = require("../services/connectDB").db;
 const { StatusCodes } = require("http-status-codes");
 const { Mail } = require("../services/connectDB").db;
 
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client();
+
 // POST -> Sign Up
 exports.signup = async (req, res, next) => {
   const name = req.body.name;
@@ -51,13 +54,32 @@ exports.signup = async (req, res, next) => {
   }
 };
 
+const generateToken = ({
+  email,
+  userId,
+  isAuthUser
+}) => {
+
+  return jwt.sign(
+    {
+      email,
+      userId,
+      isAuthUser
+    },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "24h" }
+  );
+}
+
 // POST - Login
 exports.login = async (req, res, next) => {
+  console.log("Req.user", req.user);
 
   const email = req.body.email;
   const password = req.body.password;
 
   try {
+
     const userFound = await User.findOne({
       where: { email: email },
       include:
@@ -66,7 +88,6 @@ exports.login = async (req, res, next) => {
         required: false
       }
     });
-
 
     if (!userFound) {
       let error = new Error("User not found!");
@@ -82,16 +103,11 @@ exports.login = async (req, res, next) => {
       throw error;
 
     } else {
-
-      const token = jwt.sign(
-        {
-          email: userFound.email,
-          userId: userFound.id,
-          isAuthUser: true
-        },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: "24h" }
-      );
+      const token = generateToken({
+        email: userFound.email,
+        userId: userFound.id,
+        isAuthUser: true
+      });
 
       return res.status(StatusCodes.OK).json({
         success: true,
@@ -110,25 +126,57 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.handleGoogleCallback = (req, res, next) => {
+exports.googleAuthentication = async (req, res, next) => {
+  const googleToken = {
+    idToken: req.body.credential,
+    audience: req.body.clientId,
+  };
+
+  console.log(" Google authentication ");
+
   try {
-    const data = {
-      googleId: req.user.googleId,
-      email: req.user.email,
-      userId: req.user.id,
-      isAuthUser: true,
-      isGoogleAuth: true
+
+    const ticket = await client.verifyIdToken(googleToken);
+
+    const payload = ticket.getPayload();
+
+    const { given_name, email } = payload;
+
+    let userFound = await User.findOne({
+      where: { email: email, isGoogleAuth: true },
+      include:
+      {
+        model: Mail,
+        required: false
+      }
+    });
+
+    if (!userFound) {
+      userFound = await User.create({
+        name: given_name,
+        email: email,
+        isGoogleAuth: true
+      });
     };
 
-    console.log("Data -> ", data);
-    const token = jwt.sign(data,
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: "24h" });
+    const token = generateToken({
+      email: userFound.email,
+      userId: userFound.id,
+      isAuthUser: true
+    });
+
 
     return res.status(StatusCodes.OK).json({
-      message: "Login successful!",
-      token,
-      user: req.user
+      user: req.user,
+      success: true,
+      token: token,
+      message: "Google authentication successfully!",
+      data: {
+        id: userFound.id,
+        name: userFound.name,
+        email: userFound.email,
+        mails: userFound.mails
+      }
     });
   } catch (error) {
     next(error);

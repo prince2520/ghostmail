@@ -16,7 +16,7 @@ router.get('/generate-new-mail', generateNewGhostMail);
 
 router.get('/auth-generate-new-mail', isAuth, authorizedGenerateGhostMail);
 
-router.get('/get-mail-data', getMailData);
+router.get('/get-mail-data', isAuth, getMailData);
 
 router.delete('/delete-mail', isAuth, deleteMail);
 

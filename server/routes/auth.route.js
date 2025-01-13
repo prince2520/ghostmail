@@ -3,21 +3,13 @@ const express = require("express");
 const {
     signup,
     login,
-    handleGoogleCallback
+    googleAuthentication
 } = require("../controllers/auth.controller");
-const passport = require("passport");
 
 const router = express.Router();
 
 router.post('/signup', signup);
 router.post('/login', login);
-
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-
-router.get(
-    "/google/callback",
-    passport.authenticate("google"),
-    handleGoogleCallback
-);
+router.post("/google-auth", googleAuthentication);
 
 module.exports = router;

@@ -37,7 +37,6 @@ module.exports.connectDB = (server) => {
   sequelize.authenticate().then(async () => {
     console.log('Connection has been established successfully.');
 
-
     //await sequelize.sync({force : true});
     await sequelize.sync();
 

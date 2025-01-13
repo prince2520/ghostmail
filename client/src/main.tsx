@@ -15,6 +15,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider.tsx";
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+    {console.log("google client id ", import.meta.env.VITE_API_GOOGLE_CLIENT_ID )}
       <GoogleOAuthProvider clientId={import.meta.env.VITE_API_GOOGLE_CLIENT_ID}>
         <Provider store={store}>
           <AuthContextProvider>

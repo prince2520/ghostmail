@@ -18,6 +18,7 @@ const AuthContext = React.createContext({
     loginHandler: (email, password) => { },
     signUpHandler: (userName, email, password, confirmPassword) => { },
     logoutHandler: () => { },
+    saveloginDataHandler: ()=> {},
     token: "",
     isAuth: false
 });
@@ -87,36 +88,39 @@ export const AuthContextProvider = (props) => {
         ...result, isNotAuth: true
     }));
 
+    const saveloginDataHandler = (result) => {
+        if (result.success) {
+            localStorage.clear();
+            store.dispatch(resetState())
+            socketJoinAllMail(result.data.mails);
+            saveUserDataHandler(result.data);
+            setToken(result.token);
+            setIsAuth(true);
+
+            localStorage.setItem("token", result.token);
+
+            const remainingMilliseconds = 24 * 60 * 60 * 1000;
+
+            const expiryDate = new Date(
+                new Date().getTime() + remainingMilliseconds
+            );
+            localStorage.setItem("expiryDate", expiryDate.toISOString());
+            autoLogout(remainingMilliseconds);
+            navigate("/home");
+            toast({
+                title: "Success",
+                description: result.message,
+                variant: "success"
+            });
+        }
+    };
 
     // Login
     const loginHandler = useCallback(
         (email, password) => {
             login(email, password)
                 .then((result) => {
-                    if (result.success) {
-                        localStorage.clear();
-                        store.dispatch(resetState())
-                        socketJoinAllMail(result.data.mails);
-                        saveUserDataHandler(result.data);
-                        setToken(result.token);
-                        setIsAuth(true);
-
-                        localStorage.setItem("token", result.token);
-
-                        const remainingMilliseconds = 24 * 60 * 60 * 1000;
-
-                        const expiryDate = new Date(
-                            new Date().getTime() + remainingMilliseconds
-                        );
-                        localStorage.setItem("expiryDate", expiryDate.toISOString());
-                        autoLogout(remainingMilliseconds);
-                        navigate("/home");
-                        toast({
-                            title: "Success",
-                            description: result.message,
-                            variant : "success"
-                        });
-                    }
+                    saveloginDataHandler(result);
                 })
                 .catch((err) => {
                     toast({
@@ -183,6 +187,7 @@ export const AuthContextProvider = (props) => {
                 loginHandler: loginHandler,
                 signUpHandler: signUpHandler,
                 logoutHandler: logoutHandler,
+                saveloginDataHandler: saveloginDataHandler,
                 token: token,
                 isAuth: isAuth
             }}
