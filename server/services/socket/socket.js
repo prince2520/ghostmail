@@ -15,6 +15,7 @@ module.exports = () => {
 
         // MAIL - join all mails 
         socket.on(SOCKET_EVENT.JOIN_ALL_MAIL, ({mails}) => {
+            console.error("mails ", mails)
             for(let mail of mails){
                 socket.join(mail.id);
             }    

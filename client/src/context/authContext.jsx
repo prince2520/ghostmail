@@ -89,10 +89,11 @@ export const AuthContextProvider = (props) => {
     }));
 
     const saveloginDataHandler = (result) => {
+        console.log("result -> ", result);
         if (result.success) {
             localStorage.clear();
             store.dispatch(resetState())
-            socketJoinAllMail(result.data.mails);
+            // /socketJoinAllMail(result.data.mails);
             saveUserDataHandler(result.data);
             setToken(result.token);
             setIsAuth(true);

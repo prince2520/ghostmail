@@ -11,7 +11,6 @@ const GoogleAuth = ({ text }) => {
     return (
         <GoogleLogin
             onSuccess={credentialResponse => {
-                console.log("credential Response => ", credentialResponse);
                 fetch(`${import.meta.env.VITE_API_SERVER_URL}/auth/google-auth`, {
                     method: "POST",
                     headers: {
@@ -21,7 +20,7 @@ const GoogleAuth = ({ text }) => {
                 })
                     .then((res) => res.json())
                     .then((result) => {
-                        console.log("Google data from backend:", result);
+                         console.log("Result ", result);
                         authCtx.saveloginDataHandler(result);
                     })
                     .catch((err) => toast({

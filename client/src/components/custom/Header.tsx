@@ -1,12 +1,12 @@
 import Lottie from "lottie-react";
 
-import { Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from 'react-router-dom';
 
 import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
 import { useContext } from "react";
 import AuthContext from "../../context/authContext.jsx";
+import Profile from "../custom/Profile";
 
 import {
     AlertDialog,
@@ -59,6 +59,7 @@ const Header = () => {
                 <h3 className="hidden md:block font-extrabold text-teal-700">GHOSTMAIL</h3>
             </div>
             <div className="flex gap-x-4 items-center justify-center">
+                {authCtx.isAuth && <Profile/>}
                 <ModeToggle/>
                 {location.pathname === "/home" ?
                     !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)

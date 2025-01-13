@@ -73,8 +73,6 @@ const generateToken = ({
 
 // POST - Login
 exports.login = async (req, res, next) => {
-  console.log("Req.user", req.user);
-
   const email = req.body.email;
   const password = req.body.password;
 
@@ -95,9 +93,16 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
+    if (userFound.isGoogleAuth) {
+      let error = new Error("Authenticate with google with this email!");
+      error.statusCode = StatusCodes.NOT_FOUND;
+      throw error;
+    }
+
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
+
       let error = new Error("Password incorrect!");
       error.statusCode = StatusCodes.UNAUTHORIZED;
       throw error;
@@ -132,15 +137,14 @@ exports.googleAuthentication = async (req, res, next) => {
     audience: req.body.clientId,
   };
 
-  console.log(" Google authentication ");
-
   try {
 
     const ticket = await client.verifyIdToken(googleToken);
 
     const payload = ticket.getPayload();
 
-    const { given_name, email } = payload;
+    const { name, email } = payload;
+    console.log('payload ', payload);
 
     let userFound = await User.findOne({
       where: { email: email, isGoogleAuth: true },
@@ -153,7 +157,7 @@ exports.googleAuthentication = async (req, res, next) => {
 
     if (!userFound) {
       userFound = await User.create({
-        name: given_name,
+        name: name,
         email: email,
         isGoogleAuth: true
       });
@@ -167,17 +171,17 @@ exports.googleAuthentication = async (req, res, next) => {
 
 
     return res.status(StatusCodes.OK).json({
-      user: req.user,
       success: true,
       token: token,
-      message: "Google authentication successfully!",
+      message: "Login Successfull!",
       data: {
         id: userFound.id,
         name: userFound.name,
         email: userFound.email,
-        mails: userFound.mails
+        mails: userFound.mails || []
       }
     });
+
   } catch (error) {
     next(error);
   }

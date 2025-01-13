@@ -54,9 +54,9 @@ const AllMails = () => {
           <CommandInput placeholder="Search Temp Mail..." />
           <CommandList>
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
-            <ScrollArea className="h-[200px] rounded-md px-4 py">
+            <ScrollArea className="h-[180px] rounded-md px-4 py">
               <CommandGroup>
-                {user.mails.map((m) => (
+                {user?.mails.map((m) => (
                   <CommandItem
                     key={m.id}
                     value={m}

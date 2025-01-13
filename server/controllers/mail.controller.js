@@ -106,7 +106,7 @@ const newGhostMail = async (authEmail = null) => {
 
     const data = await getMailFromDatabase(mail.id);
 
-    const result = { success: true, data: data, message: `new ${address} mail created!` };
+    const result = { success: true, data: data, message: `${address} mail created!` };
 
     return result;
 }
