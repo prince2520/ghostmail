@@ -12,8 +12,10 @@ const io = require("../services/socket/socketIO").getIO();
 // Save incoming message 
 exports.saveMessage = async (req, res, next) => {    
     try {
+        console.log("message -> ", req.body)
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
+        console.log("to -> ", req.body.to);
 
         const mailFound = await Mail.findOne({ where: { address: to.address } });
 
@@ -34,7 +36,7 @@ exports.saveMessage = async (req, res, next) => {
         const data = {
             mailId: mailFound.id,
             subject: req.body.subject,
-            text: req.body.text,
+            text: req.body.textAsHtml,
             createdAt: new Date(req.body.date),
             messageFromId: messageFromFound.id
         };

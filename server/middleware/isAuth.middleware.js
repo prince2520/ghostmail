@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { StatusCodes } = require("http-status-codes");
 
 module.exports = (req, res, next) => {
-
     const authHeader = req.get('Authorization');
 
     if (!authHeader) {
@@ -21,15 +20,11 @@ module.exports = (req, res, next) => {
         throw err;
     }
 
-    console.log("Decoded token -> ", decodedToken);
-
-
     if (!decodedToken) {
         const error = new Error('Not authenticated.');
         error.statusCode = StatusCodes.UNAUTHORIZED;
         throw error;
     }
-
 
     if (decodedToken.isAuthUser) {
         req.userId = decodedToken.userId;
@@ -39,8 +34,5 @@ module.exports = (req, res, next) => {
     }
 
     req.isAuthUser = decodedToken.isAuthUser;
-
-
-    console.log("isAuth middleware", req.email, req.userId);
     next();
 }

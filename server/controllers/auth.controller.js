@@ -1,15 +1,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { User } = require("../services/connectDB").db;
-
 const { StatusCodes } = require("http-status-codes");
-const { Mail } = require("../services/connectDB").db;
-
 const { OAuth2Client } = require('google-auth-library');
+
+const { Mail, User } = require("../services/connectDB").db;
+
 const client = new OAuth2Client();
 
-// POST -> Sign Up
+
+/*
+  Method - POST 
+ 
+  This is function help user to signup and store data in database  
+*/
 exports.signup = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
@@ -31,6 +35,7 @@ exports.signup = async (req, res, next) => {
       throw error;
     }
 
+    // create an encrypted password from input password
     const hashedPw = await bcrypt.hash(password, 12);
 
     if (!hashedPw) {
@@ -54,6 +59,8 @@ exports.signup = async (req, res, next) => {
   }
 };
 
+
+// Generate token which valid for a period of time
 const generateToken = ({
   email,
   userId,
@@ -71,13 +78,17 @@ const generateToken = ({
   );
 }
 
-// POST - Login
+/*
+  Method - POST 
+ 
+  This is function is verify the email and password of user, and give a verified token and user data as response 
+*/
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
   try {
-
+   
     const userFound = await User.findOne({
       where: { email: email },
       include:
@@ -99,15 +110,15 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
+    // compare the input and encrypted password of user 
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
-
       let error = new Error("Password incorrect!");
       error.statusCode = StatusCodes.UNAUTHORIZED;
       throw error;
-
     } else {
+      
       const token = generateToken({
         email: userFound.email,
         userId: userFound.id,
@@ -131,6 +142,12 @@ exports.login = async (req, res, next) => {
   }
 };
 
+
+/*
+  Method - POST 
+ 
+  This is function handle google authentication login user if not user found then create user and generate verified token 
+*/
 exports.googleAuthentication = async (req, res, next) => {
   const googleToken = {
     idToken: req.body.credential,

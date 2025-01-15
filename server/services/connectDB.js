@@ -37,8 +37,8 @@ module.exports.connectDB = (server) => {
   sequelize.authenticate().then(async () => {
     console.log('Connection has been established successfully.');
 
-    await sequelize.sync({force : true});
-    //await sequelize.sync();
+    //await sequelize.sync({force : true});
+    await sequelize.sync();
 
     server.listen(process.env.PORT || 5000, () => {
       console.log("Server Connected!!");

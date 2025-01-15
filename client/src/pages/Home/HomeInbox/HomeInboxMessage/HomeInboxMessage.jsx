@@ -1,5 +1,6 @@
 import dateFormat from "dateformat";
 import randomColor from 'randomcolor';
+import parse from 'html-react-parser';
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -13,6 +14,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
+import DOMPurify from 'dompurify';
 import { Button } from "@/components/ui/button";
 import { deleteMessage } from "../../../../api/message";
 import { useContext } from "react";
@@ -20,22 +22,25 @@ import AuthContext from "../../../../context/authContext";
 import { useDispatch } from "react-redux";
 import { MailActions } from "../../../../store/slice/mailSlice";
 import { useToast } from "@/hooks/use-toast";
+import { useCallback } from "react";
+import React from "react";
 
 
 const HomeInboxMessages = ({ messages, mailId }) => {
     const authCtx = useContext(AuthContext);
+
     const dispatch = useDispatch();
     const { toast } = useToast();
 
 
     //Generate random color 
-    const generateRandomColorHandler = () => {
+    const generateRandomColorHandler = useCallback(() => {
         return randomColor({
             luminosity: 'dark',
             format: 'rgba',
             alpha: 0.6
         });
-    };
+    }, []);
 
     const checkShowDateCondition = (createdAt, idx) => {
         if (idx === 0) return true;
@@ -86,7 +91,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                             <p className="text-xs font-semibold  text-neutral-900 dark:text-neutral-300">{dateFormat(msg.createdAt, "hh:MMtt")} </p>
                                         </div>
                                         <h1 className="text-sm md:text-md">{msg.subject.length > 30 ? msg.subject.slice(0, 50) + '...' : msg.subject}</h1>
-                                        <p className="text-xs md:text-sm font-normal text-neutral-600 dark:text-neutral-400">{msg.text.length > 30 ? msg.text.slice(0, 50) + '...' : msg.text}</p>
+                                        <p className="text-xs md:text-sm font-normal text-neutral-600 dark:text-neutral-400">{msg.text.length > 30 ? msg.text.replace(/<[^>]+>/g, '').slice(0, 50) + '...' : msg.text.replace(/<[^>]+>/g, '')}</p>
                                     </div>
                                 </div>
                             </DialogTrigger>
@@ -94,7 +99,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                 <DialogHeader>
                                     <DialogTitle>Message</DialogTitle>
                                 </DialogHeader>
-                                <div className="flex flex-col gap-y-2">
+                                <div className="flex relative w-full flex-col gap-y-2">
                                     <div className="flex items-center gap-x-2">
                                         <span className="w-fit text-[0.8rem] text-neutral-600 dark:text-neutral-400">From : </span>
                                         <div className="flex gap-x-2 text-center border text-[0.75rem] px-2 py-1 rounded w-fit ">
@@ -115,8 +120,8 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                                 {dateFormat(msg.createdAt, "ddd, dd mmm yyyy, hh:MMtt")}
                                             </div>
                                         </div>
-                                        <ScrollArea className="w-full h-[200px] border px-2 py-2 rounded text-sm">
-                                            {msg.text}
+                                        <ScrollArea className="flex flex-wrap text-wrap w-full h-[200px] border px-2 py-2 rounded text-sm">
+                                            {parse(DOMPurify.sanitize(msg.text))}
                                         </ScrollArea>
                                     </div>
 
@@ -140,4 +145,4 @@ const HomeInboxMessages = ({ messages, mailId }) => {
     );
 };
 
-export default HomeInboxMessages;
+export default React.memo(HomeInboxMessages);
