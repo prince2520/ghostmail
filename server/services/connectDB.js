@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+const cron = require('node-cron');
 
 const db = {};
 
@@ -31,11 +32,25 @@ db.Message.belongsTo(db.Mail);
 db.MessageFrom.hasMany(db.Message);
 db.Message.belongsTo(db.MessageFrom);
 
+let test = cron.schedule('10 * * * *', () => {
+  console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
+});
+
+test.start();
 
 module.exports.connectDB = (server) => {
 
   sequelize.authenticate().then(async () => {
     console.log('Connection has been established successfully.');
+
+    
+    // let deleteTempUser = cron.schedule('0 0 * * *', () => {
+    //   console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
+    // }, {
+    //   scheduled: true,
+    //   timezone: "Asia/Kolkata"
+    // });
+
 
     //await sequelize.sync({force : true});
     await sequelize.sync();

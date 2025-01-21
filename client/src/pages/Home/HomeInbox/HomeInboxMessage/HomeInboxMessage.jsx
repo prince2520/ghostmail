@@ -121,8 +121,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
                                             </div>
                                         </div>
                                         <ScrollArea className="flex flex-wrap text-wrap w-full h-[200px] border px-2 py-2 rounded text-sm">
-                                            {parse(DOMPurify.sanitize(msg.text))}
-                                        </ScrollArea>
+                                            {parse(DOMPurify.sanitize(msg.text))}                                        </ScrollArea>
                                     </div>
 
                                 </div>
