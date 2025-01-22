@@ -169,6 +169,36 @@ npm start // For normal start
 nodemon start // for sync you changes in bckend
 ```
 
+
+#### SMTP Server
+
+<p><b>Step 6 -</b> Change directory to smtp-server </p>
+
+```
+cd server 
+```
+
+<p><b>Step 7 -</b> Install the necessary dependencies. </p>
+
+```
+npm install 
+```
+
+<p><b>Step 8 -</b> Add environment variables. </p>
+
+```
+# add .env file to root directory
+# add backend server url
+SERVERURL=****
+```
+
+<p><b>Step 9 -</b> Run smtp server locally.</p>
+
+``` 
+node server.js
+```
+
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
