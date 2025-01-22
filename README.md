@@ -41,7 +41,7 @@ Ghostmail: Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secur
 
 
 ## About The Project
-![Ghostmail](https://github.com/user-attachments/assets/9d8f3089-fb82-4b52-9395-9f331ba06f7a)
+![Ghostmail](https://github.com/user-attachments/assets/23db3a9e-93c4-4fca-976a-1e0c1c691b80)
 
 <p align="left">
 Ghostmail provides a free, secure, and anonymous disposable email address, designed to help you maintain a clean and safe inbox. Perfect for protecting your personal email from spam and unwanted communications, Ghostmail ensures your privacy while managing online sign-ups and interactions.
