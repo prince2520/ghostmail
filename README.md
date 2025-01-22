@@ -117,30 +117,24 @@ npm install
 # Create .env file and paste to src folder
 
 # Add the url of your server
-REACT_APP_SERVER_URL= http://127.0.0.1:5000 //By Default Server
+// Backend Server url 
+VITE_API_SERVER_URL=*****
 
-# Add your firebase credentials here
-# firebase config (Add your config data)
-REACT_APP_apiKey=*****
-REACT_APP_authDomain=*****
-REACT_APP_projectId=*****
-REACT_APP_storageBucket=*****
-REACT_APP_messagingSenderId=*****
-REACT_APP_appId=*****
-REACT_APP_measurementId=*****
+// Google client id
+VITE_API_GOOGLE_CLIENT_ID=*****
 ```
 <p><b>Step 5 -</b> Run frontend server locally.</p>
 
 ```
-npm start 
+npm run dev 
 ```
 
 #### Backend
 
-<p><b>Step 6 -</b> Change directory to backend. </p>
+<p><b>Step 6 -</b> Change directory to server </p>
 
 ```
-cd backend 
+cd server 
 ```
 
 <p><b>Step 7 -</b> Install the necessary dependencies. </p>
@@ -153,21 +147,26 @@ npm install
 
 ```
 # add .env file to root directory
-# Add your MongoDB credentials here
-MONGODB_URI=*****
-DB_USER=*****
-DB_PASSWORD=*****
-DB_NAME=*****
+# Add your MySql credentials here
 
-#JWT Secret Key
+// MYSQL CREDENTIAL 
+DB_HOST=localhost
+DB_USERNAME=root
+DB_PASSWORD=**** 
+DB_NAME=ghostmail
+DB_DIALECT=mysql
+
 JWT_SECRET_KEY=****
+SESSION_KEY=***
 
+MAIL_DOMAIN_ADDRESS=ghostmails.site
 ```
 
 <p><b>Step 9 -</b> Run backend server locally.</p>
 
-```
-npm start
+``` 
+npm start // For normal start
+nodemon start // for sync you changes in bckend
 ```
 
 ## Contributing
@@ -179,7 +178,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ### Creating A Pull Request
 
-Wanna contribute to ChitChat ?
+Wanna contribute to Ghostmail ?
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/FeatureName`)
