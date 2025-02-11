@@ -1,12 +1,12 @@
 import Lottie from "lottie-react";
+import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from 'react-router-dom';
 
+import Profile from "./Profile.js";
+import AuthContext from "../../context/authContext.js";
 import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
-import { useContext } from "react";
-import AuthContext from "../../context/authContext.jsx";
-import Profile from "../custom/Profile";
 
 import {
     AlertDialog,
@@ -20,7 +20,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import ModeToggle from "./ModeToggle"
+import ModeToggle from "./ModeToggle.js";
 
 const Logout = () => {
     const authCtx = useContext(AuthContext);

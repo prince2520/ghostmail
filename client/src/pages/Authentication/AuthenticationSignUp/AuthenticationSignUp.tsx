@@ -14,11 +14,11 @@ import {
     FormMessage
 } from "@/components/ui/form";
 
-import AuthContext from "../../../context/authContext.jsx";
+import AuthContext from "../../../context/authContext.js";
+import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { SignUpSchema } from "../../../schema/signup";
 
-import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 
 const AuthenticationSignUp = () => {

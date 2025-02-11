@@ -1,6 +1,10 @@
+import React,  { useCallback , useContext}  from "react";
+import { useToast } from "@/hooks/use-toast";
+
 import dateFormat from "dateformat";
 import randomColor from 'randomcolor';
 import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -14,23 +18,19 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import DOMPurify from 'dompurify';
+import { Message } from "@/types/mail.d";
+import { useAppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { deleteMessage } from "../../../../api/message";
-import { useContext } from "react";
-import AuthContext from "../../../../context/authContext";
-import { useDispatch } from "react-redux";
 import { MailActions } from "../../../../store/slice/mailSlice";
-import { useToast } from "@/hooks/use-toast";
-import { useCallback } from "react";
-import React from "react";
 
+import AuthContext from "../../../../context/authContext";
 
-const HomeInboxMessages = ({ messages, mailId }) => {
+const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: string}) => {
     const authCtx = useContext(AuthContext);
 
-    const dispatch = useDispatch();
     const { toast } = useToast();
+    const dispatch = useAppDispatch();
 
 
     //Generate random color 
@@ -42,7 +42,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
         });
     }, []);
 
-    const checkShowDateCondition = (createdAt, idx) => {
+    const checkShowDateCondition = (createdAt:string, idx:number) => {
         if (idx === 0) return true;
 
         let prevDate, currDate;
@@ -53,7 +53,7 @@ const HomeInboxMessages = ({ messages, mailId }) => {
         return prevDate !== currDate;
     };
 
-    const deleteMessageHandler = (messageId) => {
+    const deleteMessageHandler = (messageId:string) => {
         deleteMessage(authCtx.token, mailId, messageId)
             .then(res => {
                 if (res.success) {

@@ -1,7 +1,8 @@
+import { FetchUserDataResponse } from "@/types/user.d";
 import { throwError } from "./throwError";
 
 // POST - generate a new mail for authorized user
-export const fetchUserData = async (token) => {
+export const fetchUserData = async (token:string) : Promise<FetchUserDataResponse> => {
     const response = await fetch(
         `${import.meta.env.VITE_API_SERVER_URL}/user/user-data`,
         {

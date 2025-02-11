@@ -7,6 +7,7 @@ const { Message } = require("../services/connectDB").db;
 const { User } = require("../services/connectDB").db;
 const { MessageFrom } = require("../services/connectDB").db;
 
+
 const getMailFromDatabase = async (mailId) => {
     const result = await Mail.findOne({
         where: { id: mailId },
@@ -29,11 +30,12 @@ const getMailFromDatabase = async (mailId) => {
     return result;
 };
 
+
+
 const generateMail = async () => {
     let address = null;
 
     while (!address) {
-
         let newAddress = randomstring.generate({
             length: 12,
             charset: ['alphabetic', 'numeric']
@@ -160,14 +162,13 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 exports.getMailData = async (req, res, next) => {
     let mailId = req.query.mailId;
 
-    if (!
-        req.isAuthUser) {
+    if (!req.isAuthUser) {
         mailId = req.tempMailId;
     }
 
-    console.log('mailId', mailId);
     try {
         const mail = await getMailFromDatabase(mailId);
+        console.log("Get Mail ", mail)
         return res
             .status(StatusCodes.OK)
             .json(mail);

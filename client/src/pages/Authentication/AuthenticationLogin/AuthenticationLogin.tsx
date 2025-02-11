@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 
 
-import AuthContext from "../../../context/authContext.jsx";
+import AuthContext from "../../../context/authContext.js";
 import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { LoginSchema } from "../../../schema/login";
@@ -28,9 +28,7 @@ const AuthenticationLogin = () => {
         resolver: zodResolver(LoginSchema),
         defaultValues: {
             email: "",
-            name: "",
             password: "",
-            confirmPassword: "",
         }
     });
 
@@ -76,7 +74,6 @@ const AuthenticationLogin = () => {
                                 </FormItem>
                             )}
                         />
-
                         <Button type="submit" className='w-full'>Submit</Button>
                     </div>
                 </form>

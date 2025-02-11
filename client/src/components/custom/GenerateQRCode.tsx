@@ -2,13 +2,13 @@ import QRCode from 'qrcode';
 
 import { useEffect, useState } from 'react';
 
-const GenerateQRCode = ({ mailAddress }) => {
-    const [imgSrc, setImgSrc] = useState(null);
+const GenerateQRCode = ({ mailAddress } : { mailAddress: string }) => {
+    const [imgSrc, setImgSrc] = useState<string>();
 
     useEffect(() => {
         const mailLink = `mailto:${mailAddress}`
         QRCode.toDataURL(mailLink)
-            .then(url => {
+            .then((url:string) => {
                 setImgSrc(url);
             })
             .catch(err => {

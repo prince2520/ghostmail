@@ -1,8 +1,9 @@
+import { DeleteMessageResponse } from "@/types/message.d";
 import { throwError } from "./throwError";
 
 
 // DELETE - delete message
-export const deleteMessage = async (token, mailId, messageId) => {
+export const deleteMessage = async (token:string, mailId:string, messageId:string) : Promise<DeleteMessageResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/message/delete-message`,
     {

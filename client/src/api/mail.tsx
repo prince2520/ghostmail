@@ -1,9 +1,10 @@
 // Method - Description
 
+import { AuthorizedGenerateGhostMailResponse, ChangeMailAddressResponse, DeleteMailResponse, GetMailResponse, UnAuthorizedGenerateGhostMailResponse } from "@/types/mail.d";
 import { throwError } from "./throwError";
 
 // POST - generate a new mail for authorized user
-export const authorizedGenerateGhostMail = async (token) => {
+export const authorizedGenerateGhostMail = async (token:string): Promise<AuthorizedGenerateGhostMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
     {
@@ -21,7 +22,7 @@ export const authorizedGenerateGhostMail = async (token) => {
 };
 
 // GET - generate a new mail for unauthorized user
-export const unauthorizedGenerateGhostMail = async () => {
+export const unauthorizedGenerateGhostMail = async () : Promise<UnAuthorizedGenerateGhostMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail`,
   );
@@ -33,7 +34,7 @@ export const unauthorizedGenerateGhostMail = async () => {
 
 
 // GET - MAIL DATA
-export const mailData = async (token, mailId ) => {
+export const mailData = async (token:string, mailId:string ) :Promise<GetMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/get-mail-data?mailId=${mailId}`,
     {
@@ -51,7 +52,7 @@ export const mailData = async (token, mailId ) => {
 };
 
 // GET - MAIL DATA
-export const deleteMail = async (token, mailId, mailAddress ) => {
+export const deleteMail = async (token:string, mailId:string, mailAddress:string ) : Promise<DeleteMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/delete-mail`,
     {
@@ -73,7 +74,7 @@ export const deleteMail = async (token, mailId, mailAddress ) => {
 
 
 
-export const changeMailAddress = async(token, mailId, mailAddress) => {
+export const changeMailAddress = async(token:string, mailId:string, mailAddress:string) : Promise<ChangeMailAddressResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/change-address`,
     {

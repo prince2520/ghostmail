@@ -19,9 +19,12 @@ import {
 
 import GenerateQRCode from "../../../components/custom/GenerateQRCode";
 
+import { RootState } from "@/store/store";
+import { Mail, Message } from "@/types/mail.d";
+
 const HomeMail = () => {
-    const mail = useSelector(state => state.mail);
-    const mailDetail = mail.mails.find(m => mail.currMailId === m.id);
+    const mail = useSelector((state:RootState) => state.mail);
+    const mailDetail:Mail|undefined = mail.mails.find((m:Message) => mail.currMailId === m.id);
 
     const { toast } = useToast();
 
@@ -61,11 +64,8 @@ const HomeMail = () => {
                             </Tooltip>
                         </TooltipProvider>
                     </div>
-
                 </div>
-
                 <p className="text-center text-[0.65rem] md:text-xs text-neutral-600 dark:text-neutral-400" >Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.</p>
-
             </div>
 
         </div>

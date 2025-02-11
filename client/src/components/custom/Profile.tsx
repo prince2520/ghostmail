@@ -5,10 +5,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const user = useSelector(state => state.user);
+  const user = useSelector((state:RootState) => state.user);
   return (
     <Popover>
       <PopoverTrigger asChild>

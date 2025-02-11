@@ -1,34 +1,35 @@
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, ReactNode } from "react";
 
 import { useToast } from "@/hooks/use-toast";
 
 import { login, signup } from '../api/auth';
 import { fetchUserData } from '../api/user';
+import { resetState } from "../store/resetAction";
 import { UserActions } from "../store/slice/userSlice";
+import { fetchMailDetail } from "../store/slice/mailSlice";
 import { socketJoinAllMail, socketJoinNewMail } from "../services/socket";
 
-import { fetchMailDetail } from "../store/slice/mailSlice";
-import { resetState } from "../store/resetAction";
 
-import store from "../store/store";
+import store, { useAppDispatch } from "../store/store";
+import { LoginResponse } from "@/types/auth.d";
+import { User } from "@/types/user.d";
 
 const AuthContext = React.createContext({
-    loginHandler: (email, password) => { },
-    signUpHandler: (userName, email, password, confirmPassword) => { },
+    loginHandler: (email:string, password:string) => { },
+    signUpHandler: (userName:string, email:string, password:string, confirmPassword:string) => { },
     logoutHandler: () => { },
-    saveloginDataHandler: ()=> {},
+    saveloginDataHandler: (res?: LoginResponse)=> {},
     token: "",
     isAuth: false
-});
+} );
 
 
-export const AuthContextProvider = (props) => {
-    const [token, setToken] = useState();
-    const [isAuth, setIsAuth] = useState();
+export const AuthContextProvider = ({children} :{children:ReactNode}) => {
+    const [token, setToken] = useState<string>("");
+    const [isAuth, setIsAuth] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const { toast } = useToast();
@@ -37,7 +38,7 @@ export const AuthContextProvider = (props) => {
         localStorage.clear();
 
         navigate("/home");
-        setToken(null);
+        setToken("null");
         setIsAuth(false);
 
         store.dispatch(resetState());
@@ -49,7 +50,7 @@ export const AuthContextProvider = (props) => {
     }, [navigate]);
 
     const autoLogout = useCallback(
-        (milliseconds) => {
+        (milliseconds:number) => {
             setTimeout(() => {
                 logoutHandler();
             }, milliseconds);
@@ -60,7 +61,7 @@ export const AuthContextProvider = (props) => {
 
     // Sign Up
     const signUpHandler = useCallback(
-        (name, email, password, confirmPassword) => {
+        (name: string, email:string, password:string, confirmPassword:string) => {
             signup(name, email, password, confirmPassword)
                 .then((result) => {
                     toast({
@@ -84,16 +85,15 @@ export const AuthContextProvider = (props) => {
     );
 
     // Save user data
-    const saveUserDataHandler = (result) => dispatch(UserActions.saveUserData({
+    const saveUserDataHandler = (result: User) => dispatch(UserActions.saveUserData({
         ...result, isNotAuth: true
     }));
 
-    const saveloginDataHandler = (result) => {
-        console.log("result -> ", result);
+    const saveloginDataHandler = (result:LoginResponse ) => {
         if (result.success) {
             localStorage.clear();
             store.dispatch(resetState())
-            // /socketJoinAllMail(result.data.mails);
+            socketJoinAllMail(result.data.mails);
             saveUserDataHandler(result.data);
             setToken(result.token);
             setIsAuth(true);
@@ -118,7 +118,7 @@ export const AuthContextProvider = (props) => {
 
     // Login
     const loginHandler = useCallback(
-        (email, password) => {
+        (email: string, password:string) => {
             login(email, password)
                 .then((result) => {
                     saveloginDataHandler(result);
@@ -136,7 +136,7 @@ export const AuthContextProvider = (props) => {
 
 
     useEffect(() => {
-        const localToken = localStorage.getItem("token");
+        const localToken = localStorage.getItem("token") ?? "";
         setToken(localToken);
 
         const localExpiryDate = localStorage.getItem("expiryDate");
@@ -193,7 +193,7 @@ export const AuthContextProvider = (props) => {
                 isAuth: isAuth
             }}
         >
-            {props.children}
+            {children}
         </AuthContext.Provider>
     );
 

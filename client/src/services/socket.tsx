@@ -1,9 +1,11 @@
-import io from "socket.io-client";
+import {io, Socket } from "socket.io-client";
 
 import { SOCKET_EVENT } from "../utils/socket_event";
+import { Mail } from "@/types/mail.d";
+import { Message } from "@/types/message.d";
 
 
-let socket = null;
+let socket:any = null;
 
 // USER
 // USER - initiate socket
@@ -18,24 +20,23 @@ export const socketDisconnect = () => {
   }
 };
 
-
 // MAIL
 // MAIL - join single mail
-export const socketJoinNewMail = (mailId) => {
+export const socketJoinNewMail = (mailId:string | null) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.JOIN_NEW_MAIL, { mailId });
   }
 };
 
 // MAIL - join multiple mail
-export const socketJoinAllMail = (mails) => {
+export const socketJoinAllMail = (mails: Mail[]) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.JOIN_ALL_MAIL, { mails });
   }
 }
 
 // MAIL - leave mail 
-export const socketLeaveMail = (mailId) => {
+export const socketLeaveMail = (mailId: string) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.LEAVE_MAIL, { mailId });
   }
@@ -44,9 +45,9 @@ export const socketLeaveMail = (mailId) => {
 
 // MESSAGE
 // MESSAGE - get send message
-export const socketGetSendMessage = (cb) => {
+export const socketGetSendMessage = (cb :any ) => {
   if (socket) {
-    socket.on(SOCKET_EVENT.GET_SEND_MESSSAGE, ({ data }) => {
+    socket.on(SOCKET_EVENT.GET_SEND_MESSSAGE, ({ data  }: {data: Message}) => {
       cb(null, { data });
     });
   }

@@ -1,7 +1,6 @@
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { ChevronsUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -10,29 +9,31 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useSelector } from "react-redux";
-import AuthContext from "../../context/authContext";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RootState, useAppDispatch } from "@/store/store";
 import { fetchMailDetail } from "../../store/slice/mailSlice";
-import { useDispatch } from "react-redux";
-import { ScrollArea } from "@/components/ui/scroll-area"
 
+import AuthContext from "../../context/authContext";
+import { Mail } from "@/types/mail.d";
 
 const AllMails = () => {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("");
+  const [open, setOpen] = React.useState<boolean>(false)
+  const [value, setValue] = React.useState<Mail>();
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state:RootState) => state.user);
   const authCtx = useContext(AuthContext);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -56,11 +57,12 @@ const AllMails = () => {
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
             <ScrollArea className="h-[180px] rounded-md px-4 py">
               <CommandGroup>
-                {user?.mails.map((m) => (
+                {user?.mails.map((m: Mail) => (
                   <CommandItem
                     key={m.id}
-                    value={m}
-                    onSelect={() => {
+                    //value={m}
+                    onSelect={()  => {
+                      console.log(m)
                       const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false };
                       dispatch(fetchMailDetail(argsObj));
                       setValue(m)
