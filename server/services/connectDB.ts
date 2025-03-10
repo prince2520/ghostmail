@@ -1,16 +1,23 @@
-const { Sequelize } = require('sequelize');
-const cron = require('node-cron');
+import { Server } from 'http';
+import { Sequelize, Dialect } from 'sequelize';
 
-const db = {};
+export const db :{
+  sequelize: Sequelize,
+  Mail?: any,
+  User?: any,
+  Message?: any,
+  MessageFrom?: any
+} = {
+  sequelize: {} as Sequelize
+};
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize(process.env.DB_NAME as string, process.env.DB_USERNAME as string , process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
-  dialect: process.env.DB_DIALECT
+  dialect: process.env.DB_DIALECT as Dialect
 });
 
 exports.sequelize = sequelize;
 
-db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Models 
@@ -32,25 +39,16 @@ db.Message.belongsTo(db.Mail);
 db.MessageFrom.hasMany(db.Message);
 db.Message.belongsTo(db.MessageFrom);
 
-let test = cron.schedule('10 * * * *', () => {
-  console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
-});
+// let test = cron.schedule('10 * * * *', () => {
+//   console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
+// });
 
-test.start();
+// test.start();
 
-module.exports.connectDB = (server) => {
+export const connectDB = (server: Server) => {
 
   sequelize.authenticate().then(async () => {
     console.log('Connection has been established successfully.');
-
-    
-    // let deleteTempUser = cron.schedule('0 0 * * *', () => {
-    //   console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
-    // }, {
-    //   scheduled: true,
-    //   timezone: "Asia/Kolkata"
-    // });
-
 
     //await sequelize.sync({force : true});
     await sequelize.sync();
@@ -63,6 +61,4 @@ module.exports.connectDB = (server) => {
     console.error('Unable to connect to the database:', err);
   });
 };
-
-module.exports.db = db;
 

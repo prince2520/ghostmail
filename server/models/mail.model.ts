@@ -1,10 +1,11 @@
-const { DataTypes } = require('sequelize');
+import { DataTypes } from 'sequelize';
+import { db } from "../services/connectDB";
+import { MailInstance } from '../types/models/mail.model';
 
-const { sequelize } = require("../services/connectDB")
 
 // MODEL - MAIL
-module.exports.Mail = () => {
-    const Mail = sequelize.define("mail", {
+export const Mail = ()  => {
+    const Mail = db.sequelize.define<MailInstance>("mail", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

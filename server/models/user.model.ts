@@ -1,10 +1,10 @@
-const { DataTypes } = require('sequelize');
-
-const { sequelize } = require("../services/connectDB")
+import { DataTypes } from 'sequelize';
+import { db } from "../services/connectDB";
+import { UserInstance } from '../types/models/user.model';
 
 // MODEL - USER
-module.exports.User = () => {
-    const User = sequelize.define("user", {
+export const User = () => {
+    const User = db.sequelize.define<UserInstance>("user", {
         isGoogleAuth: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,

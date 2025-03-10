@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     signup,
     login,
     googleAuthentication
-} = require("../controllers/auth.controller");
+} from "../controllers/auth.controller";
 
 const router = express.Router();
 
-router.post('/signup', signup);
 router.post('/login', login);
+router.post('/signup', signup);
 router.post("/google-auth", googleAuthentication);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-exports.SOCKET_EVENT = Object.freeze({
+export const SOCKET_EVENT = Object.freeze({
     // USER
     DISCONNECT : "disconnect",
 

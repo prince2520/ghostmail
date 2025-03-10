@@ -1,47 +1,43 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const { StatusCodes } = require("http-status-codes");
-const { OAuth2Client } = require('google-auth-library');
+import { db } from "../services/connectDB";
+import { StatusCodes } from "http-status-codes";
+import { OAuth2Client } from 'google-auth-library';
+import { Request, Response, NextFunction } from 'express';
+import { throwError } from "../utils/throwError";
+import { GoogleToken} from "../types/controllers/auth";
 
-const { Mail, User } = require("../services/connectDB").db;
+const { Mail, User } = db;
 
 const client = new OAuth2Client();
-
 
 /*
   Method - POST 
  
   This is function help user to signup and store data in database  
 */
-exports.signup = async (req, res, next) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
+
+
+export const signup   = async (req: Request, res: Response, next: NextFunction) => {
+  const { name, email, password, confirmPassword } = req.body;
 
   try {
     if (password !== confirmPassword) {
-      let error = new Error("Confirm password and password are not matched!");
-      error.statusCode = StatusCodes.BAD_REQUEST;
-      throw error;
+      throwError("Confirm password and password are not matched!", StatusCodes.BAD_REQUEST);
     }
 
     const userCount = await User.count({ where: { email: email } });
 
     if (userCount > 0) {
-      let error = new Error("User with this email already exists!!");
-      error.statusCode = StatusCodes.BAD_REQUEST;
-      throw error;
+      throwError("User with this email already exists!!", StatusCodes.BAD_REQUEST);
     }
 
     // create an encrypted password from input password
     const hashedPw = await bcrypt.hash(password, 12);
 
     if (!hashedPw) {
-      let error = new Error(err.message);
-      error.statusCode = StatusCodes.BAD_REQUEST;
-      throw error;
+      throwError("Error hashing password", StatusCodes.BAD_REQUEST);
     }
 
     await User.create({
@@ -50,7 +46,7 @@ exports.signup = async (req, res, next) => {
       password: hashedPw
     });
 
-    return res
+    res
       .status(StatusCodes.OK)
       .json({ success: true, message: "User Created!" });
 
@@ -65,7 +61,13 @@ const generateToken = ({
   email,
   userId,
   isAuthUser
-}) => {
+}: { email: string, userId: string, isAuthUser: boolean }) => {
+
+  const secretKey = process.env.JWT_SECRET_KEY;
+
+  if (!secretKey) {
+    throw new Error("JWT_SECRET_KEY is not defined");
+  }
 
   return jwt.sign(
     {
@@ -73,7 +75,7 @@ const generateToken = ({
       userId,
       isAuthUser
     },
-    process.env.JWT_SECRET_KEY,
+    secretKey,
     { expiresIn: "24h" }
   );
 }
@@ -83,12 +85,11 @@ const generateToken = ({
  
   This is function is verify the email and password of user, and give a verified token and user data as response 
 */
-exports.login = async (req, res, next) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   const email = req.body.email;
   const password = req.body.password;
 
   try {
-   
     const userFound = await User.findOne({
       where: { email: email },
       include:
@@ -99,33 +100,27 @@ exports.login = async (req, res, next) => {
     });
 
     if (!userFound) {
-      let error = new Error("User not found!");
-      error.statusCode = StatusCodes.NOT_FOUND;
-      throw error;
+      throwError("User not found!", StatusCodes.NOT_FOUND);
     }
 
     if (userFound.isGoogleAuth) {
-      let error = new Error("Authenticate with google with this email!");
-      error.statusCode = StatusCodes.NOT_FOUND;
-      throw error;
+      throwError("Authenticate with google with this email!", StatusCodes.NOT_FOUND);
     }
 
     // compare the input and encrypted password of user 
     const isEqual = await bcrypt.compare(password, userFound.password);
 
     if (!isEqual) {
-      let error = new Error("Password incorrect!");
-      error.statusCode = StatusCodes.UNAUTHORIZED;
-      throw error;
+      throwError("Password incorrect!", StatusCodes.UNAUTHORIZED);
     } else {
-      
+
       const token = generateToken({
         email: userFound.email,
         userId: userFound.id,
         isAuthUser: true
       });
 
-      return res.status(StatusCodes.OK).json({
+      res.status(StatusCodes.OK).json({
         success: true,
         token: token,
         message: "Login Successfull!",
@@ -148,20 +143,25 @@ exports.login = async (req, res, next) => {
  
   This is function handle google authentication login user if not user found then create user and generate verified token 
 */
-exports.googleAuthentication = async (req, res, next) => {
-  const googleToken = {
+
+
+export const googleAuthentication = async (req: Request, res: Response, next: NextFunction) => {
+  const googleToken: GoogleToken = {
     idToken: req.body.credential,
     audience: req.body.clientId,
   };
 
   try {
-
+    // verify client google token 
     const ticket = await client.verifyIdToken(googleToken);
 
     const payload = ticket.getPayload();
 
+    if (!payload) {
+      throw new Error("Invalid token payload");
+    }
+
     const { name, email } = payload;
-    console.log('payload ', payload);
 
     let userFound = await User.findOne({
       where: { email: email, isGoogleAuth: true },
@@ -187,7 +187,7 @@ exports.googleAuthentication = async (req, res, next) => {
     });
 
 
-    return res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.OK).json({
       success: true,
       token: token,
       message: "Login Successfull!",

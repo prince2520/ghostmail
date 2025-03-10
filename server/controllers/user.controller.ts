@@ -1,9 +1,11 @@
-const { StatusCodes } = require("http-status-codes");
+import { NextFunction, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { AuthRequest } from "../types/auth.middleware";
+import { db } from "../services/connectDB";
 
-const { User } = require("../services/connectDB").db;
-const { Mail } = require("../services/connectDB").db;
+const  {User, Mail}  = db;
 
-exports.fetchUserData = async (req, res, next) => {
+export const fetchUserData = async (req:AuthRequest, res:Response, next:NextFunction) => {
     const email = req.email;
 
     try {
@@ -17,7 +19,7 @@ exports.fetchUserData = async (req, res, next) => {
             }
         });
 
-        return res.status(StatusCodes.OK).json({
+        res.status(StatusCodes.OK).json({
             success: true,
             data : userFound
         });

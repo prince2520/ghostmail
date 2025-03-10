@@ -1,13 +1,13 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     saveMessage,
     deleteMessage
-} = require("../controllers/message.controller")
+} from "../controllers/message.controller";
 
 const router = express.Router();
 
 router.post('/save-message', saveMessage);
 router.delete('/delete-message', deleteMessage);
 
-module.exports = router;
+export default router;

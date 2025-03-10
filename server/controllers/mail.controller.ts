@@ -1,14 +1,15 @@
-const { StatusCodes } = require("http-status-codes");
-const randomstring = require("randomstring");
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import randomstring from "randomstring";
 
-const { Mail } = require("../services/connectDB").db;
-const { Message } = require("../services/connectDB").db;
-const { User } = require("../services/connectDB").db;
-const { MessageFrom } = require("../services/connectDB").db;
+import {db} from "../services/connectDB";
+import {  Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
+import { throwError } from "../utils/throwError";
+import { AuthRequest } from "../types/auth.middleware";
 
+const {Message, MessageFrom, Mail, User} = db;
 
-const getMailFromDatabase = async (mailId) => {
+const getMailFromDatabase = async (mailId : string | undefined | null) => {
     const result = await Mail.findOne({
         where: { id: mailId },
         include: {
@@ -22,9 +23,7 @@ const getMailFromDatabase = async (mailId) => {
     });
 
     if (!result) {
-        let error = new Error("Mail not Found!");
-        error.statusCode = StatusCodes.NOT_FOUND;
-        throw error;
+        throwError("Mail not Found!", StatusCodes.NOT_FOUND);
     }
 
     return result;
@@ -32,7 +31,7 @@ const getMailFromDatabase = async (mailId) => {
 
 
 
-const generateMail = async () => {
+const generateMail = async () : Promise<string> => {
     let address = null;
 
     while (!address) {
@@ -51,21 +50,26 @@ const generateMail = async () => {
     }
 
     if (!address) {
-        let error = new Error("New temp mail not generated!");
-        error.statusCode = StatusCodes.NOT_IMPLEMENTED;
-        throw error;
+        throwError("New temp mail not generated!", StatusCodes.NOT_IMPLEMENTED);
     }
 
     return address;
 };
 
-const newGhostMail = async (authEmail = null) => {
+const newGhostMail = async (authEmail : string | null = null ) => {
     let address = await generateMail();
 
     let date = new Date();
     date.setDate(date.getDate() + 1);
 
-    const cond = {
+    const cond : {
+        where: { address: string },
+        defaults: {
+            address: string,
+            expires: Date | null,
+            userId?: string
+        }
+    } = {
         where: { address: address },
         defaults: {
             address: address,
@@ -77,9 +81,7 @@ const newGhostMail = async (authEmail = null) => {
         const userFound = await User.findOne({ where: { email: authEmail } });
 
         if (!userFound) {
-            let error = new Error(`${authEmail} is not Found!`);
-            error.statusCode = StatusCodes.NOT_FOUND;
-            throw error;
+            throwError(`${authEmail} is not Found!`, StatusCodes.NOT_FOUND);
         }
 
         cond.defaults = {
@@ -91,9 +93,7 @@ const newGhostMail = async (authEmail = null) => {
         const countMail = await Mail.count({where:{userId: userFound.id}});
 
         if(countMail >= 10){
-            let error = new Error(`You can only generate only 10 mails!`);
-            error.statusCode = StatusCodes.NOT_FOUND;
-            throw error;
+            throwError(`You can only generate only 10 mails!`, StatusCodes.NOT_FOUND);
         }
     }
 
@@ -101,9 +101,7 @@ const newGhostMail = async (authEmail = null) => {
     const [mail, created] = await Mail.findOrCreate(cond);
 
     if (!created) {
-        let error = new Error("Mail already exist! Please try another mail.");
-        error.statusCode = StatusCodes.BAD_REQUEST;
-        throw error;
+        throwError("Mail already exist! Please try another mail.", StatusCodes.BAD_REQUEST);
     }
 
     const data = await getMailFromDatabase(mail.id);
@@ -114,9 +112,14 @@ const newGhostMail = async (authEmail = null) => {
 }
 
 // Generate a new ghost mail 
-exports.generateNewGhostMail = async (req, res, next) => {
+export const generateNewGhostMail = async (req:AuthRequest, res:Response, next:NextFunction) => {
     try {
-        let result = await newGhostMail();
+        let result:{
+            success: boolean,
+            data: any,
+            token?: string,
+            isNotAuth?: boolean
+        } = await newGhostMail();
 
         if (!req.isAuthUser) {
             const token = jwt.sign(
@@ -124,7 +127,7 @@ exports.generateNewGhostMail = async (req, res, next) => {
                     isAuthUser: false,
                     tempMailId: result.data.id
                 },
-                process.env.JWT_SECRET_KEY,
+                process.env.JWT_SECRET_KEY as string,
                 { expiresIn: "24h" }
             );
 
@@ -132,7 +135,7 @@ exports.generateNewGhostMail = async (req, res, next) => {
             result.isNotAuth = true;
         };
 
-        return res
+        res
             .status(StatusCodes.OK)
             .json(result);
 
@@ -142,13 +145,15 @@ exports.generateNewGhostMail = async (req, res, next) => {
 }
 
 
-exports.authorizedGenerateGhostMail = async (req, res, next) => {
+
+
+export const authorizedGenerateGhostMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const authEmail = req.email;
 
     try {
         const result = await newGhostMail(authEmail);
 
-        return res
+        res
             .status(StatusCodes.OK)
             .json(result);
 
@@ -159,8 +164,8 @@ exports.authorizedGenerateGhostMail = async (req, res, next) => {
 
 
 // get mail data  
-exports.getMailData = async (req, res, next) => {
-    let mailId = req.query.mailId;
+export const getMailData = async (req: AuthRequest, res:Response, next:NextFunction) => {
+    let mailId = req.query.mailId as string | null | undefined;
 
     if (!req.isAuthUser) {
         mailId = req.tempMailId;
@@ -168,8 +173,8 @@ exports.getMailData = async (req, res, next) => {
 
     try {
         const mail = await getMailFromDatabase(mailId);
-        console.log("Get Mail ", mail)
-        return res
+
+        res
             .status(StatusCodes.OK)
             .json(mail);
 
@@ -179,10 +184,10 @@ exports.getMailData = async (req, res, next) => {
 }
 
 // DELETE -> delete the mail for auth user
-exports.deleteMail = async (req, res, next) => {
+export const deleteMail = async (req: AuthRequest, res:Response, next:NextFunction)  : Promise<void> => {
+    
     const mailId = req.body.mailId;
     const mailAddress = req.body.mailAddress;
-
 
     try {
         const isDeletedMail =  await Mail.destroy({
@@ -190,9 +195,7 @@ exports.deleteMail = async (req, res, next) => {
         });
 
         if (!isDeletedMail) {
-            let error = new Error("Mail not deleted!");
-            error.statusCode = StatusCodes.NOT_IMPLEMENTED;
-            throw error;
+            throwError("Mail not deleted!", StatusCodes.NOT_IMPLEMENTED);
         }
 
         const data = {
@@ -201,7 +204,7 @@ exports.deleteMail = async (req, res, next) => {
             message: `${mailAddress} is deleted successfully!`
         }
 
-        return res
+        res
             .status(StatusCodes.OK)
             .json(data);
     } catch (err) {
@@ -211,7 +214,7 @@ exports.deleteMail = async (req, res, next) => {
 
 
 
-exports.changeAddress = async (req, res, next) => {
+export const changeAddress = async (req : AuthRequest, res : Response, next: NextFunction) => {
     const userId = req.userId;
     const mailId = req.body.mailId;
     const mailAddress = req.body.mailAddress;
@@ -233,7 +236,7 @@ exports.changeAddress = async (req, res, next) => {
             message: `${mailAddress} changed to ${address}`
         };
 
-        return res
+        res
             .status(StatusCodes.OK)
             .json( data );
 

@@ -1,8 +1,9 @@
-exports.errorHandler = (err, req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+import { CustomError } from '../types/controllers/error';
+
+export const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
     const errorStatus = err?.statusCode || 500;
     const errorMessage = err?.message || "Internal Server Error";
-
-    console.log('err-> ', err)
 
     return res.status(errorStatus).json({
         success: false,

@@ -156,7 +156,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
 
         autoLogout(remainingMilliseconds);
 
-        const isNotAuth = localStorage.getItem("isNotAuth");
+        const isNotAuth:boolean = localStorage.getItem("isNotAuth") == "true" ? true : false;
 
         if (!isNotAuth) {
             setIsAuth(true);
@@ -173,8 +173,8 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
                 });
             });
         } else {
-            const mailId = localStorage.getItem("mailId");
-            const argsObj = { token: localToken, mailId, isNotAuth: isNotAuth };
+            const mailId = localStorage.getItem("mailId") == "true" ? true : false;
+            const argsObj : {token:string, mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
 
             socketJoinNewMail(mailId);
             dispatch(fetchMailDetail(argsObj));

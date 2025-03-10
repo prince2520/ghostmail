@@ -1,10 +1,11 @@
-const { DataTypes } = require('sequelize');
+import { DataTypes } from 'sequelize';
+import { db } from "../services/connectDB";
+import { MessageFromInstance , MessageInstance} from "../types/models/message.model";
 
-const { sequelize } = require("../services/connectDB")
 
 // MODEL - MESSAGEFROM
-module.exports.MessageFrom = () => {
-    const MessageFrom = sequelize.define("messageFrom", {
+export const MessageFrom = () => {
+    const MessageFrom = db.sequelize.define<MessageFromInstance>("messageFrom", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -21,10 +22,9 @@ module.exports.MessageFrom = () => {
     return MessageFrom;
 };
 
-
 // MODEL - MESSAGE
-module.exports.Message = () => {
-    const Message = sequelize.define("message", {
+export const Message = () => {
+    const Message = db.sequelize.define<MessageInstance>("message", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

@@ -1,4 +1,4 @@
-export const throwError = async(result:any) => {
+export const throwError = async(result:any)=> {
     const data = await result.json(); // Parse JSON error from the server
 
     if (!result.ok) {

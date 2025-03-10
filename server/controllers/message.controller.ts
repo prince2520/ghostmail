@@ -1,28 +1,27 @@
-const {Mail} = require("../services/connectDB").db;
-const {Message} = require("../services/connectDB").db;
-const {MessageFrom} = require("../services/connectDB").db;
+import { NextFunction, Response } from "express";
+import { throwError } from "../utils/throwError";
 
-const { StatusCodes } = require("http-status-codes");
+import {db} from "../services/connectDB";
+const {Mail, Message, MessageFrom} = db;
 
-const {SOCKET_EVENT} = require("../utils/socket_event");
-const { where } = require("sequelize");
 
-const io = require("../services/socket/socketIO").getIO();
+import { StatusCodes } from "http-status-codes";
+import {SOCKET_EVENT} from "../utils/socket_event";
+
+import {getIO} from "../services/socket/socketIO";
+import { AuthRequest } from "../types/auth.middleware";
+const io = getIO();
 
 // Save incoming message 
-exports.saveMessage = async (req, res, next) => {    
+export const saveMessage = async (req: AuthRequest, res:Response, next:NextFunction) => {    
     try {
-        console.log("message -> ", req.body)
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
-        console.log("to -> ", req.body.to);
 
         const mailFound = await Mail.findOne({ where: { address: to.address } });
 
         if (!mailFound) {
-            let error = new Error("User address not Found!");
-            error.statusCode = StatusCodes.NOT_FOUND;
-            throw error;
+            throwError("User address not Found!", StatusCodes.NOT_FOUND);
         };
 
         const [messageFromFound, created] = await MessageFrom.findOrCreate({
@@ -60,7 +59,8 @@ exports.saveMessage = async (req, res, next) => {
 
 
 // Delete Message 
-exports.deleteMessage = async (req, res, next) => {
+export const deleteMessage = async (req: AuthRequest, res: Response, next : NextFunction) => {
+
     let mailId = req.body.mailId;
     const messageId = req.body.messageId;
 
@@ -72,9 +72,7 @@ exports.deleteMessage = async (req, res, next) => {
         const isDeletedMsgSuccess = await Message.destroy({where: { id : messageId, mailId : mailId}});
 
         if(!isDeletedMsgSuccess){
-            let error = new Error("Message not deleted, Something goes wrong. Please try again!")
-            error.statusCode = StatusCodes.NOT_IMPLEMENTED;
-            throw Error;
+            throwError("Message not deleted, Something goes wrong. Please try again!", StatusCodes.NOT_IMPLEMENTED);
         }
 
         const data = {
@@ -84,7 +82,7 @@ exports.deleteMessage = async (req, res, next) => {
             message : `Message deleted successfully!`
         }
 
-        return res.status(StatusCodes.OK).json(data);
+        res.status(StatusCodes.OK).json(data);
 
     }catch(err){
         next(err);
