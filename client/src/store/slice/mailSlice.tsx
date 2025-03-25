@@ -6,7 +6,7 @@ import { Mail, IMailSlice } from "@/types/mail.d";
 // REDUX THUNK -  Fetch The mail detail 
 export const fetchMailDetail = createAsyncThunk(
     'mail/fetchMailDetail',
-    async ({ mailId, token, isNotAuth }: { mailId: string , token: string | undefined, isNotAuth: boolean }, { getState, rejectWithValue }) => {
+    async ({ mailId, token, isNotAuth }: { mailId: string | null , token: string | undefined, isNotAuth: boolean }, { getState, rejectWithValue }) => {
         const state: any = getState();
         const alreadyExitMail = state.mail.mails.some((m: Mail) => m.id === mailId);
 
