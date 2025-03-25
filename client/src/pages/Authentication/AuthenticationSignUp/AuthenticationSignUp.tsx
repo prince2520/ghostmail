@@ -20,7 +20,6 @@ import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 import { SignUpSchema } from "../../../schema/signup";
 
 
-
 const AuthenticationSignUp = () => {
     const authCtx = useContext(AuthContext);
     

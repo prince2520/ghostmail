@@ -1,5 +1,6 @@
 import { UUID } from "node:crypto";
 import { Model, Optional } from "sequelize";
+
 // INTERFACE  
 // Model - MailFrom
 interface MessageFromAttributes {

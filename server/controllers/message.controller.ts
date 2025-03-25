@@ -10,6 +10,7 @@ import {SOCKET_EVENT} from "../utils/socket_event";
 
 import {getIO} from "../services/socket/socketIO";
 import { AuthRequest } from "../types/auth.middleware";
+
 const io = getIO();
 
 // Save incoming message 

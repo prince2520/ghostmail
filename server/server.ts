@@ -1,6 +1,6 @@
 import helmet from "helmet";
 import bodyParser from "body-parser";
-import { CustomError } from "./types/controllers/error";
+import { CustomError } from "./types/error";
 
 import {config} from "dotenv";
 config();

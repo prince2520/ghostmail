@@ -20,11 +20,11 @@ import {
 import GenerateQRCode from "../../../components/custom/GenerateQRCode";
 
 import { RootState } from "@/store/store";
-import { Mail, Message } from "@/types/mail.d";
+import { Mail } from "@/types/mail.d";
 
 const HomeMail = () => {
     const mail = useSelector((state:RootState) => state.mail);
-    const mailDetail:Mail|undefined = mail.mails.find((m:Message) => mail.currMailId === m.id);
+    const mailDetail = mail.mails.find((m:Mail) => mail.currMailId === m.id);
 
     const { toast } = useToast();
 
@@ -51,7 +51,7 @@ const HomeMail = () => {
                                         toast({
                                             description: `${mailDetail?.address} copied to clipboard!`
                                         })
-                                        navigator.clipboard.writeText(mailDetail?.address)
+                                        navigator.clipboard.writeText(mailDetail?.address ?? '');
                                     }} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
                                         <Copy size={18} />
                                         <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>

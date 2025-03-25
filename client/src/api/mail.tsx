@@ -4,7 +4,7 @@ import { AuthorizedGenerateGhostMailResponse, ChangeMailAddressResponse, DeleteM
 import { throwError } from "./throwError";
 
 // POST - generate a new mail for authorized user
-export const authorizedGenerateGhostMail = async (token:string): Promise<AuthorizedGenerateGhostMailResponse> => {
+export const authorizedGenerateGhostMail = async (token: string): Promise<AuthorizedGenerateGhostMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/auth-generate-new-mail`,
     {
@@ -22,7 +22,7 @@ export const authorizedGenerateGhostMail = async (token:string): Promise<Authori
 };
 
 // GET - generate a new mail for unauthorized user
-export const unauthorizedGenerateGhostMail = async () : Promise<UnAuthorizedGenerateGhostMailResponse> => {
+export const unauthorizedGenerateGhostMail = async (): Promise<UnAuthorizedGenerateGhostMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/generate-new-mail`,
   );
@@ -34,7 +34,7 @@ export const unauthorizedGenerateGhostMail = async () : Promise<UnAuthorizedGene
 
 
 // GET - MAIL DATA
-export const mailData = async (token:string, mailId:string|null ) :Promise<GetMailResponse> => {
+export const mailData = async (token?: string, mailId?: string): Promise<GetMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/get-mail-data?mailId=${mailId}`,
     {
@@ -52,7 +52,7 @@ export const mailData = async (token:string, mailId:string|null ) :Promise<GetMa
 };
 
 // GET - MAIL DATA
-export const deleteMail = async (token:string, mailId:string, mailAddress:string ) : Promise<DeleteMailResponse> => {
+export const deleteMail = async (token?: string, mailId?: string, mailAddress?: string): Promise<DeleteMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/delete-mail`,
     {
@@ -64,7 +64,7 @@ export const deleteMail = async (token:string, mailId:string, mailAddress:string
       body: JSON.stringify({
         mailId: mailId,
         mailAddress: mailAddress
-    }),
+      }),
     }
   );
   const result = throwError(response);
@@ -74,7 +74,7 @@ export const deleteMail = async (token:string, mailId:string, mailAddress:string
 
 
 
-export const changeMailAddress = async(token:string, mailId:string, mailAddress:string) : Promise<ChangeMailAddressResponse> => {
+export const changeMailAddress = async (token: string, mailId: string, mailAddress: string): Promise<ChangeMailAddressResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/change-address`,
     {
@@ -86,7 +86,7 @@ export const changeMailAddress = async(token:string, mailId:string, mailAddress:
       body: JSON.stringify({
         mailId: mailId,
         mailAddress: mailAddress
-    }),
+      }),
     }
   );
 

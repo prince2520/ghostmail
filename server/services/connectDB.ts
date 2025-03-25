@@ -39,12 +39,6 @@ db.Message.belongsTo(db.Mail);
 db.MessageFrom.hasMany(db.Message);
 db.Message.belongsTo(db.MessageFrom);
 
-// let test = cron.schedule('10 * * * *', () => {
-//   console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
-// });
-
-// test.start();
-
 export const connectDB = (server: Server) => {
 
   sequelize.authenticate().then(async () => {

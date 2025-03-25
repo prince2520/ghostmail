@@ -18,7 +18,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Message } from "@/types/mail.d";
+import { Message } from "@/types/message.d";
 import { useAppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { deleteMessage } from "../../../../api/message";

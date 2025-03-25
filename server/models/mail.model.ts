@@ -4,7 +4,7 @@ import { MailInstance } from '../types/models/mail.model';
 
 
 // MODEL - MAIL
-export const Mail = ()  => {
+export const Mail = () => {
     const Mail = db.sequelize.define<MailInstance>("mail", {
         id: {
             type: DataTypes.UUID,

@@ -14,10 +14,8 @@ const client = new OAuth2Client();
 
 /*
   Method - POST 
- 
   This is function help user to signup and store data in database  
 */
-
 
 export const signup   = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -82,7 +80,6 @@ const generateToken = ({
 
 /*
   Method - POST 
- 
   This is function is verify the email and password of user, and give a verified token and user data as response 
 */
 export const login = async (req: Request, res: Response, next: NextFunction) => {

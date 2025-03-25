@@ -1,15 +1,16 @@
 import jwt from "jsonwebtoken";
 import randomstring from "randomstring";
 
-import {db} from "../services/connectDB";
-import {  Response, NextFunction } from "express";
+import { db } from "../services/connectDB";
+import { Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { throwError } from "../utils/throwError";
 import { AuthRequest } from "../types/auth.middleware";
+import { MailInstance } from "../types/models/mail.model";
 
-const {Message, MessageFrom, Mail, User} = db;
+const { Message, MessageFrom, Mail, User } = db;
 
-const getMailFromDatabase = async (mailId : string | undefined | null) => {
+const getMailFromDatabase = async (mailId?: string) : Promise <MailInstance> => {
     const result = await Mail.findOne({
         where: { id: mailId },
         include: {
@@ -31,7 +32,7 @@ const getMailFromDatabase = async (mailId : string | undefined | null) => {
 
 
 
-const generateMail = async () : Promise<string> => {
+const generateMail = async (): Promise<string> => {
     let address = null;
 
     while (!address) {
@@ -56,13 +57,13 @@ const generateMail = async () : Promise<string> => {
     return address;
 };
 
-const newGhostMail = async (authEmail : string | null = null ) => {
+const newGhostMail = async (authEmail?: string) => {
     let address = await generateMail();
 
     let date = new Date();
     date.setDate(date.getDate() + 1);
 
-    const cond : {
+    const cond: {
         where: { address: string },
         defaults: {
             address: string,
@@ -90,9 +91,9 @@ const newGhostMail = async (authEmail : string | null = null ) => {
             userId: userFound.id
         }
 
-        const countMail = await Mail.count({where:{userId: userFound.id}});
+        const countMail = await Mail.count({ where: { userId: userFound.id } });
 
-        if(countMail >= 10){
+        if (countMail >= 10) {
             throwError(`You can only generate only 10 mails!`, StatusCodes.NOT_FOUND);
         }
     }
@@ -112,11 +113,12 @@ const newGhostMail = async (authEmail : string | null = null ) => {
 }
 
 // Generate a new ghost mail 
-export const generateNewGhostMail = async (req:AuthRequest, res:Response, next:NextFunction) => {
+export const generateNewGhostMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-        let result:{
+        let result: {
             success: boolean,
-            data: any,
+            data: MailInstance,
+            message: string,
             token?: string,
             isNotAuth?: boolean
         } = await newGhostMail();
@@ -164,8 +166,8 @@ export const authorizedGenerateGhostMail = async (req: AuthRequest, res: Respons
 
 
 // get mail data  
-export const getMailData = async (req: AuthRequest, res:Response, next:NextFunction) => {
-    let mailId = req.query.mailId as string | null | undefined;
+export const getMailData = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    let mailId = req.query.mailId as string | undefined;
 
     if (!req.isAuthUser) {
         mailId = req.tempMailId;
@@ -184,13 +186,13 @@ export const getMailData = async (req: AuthRequest, res:Response, next:NextFunct
 }
 
 // DELETE -> delete the mail for auth user
-export const deleteMail = async (req: AuthRequest, res:Response, next:NextFunction)  : Promise<void> => {
-    
+export const deleteMail = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+
     const mailId = req.body.mailId;
     const mailAddress = req.body.mailAddress;
 
     try {
-        const isDeletedMail =  await Mail.destroy({
+        const isDeletedMail = await Mail.destroy({
             where: { id: mailId }
         });
 
@@ -214,7 +216,7 @@ export const deleteMail = async (req: AuthRequest, res:Response, next:NextFuncti
 
 
 
-export const changeAddress = async (req : AuthRequest, res : Response, next: NextFunction) => {
+export const changeAddress = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.userId;
     const mailId = req.body.mailId;
     const mailAddress = req.body.mailAddress;
@@ -238,7 +240,7 @@ export const changeAddress = async (req : AuthRequest, res : Response, next: Nex
 
         res
             .status(StatusCodes.OK)
-            .json( data );
+            .json(data);
 
     } catch (err) {
         next(err);

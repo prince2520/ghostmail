@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 
 import { useEffect, useState } from 'react';
 
-const GenerateQRCode = ({ mailAddress } : { mailAddress: string }) => {
+const GenerateQRCode = ({ mailAddress } : { mailAddress: string | null | undefined }) => {
     const [imgSrc, setImgSrc] = useState<string>();
 
     useEffect(() => {

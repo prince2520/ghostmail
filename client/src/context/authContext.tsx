@@ -19,7 +19,7 @@ const AuthContext = React.createContext({
     loginHandler: (email:string, password:string) => { },
     signUpHandler: (userName:string, email:string, password:string, confirmPassword:string) => { },
     logoutHandler: () => { },
-    saveloginDataHandler: (res?: LoginResponse)=> {},
+    saveloginDataHandler: (res: LoginResponse)=> {},
     token: "",
     isAuth: false
 } );
@@ -173,7 +173,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
                 });
             });
         } else {
-            const mailId = localStorage.getItem("mailId") == "true" ? true : false;
+            const mailId = localStorage.getItem("mailId");
             const argsObj : {token:string, mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
 
             socketJoinNewMail(mailId);

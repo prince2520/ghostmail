@@ -62,7 +62,6 @@ const AllMails = () => {
                     key={m.id}
                     //value={m}
                     onSelect={()  => {
-                      console.log(m)
                       const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false };
                       dispatch(fetchMailDetail(argsObj));
                       setValue(m)

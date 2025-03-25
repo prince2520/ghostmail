@@ -1,4 +1,4 @@
-import {io, Socket } from "socket.io-client";
+import {io } from "socket.io-client";
 
 import { SOCKET_EVENT } from "../utils/socket_event";
 import { Mail } from "@/types/mail.d";
@@ -29,14 +29,14 @@ export const socketJoinNewMail = (mailId:string | null) => {
 };
 
 // MAIL - join multiple mail
-export const socketJoinAllMail = (mails: Mail[]) => {
+export const socketJoinAllMail = (mails: Mail[] |null) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.JOIN_ALL_MAIL, { mails });
   }
 }
 
 // MAIL - leave mail 
-export const socketLeaveMail = (mailId: string) => {
+export const socketLeaveMail = (mailId: string | null) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.LEAVE_MAIL, { mailId });
   }

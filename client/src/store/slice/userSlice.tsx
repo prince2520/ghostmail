@@ -3,8 +3,8 @@ import { User } from "@/types/user.d";
 
 
 // INITIAL STATE
-const initialUserState : User  = {
-    id: 0,
+const initialUserState: User = {
+    id: "",
     name: "",
     email: "",
     mails: []
@@ -18,12 +18,12 @@ const UserSlice = createSlice({
             state.id = action.payload.id;
             state.name = action.payload.name;
             state.email = action.payload.email,
-            state.mails = action.payload.mails;
+                state.mails = action.payload.mails;
         },
         addNewMail(state, action) {
-            if(action.payload.isNotAuth)
+            if (action.payload.isNotAuth)
                 state.mails.length = 0;
-            
+
             state.mails.push(action.payload);
         },
         deleteMail(state, action) {
