@@ -34,7 +34,7 @@ export const unauthorizedGenerateGhostMail = async (): Promise<UnAuthorizedGener
 
 
 // GET - MAIL DATA
-export const mailData = async (token?: string, mailId?: string): Promise<GetMailResponse> => {
+export const mailData = async (token?: string, mailId?: string | null): Promise<GetMailResponse> => {
   const response = await fetch(
     `${import.meta.env.VITE_API_SERVER_URL}/mail/get-mail-data?mailId=${mailId}`,
     {

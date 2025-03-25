@@ -15,17 +15,31 @@ import store, { useAppDispatch } from "../store/store";
 import { LoginResponse } from "@/types/auth.d";
 import { User } from "@/types/user.d";
 
-const AuthContext = React.createContext({
-    loginHandler: (email:string, password:string) => { },
-    signUpHandler: (userName:string, email:string, password:string, confirmPassword:string) => { },
+interface AuthContextType {
+    loginHandler: (email: string, password: string) => void;
+    signUpHandler: (
+        userName: string,
+        email: string,
+        password: string,
+        confirmPassword: string
+    ) => void;
+    logoutHandler: () => void;
+    saveloginDataHandler: (result: LoginResponse) => void;
+    token: string;
+    isAuth: boolean;
+}
+
+const AuthContext = React.createContext<AuthContextType>({
+    loginHandler: (email: string, password: string) => { },
+    signUpHandler: (userName: string, email: string, password: string, confirmPassword: string) => { },
     logoutHandler: () => { },
-    saveloginDataHandler: (res: LoginResponse)=> {},
+    saveloginDataHandler: (result: LoginResponse) => { },
     token: "",
     isAuth: false
-} );
+});
 
 
-export const AuthContextProvider = ({children} :{children:ReactNode}) => {
+export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string>("");
     const [isAuth, setIsAuth] = useState<boolean>(false);
 
@@ -50,7 +64,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
     }, [navigate]);
 
     const autoLogout = useCallback(
-        (milliseconds:number) => {
+        (milliseconds: number) => {
             setTimeout(() => {
                 logoutHandler();
             }, milliseconds);
@@ -61,7 +75,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
 
     // Sign Up
     const signUpHandler = useCallback(
-        (name: string, email:string, password:string, confirmPassword:string) => {
+        (name: string, email: string, password: string, confirmPassword: string) => {
             signup(name, email, password, confirmPassword)
                 .then((result) => {
                     toast({
@@ -89,7 +103,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
         ...result, isNotAuth: true
     }));
 
-    const saveloginDataHandler = (result:LoginResponse ) => {
+    const saveloginDataHandler = (result: LoginResponse) => {
         if (result.success) {
             localStorage.clear();
             store.dispatch(resetState())
@@ -118,7 +132,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
 
     // Login
     const loginHandler = useCallback(
-        (email: string, password:string) => {
+        (email: string, password: string) => {
             login(email, password)
                 .then((result) => {
                     saveloginDataHandler(result);
@@ -156,7 +170,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
 
         autoLogout(remainingMilliseconds);
 
-        const isNotAuth:boolean = localStorage.getItem("isNotAuth") == "true" ? true : false;
+        const isNotAuth: boolean = localStorage.getItem("isNotAuth") == "true" ? true : false;
 
         if (!isNotAuth) {
             setIsAuth(true);
@@ -174,7 +188,7 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
             });
         } else {
             const mailId = localStorage.getItem("mailId");
-            const argsObj : {token:string, mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
+            const argsObj: { token?: string , mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
 
             socketJoinNewMail(mailId);
             dispatch(fetchMailDetail(argsObj));
@@ -196,7 +210,6 @@ export const AuthContextProvider = ({children} :{children:ReactNode}) => {
             {children}
         </AuthContext.Provider>
     );
-
 };
 
 export default AuthContext;
