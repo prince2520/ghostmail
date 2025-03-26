@@ -30,10 +30,10 @@ interface AuthContextType {
 }
 
 const AuthContext = React.createContext<AuthContextType>({
-    loginHandler: (email: string, password: string) => { },
-    signUpHandler: (userName: string, email: string, password: string, confirmPassword: string) => { },
+    loginHandler: (_: string, __: string) => { },
+    signUpHandler: (_: string, __: string, ___: string, ____: string) => { },
     logoutHandler: () => { },
-    saveloginDataHandler: (result: LoginResponse) => { },
+    saveloginDataHandler: (_: LoginResponse) => { },
     token: "",
     isAuth: false
 });
@@ -188,7 +188,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             });
         } else {
             const mailId = localStorage.getItem("mailId");
-            const argsObj: { token?: string , mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
+            const argsObj: { token?: string, mailId: string | null, isNotAuth: boolean } = { token: localToken, mailId, isNotAuth: isNotAuth };
 
             socketJoinNewMail(mailId);
             dispatch(fetchMailDetail(argsObj));
