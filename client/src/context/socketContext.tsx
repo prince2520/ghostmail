@@ -3,16 +3,16 @@ import { useToast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { MailActions } from "../store/slice/mailSlice";
 
-import { socketInitiate, socketGetSendMessage, socketDisconnect} from "../services/socket";
+import { socketInitiate, socketGetSendMessage, socketDisconnect } from "../services/socket";
 import { RootState } from "@/store/store";
 import { Message } from "@/types/message.d";
 
 const SocketContext = React.createContext({});
 
-export const SocketContextProvider = ({ children } : {children : React.ReactNode}) => {
+export const SocketContextProvider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
-    const {toast} = useToast();
-    const userId = useSelector((state:RootState)=>state.user.id);
+    const { toast } = useToast();
+    const userId = useSelector((state: RootState) => state.user.id);
 
     useEffect(() => {
         socketInitiate();
@@ -21,16 +21,16 @@ export const SocketContextProvider = ({ children } : {children : React.ReactNode
         };
     }, [userId]);
 
-    useEffect(()=>{
-        socketGetSendMessage((err:any, { data } : {data:Message}) => {
+    useEffect(() => {
+        socketGetSendMessage((_: any, { data }: { data: Message }) => {
             toast({
-                title : "New Message", 
+                title: "New Message",
                 description: `${data.messageFrom.name} sended you a message!`
             })
 
             dispatch(MailActions.saveMessage(data));
         });
-    },[userId])
+    }, [userId])
 
     return (
         <SocketContext.Provider value={{}} >
