@@ -1,5 +1,8 @@
 import { Server } from 'http';
-import { Sequelize, Dialect } from 'sequelize';
+import { Sequelize } from "sequelize-typescript";
+import { Dialect } from "sequelize";
+
+
 
 export const db :{
   sequelize: Sequelize,
@@ -51,7 +54,7 @@ export const connectDB = (server: Server) => {
       console.log("Server Connected!!");
     });
 
-  }).catch(err => {
+  }).catch((err:any) => {
     console.error('Unable to connect to the database:', err);
   });
 };
