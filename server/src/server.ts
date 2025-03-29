@@ -17,7 +17,10 @@ import {init} from './services/socket/socketIO';
 init(server);
 
 app.use(cors({
-  origin: [process.env.CLIENT_URL as string],
+  origin: [
+    process.env.CLIENT_URL as string,
+    process.env.SMTP_SERVER_URL as string
+  ]
 }));
 
 import {connectDB} from "./services/connectDB";
