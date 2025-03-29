@@ -16,7 +16,9 @@ import {init} from './services/socket/socketIO';
 
 init(server);
 
-app.use(cors());
+app.use(cors({
+  origin: [process.env.CLIENT_URL as string],
+}));
 
 import {connectDB} from "./services/connectDB";
 import {socket} from "./services/socket/socket";
