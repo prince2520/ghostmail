@@ -1,10 +1,7 @@
 import { Server } from 'http';
 import { Sequelize } from "sequelize-typescript";
-import { Dialect } from "sequelize";
 
-
-
-export const db :{
+export const db: {
   sequelize: Sequelize,
   Mail?: any,
   User?: any,
@@ -14,10 +11,14 @@ export const db :{
   sequelize: {} as Sequelize
 };
 
-const sequelize = new Sequelize(process.env.DB_NAME as string, process.env.DB_USERNAME as string , process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  dialect: process.env.DB_DIALECT as Dialect
-});
+//  // Local use
+// const sequelize = new Sequelize(process.env.DB_NAME as string, process.env.DB_USERNAME as string , process.env.DB_PASSWORD, {
+//   host: process.env.DB_HOST,
+//   dialect: process.env.DB_DIALECT as Dialect
+// });
+
+const sequelize = new Sequelize(process.env.SUPABASE_DB_URL as string);
+
 
 exports.sequelize = sequelize;
 
@@ -43,7 +44,6 @@ db.MessageFrom.hasMany(db.Message);
 db.Message.belongsTo(db.MessageFrom);
 
 export const connectDB = (server: Server) => {
-
   sequelize.authenticate().then(async () => {
     console.log('Connection has been established successfully.');
 
@@ -54,7 +54,7 @@ export const connectDB = (server: Server) => {
       console.log("Server Connected!!");
     });
 
-  }).catch((err:any) => {
+  }).catch((err: any) => {
     console.error('Unable to connect to the database:', err);
   });
 };
