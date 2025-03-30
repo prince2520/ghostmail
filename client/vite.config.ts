@@ -5,8 +5,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
   plugins: [react()],
   server: {
-    cors: true, // Allows all origins
-    host: true, // Ensures it binds to the correct host
+    allowedHost : true
   },
   resolve: {
     alias: {
