@@ -77,7 +77,7 @@ const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: str
         <>
             <ScrollArea className="max-h-[30rem] h-fit w-full">
                 {messages.map((msg, idx) =>
-                    <>
+                    <div key={idx}>
                         {checkShowDateCondition(msg.createdAt, idx) && <div className="w-full flex items-center justify-center"><span className="px md:px-2 rounded-sm mb-2 font-medium text-xs bg-stone-50 dark:bg-zinc-900">{dateFormat(msg.createdAt, "ddd, dd mmm yyyy")}</span></div>}
                         <Dialog key={msg.id}>
                             <DialogTrigger className="w-full cursor-pointer hover:bg-stone-50 dark:hover:bg-zinc-900 border-b last:border-0 mb-2">
@@ -137,7 +137,7 @@ const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: str
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                    </>
+                    </div> 
                 )}
             </ScrollArea>
         </>

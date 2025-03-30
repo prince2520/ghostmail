@@ -23,8 +23,8 @@ import { RootState } from "@/store/store";
 import { Mail } from "@/types/mail.d";
 
 const HomeMail = () => {
-    const mail = useSelector((state:RootState) => state.mail);
-    const mailDetail = mail.mails.find((m:Mail) => mail.currMailId === m.id);
+    const mail = useSelector((state: RootState) => state.mail);
+    const mailDetail = mail.mails.find((m: Mail) => mail.currMailId === m.id);
 
     const { toast } = useToast();
 
@@ -38,8 +38,10 @@ const HomeMail = () => {
                         <Popover>
                             <PopoverTrigger>
                                 <button disabled={!mailDetail?.address} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                    <QrCode size={18} />
-                                    <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Scan QR Code</p>
+                                    <div>
+                                        <QrCode size={18} />
+                                        <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Scan QR Code</p>
+                                    </div>
                                 </button>
                             </PopoverTrigger>
                             <PopoverContent className="max-w-40"><GenerateQRCode mailAddress={mailDetail?.address} /></PopoverContent>
@@ -53,9 +55,10 @@ const HomeMail = () => {
                                         })
                                         navigator.clipboard.writeText(mailDetail?.address ?? '');
                                     }} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                        <Copy size={18} />
-                                        <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>
-
+                                        <div>
+                                            <Copy size={18} />
+                                            <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>
+                                        </div>
                                     </button>
                                 </TooltipTrigger>
                                 <TooltipContent>

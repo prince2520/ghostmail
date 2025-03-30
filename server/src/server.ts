@@ -23,6 +23,8 @@ app.use(cors({
   ]
 }));
 
+//app.use(cors());
+
 import {connectDB} from "./services/connectDB";
 import {socket} from "./services/socket/socket";
 
