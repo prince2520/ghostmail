@@ -2,17 +2,17 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import { CustomError } from "./types/error";
 
-import {config} from "dotenv";
+import { config } from "dotenv";
 config();
 
 import express from "express";
-import {Server} from "http";
+import { Server } from "http";
 
 const app = express();
-const server = new  Server(app);
+const server = new Server(app);
 
 import cors from 'cors';
-import {init} from './services/socket/socketIO';
+import { init } from './services/socket/socketIO';
 
 init(server);
 
@@ -25,8 +25,8 @@ app.use(cors({
 
 //app.use(cors());
 
-import {connectDB} from "./services/connectDB";
-import {socket} from "./services/socket/socket";
+import { connectDB } from "./services/connectDB";
+import { socket } from "./services/socket/socket";
 
 // Connect to Server
 connectDB(server);
@@ -55,3 +55,8 @@ app.use("/user", userRoute);
 app.use((err: CustomError, req: express.Request, res: express.Response, next: express.NextFunction) => {
   errorHandler(err, req, res, next);
 });
+
+
+// "test": "echo \"Error: no test specified\" && exit 1",
+//   "build": "tsc",
+//     "start": "node dist/server.js",
