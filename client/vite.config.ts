@@ -5,8 +5,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 5173, // Default to 5173 if PORT is not set
-    host: '0.0.0.0' // Allow external access (important for Render)
+    host: true
   },
   resolve: {
     alias: {
