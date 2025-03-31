@@ -19,7 +19,6 @@ export const db: {
 
 const sequelize = new Sequelize(process.env.SUPABASE_DB_URL as string);
 
-
 exports.sequelize = sequelize;
 
 db.sequelize = sequelize;

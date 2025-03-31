@@ -50,9 +50,7 @@ export const saveMessage = async (req: AuthRequest, res:Response, next:NextFunct
                 required: false,
             }
         });
-        console.log("data", data)
-        console.log("io", io)
-
+        
         io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data :getMessage });
 
     } catch (err) {
