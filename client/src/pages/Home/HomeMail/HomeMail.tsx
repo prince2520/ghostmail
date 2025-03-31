@@ -38,7 +38,7 @@ const HomeMail = () => {
                         <Popover>
                             <PopoverTrigger>
                                 <button disabled={!mailDetail?.address} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                    <div>
+                                    <div className="flex flex-nowrap">
                                         <QrCode size={18} />
                                         <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Scan QR Code</p>
                                     </div>
@@ -55,7 +55,7 @@ const HomeMail = () => {
                                         })
                                         navigator.clipboard.writeText(mailDetail?.address ?? '');
                                     }} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                        <div>
+                                        <div className="flex flex-nowrap" >
                                             <Copy size={18} />
                                             <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>
                                         </div>
