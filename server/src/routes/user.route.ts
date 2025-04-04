@@ -1,13 +1,13 @@
 import express from "express";
 
 import {
-    fetchUserData
+    getUser
 } from "../controllers/user.controller";
 
 import {isAuth} from "../middleware/isAuth.middleware";
 
 const router = express.Router();
 
-router.get('/user-data', isAuth, fetchUserData);
+router.get('/get-user', isAuth, getUser);
 
 export default router;

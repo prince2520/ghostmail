@@ -12,11 +12,32 @@ const { Mail, User } = db;
 
 const client = new OAuth2Client();
 
-/*
-  Method - POST 
-  This is function help user to signup and store data in database  
-*/
+// Generate token which valid for a period of time
+const generateToken = ({
+  email,
+  userId,
+  isAuth
+}: { email: string, userId: string, isAuth: boolean }) => {
 
+  const secretKey = process.env.JWT_SECRET_KEY;
+
+  if (!secretKey) {
+    throw new Error("JWT_SECRET_KEY is not defined");
+  }
+
+  return jwt.sign(
+    {
+      email,
+      userId,
+      isAuth
+    },
+    secretKey,
+    { expiresIn: "24h" }
+  );
+}
+
+
+// CONTROLLER - SIGNUP
 export const signup   = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -54,34 +75,8 @@ export const signup   = async (req: Request, res: Response, next: NextFunction) 
 };
 
 
-// Generate token which valid for a period of time
-const generateToken = ({
-  email,
-  userId,
-  isAuthUser
-}: { email: string, userId: string, isAuthUser: boolean }) => {
 
-  const secretKey = process.env.JWT_SECRET_KEY;
 
-  if (!secretKey) {
-    throw new Error("JWT_SECRET_KEY is not defined");
-  }
-
-  return jwt.sign(
-    {
-      email,
-      userId,
-      isAuthUser
-    },
-    secretKey,
-    { expiresIn: "24h" }
-  );
-}
-
-/*
-  Method - POST 
-  This is function is verify the email and password of user, and give a verified token and user data as response 
-*/
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -114,7 +109,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       const token = generateToken({
         email: userFound.email,
         userId: userFound.id,
-        isAuthUser: true
+        isAuth: true
       });
 
       res.status(StatusCodes.OK).json({
@@ -133,13 +128,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     next(err);
   }
 };
-
-
-/*
-  Method - POST 
- 
-  This is function handle google authentication login user if not user found then create user and generate verified token 
-*/
 
 
 export const googleAuthentication = async (req: Request, res: Response, next: NextFunction) => {
@@ -180,7 +168,7 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
     const token = generateToken({
       email: userFound.email,
       userId: userFound.id,
-      isAuthUser: true
+      isAuth: true
     });
 
 

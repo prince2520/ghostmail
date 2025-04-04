@@ -19,12 +19,11 @@ import {
 
 import GenerateQRCode from "../../../components/custom/GenerateQRCode";
 
-import { RootState } from "@/store/store";
-import { Mail } from "@/types/mail.d";
+import { RootState } from "@/redux/store";
 
 const HomeMail = () => {
-    const mail = useSelector((state: RootState) => state.mail);
-    const mailDetail = mail.mails.find((m: Mail) => mail.currMailId === m.id);
+    const {mails, currMailId} = useSelector((state: RootState) => state.mail);
+    let mailDetail = mails.find((m) => currMailId === m.id);
 
     const { toast } = useToast();
 
@@ -33,33 +32,29 @@ const HomeMail = () => {
             <div className="w-[95%] flex gap-y-6 flex-col items-center justify-center">
                 <h1 className="font-bold text-xl md:text-2xl text-center">Your Temporary Email Address</h1>
                 <div className="flex gap-x-6 gap-y-4 w-4/5 flex-col md:flex-row">
-                    <Input className="text-sm md:text-md border-neutral-300 dark:border-neutral-500" disabled type="email" defaultValue={mailDetail?.address} />
+                    <Input className="text-sm md:text-md border-neutral-300 dark:border-neutral-500" disabled type="email" value={mailDetail?.address || ""}/>
                     <div className="flex flex-row gap-x-4 justify-center items-center">
                         <Popover>
-                            <PopoverTrigger>
-                                <button disabled={!mailDetail?.address} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                    <div className="flex flex-nowrap">
-                                        <QrCode size={18} />
-                                        <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Scan QR Code</p>
-                                    </div>
-                                </button>
+                            <PopoverTrigger disabled={!mailDetail?.address} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
+                                <div className="flex flex-nowrap">
+                                    <QrCode size={18} />
+                                    <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Scan QR Code</p>
+                                </div>
                             </PopoverTrigger>
-                            <PopoverContent className="max-w-40"><GenerateQRCode mailAddress={mailDetail?.address} /></PopoverContent>
+                            <PopoverContent className="max-w-40"><GenerateQRCode/></PopoverContent>
                         </Popover>
                         <TooltipProvider>
                             <Tooltip>
-                                <TooltipTrigger>
-                                    <button disabled={!mailDetail?.address} onClick={() => {
-                                        toast({
-                                            description: `${mailDetail?.address} copied to clipboard!`
-                                        })
-                                        navigator.clipboard.writeText(mailDetail?.address ?? '');
-                                    }} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
-                                        <div className="flex flex-nowrap" >
-                                            <Copy size={18} />
-                                            <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>
-                                        </div>
-                                    </button>
+                                <TooltipTrigger disabled={!mailDetail?.address} onClick={() => {
+                                    toast({
+                                        description: `${mailDetail?.address} copied to clipboard!`
+                                    })
+                                    navigator.clipboard.writeText(mailDetail?.address ?? '');
+                                }} className="border border-neutral-300 dark:border-0 text-zinc-800 cursor-pointer px-2 py-2 flex items-center justify-center bg-white rounded-sm md:rounded-full">
+                                    <div className="flex flex-nowrap" >
+                                        <Copy size={18} />
+                                        <p className="text-xs ml-2 font-semibold text-nowrap md:hidden">Copy to clipboard</p>
+                                    </div>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Copy to clipboard</p>

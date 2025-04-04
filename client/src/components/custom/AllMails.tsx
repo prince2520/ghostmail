@@ -17,21 +17,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useContext } from "react";
 import { useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { RootState, useAppDispatch } from "@/store/store";
-import { fetchMailDetail } from "../../store/slice/mailSlice";
+import { RootState, useAppDispatch } from "@/redux/store";
 
-import AuthContext from "../../context/authContext";
 import { Mail } from "@/types/mail.d";
+import { MailActions } from "@/redux/slices/mailSlice";
 
 const AllMails = () => {
-  const [open, setOpen] = React.useState<boolean>(false)
   const [value, setValue] = React.useState<Mail>();
+  const [open, setOpen] = React.useState<boolean>(false)
 
-  const user = useSelector((state:RootState) => state.user);
-  const authCtx = useContext(AuthContext);
+  const { mails } = useSelector((state: RootState) => state.mail);
 
   const dispatch = useAppDispatch();
 
@@ -44,8 +41,8 @@ const AllMails = () => {
           aria-expanded={open}
           className="w-fit justify-between"
         >
-          {value && user.mails.some((m) => m.id === value.id)
-            ? user.mails.find((m) => m.id === value.id)?.address
+          {value && mails.some((m) => m.id === value.id)
+            ? mails.find((m) => m.id === value.id)?.address
             : "Select Temp Mail..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -57,15 +54,15 @@ const AllMails = () => {
             <CommandEmpty>No Temp Mail found.</CommandEmpty>
             <ScrollArea className="h-[180px] rounded-md px-4 py">
               <CommandGroup>
-                {user?.mails.map((m: Mail) => (
+                {mails.map((m: Mail) => (
                   <CommandItem
-                    key={m.id}
-                    //value={m}
-                    onSelect={()  => {
-                      const argsObj = { token: authCtx.token, mailId: m.id, isNotAuth: false };
-                      dispatch(fetchMailDetail(argsObj));
-                      setValue(m)
-                      setOpen(false)
+                    key={`${m.id}`}
+                    onSelect={() => {
+                      if (value?.id !== m.id) {
+                        dispatch(MailActions.updateCurrentMailId(m.id));
+                        setValue(m);
+                      }
+                      setOpen(false);
                     }}
                   >
                     {m.address}

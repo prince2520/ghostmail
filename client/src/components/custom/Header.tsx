@@ -1,11 +1,9 @@
 import Lottie from "lottie-react";
-import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from 'react-router-dom';
 
 import Profile from "./Profile.js";
-import AuthContext from "../../context/authContext.js";
 import LogoAnimation from "../../assets/lottifies/LogoAnimation.json";
 
 import {
@@ -21,13 +19,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import ModeToggle from "./ModeToggle.js";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store.js";
+import { useAuth } from "@/hooks/useAuth.js";
 
 const Logout = () => {
-    const authCtx = useContext(AuthContext);
+    const {logout} = useAuth();
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger><Button>Logout</Button></AlertDialogTrigger>
+            <AlertDialogTrigger asChild={true}><Button>Logout</Button></AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
@@ -39,7 +40,7 @@ const Logout = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => authCtx.logoutHandler()}>Logout</AlertDialogAction>
+                    <AlertDialogAction onClick={() => logout()}>Logout</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
@@ -48,7 +49,7 @@ const Logout = () => {
 
 const Header = () => {
     const location = useLocation();
-    const authCtx = useContext(AuthContext)
+    const {isAuth} = useSelector((state:RootState) => state.user);
 
     return (
         <header className="flex justify-between w-full">
@@ -59,10 +60,10 @@ const Header = () => {
                 <h3 className="hidden md:block font-extrabold text-teal-700">GHOSTMAIL</h3>
             </div>
             <div className="flex gap-x-4 items-center justify-center">
-                {authCtx.isAuth && <Profile/>}
+                {isAuth && <Profile/>}
                 <ModeToggle/>
                 {location.pathname === "/home" ?
-                    !authCtx.isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)
+                    !isAuth ? (<Link to={"/auth/login"} className="link"><Button>Login/SignUp</Button></Link>) : (<Logout/>)
                     : <Link to={"/home"} className="link"><Button>Home</Button></Link>}
             </div>
         </header>

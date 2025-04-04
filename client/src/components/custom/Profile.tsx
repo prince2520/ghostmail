@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { RootState } from "@/store/store";
+import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
 const Profile = () => {

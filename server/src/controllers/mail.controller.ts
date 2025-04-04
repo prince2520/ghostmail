@@ -10,7 +10,7 @@ import { MailInstance } from "../types/models/mail.model";
 
 const { Message, MessageFrom, Mail, User } = db;
 
-const getMailFromDatabase = async (mailId?: string) : Promise <MailInstance> => {
+const getMailFromDatabase = async (mailId?: string): Promise<MailInstance> => {
     const result = await Mail.findOne({
         where: { id: mailId },
         include: {
@@ -57,7 +57,7 @@ const generateMail = async (): Promise<string> => {
     return address;
 };
 
-const newGhostMail = async (authEmail?: string) => {
+const newMail = async (authEmail?: string) => {
     let address = await generateMail();
 
     let date = new Date();
@@ -112,29 +112,46 @@ const newGhostMail = async (authEmail?: string) => {
     return result;
 }
 
+
+export const createAuthorizedMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const authEmail = req.email;
+
+    try {
+        const result = await newMail(authEmail);
+
+        res
+            .status(StatusCodes.OK)
+            .json(result);
+
+    } catch (err) {
+        next(err);
+    };
+}
+
+
 // Generate a new ghost mail 
-export const generateNewGhostMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createUnAuthorizedMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         let result: {
             success: boolean,
             data: MailInstance,
             message: string,
             token?: string,
-            isNotAuth?: boolean
-        } = await newGhostMail();
+            isAuth?: boolean
+        } = await newMail();
 
-        if (!req.isAuthUser) {
+        if (!req.isAuth) {
             const token = jwt.sign(
                 {
-                    isAuthUser: false,
-                    tempMailId: result.data.id
+                    isAuth: false,
+                    mailId: result.data.id
                 },
                 process.env.JWT_SECRET_KEY as string,
                 { expiresIn: "24h" }
             );
 
             result.token = token;
-            result.isNotAuth = true;
+            result.isAuth = req.isAuth;
         };
 
         res
@@ -149,29 +166,10 @@ export const generateNewGhostMail = async (req: AuthRequest, res: Response, next
 
 
 
-export const authorizedGenerateGhostMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
-    const authEmail = req.email;
-
-    try {
-        const result = await newGhostMail(authEmail);
-
-        res
-            .status(StatusCodes.OK)
-            .json(result);
-
-    } catch (err) {
-        next(err);
-    };
-}
-
 
 // get mail data  
-export const getMailData = async (req: AuthRequest, res: Response, next: NextFunction) => {
-    let mailId = req.query.mailId as string | undefined;
-
-    if (!req.isAuthUser) {
-        mailId = req.tempMailId;
-    }
+export const getMail = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const mailId = req.mailId;
 
     try {
         const mail = await getMailFromDatabase(mailId);
@@ -216,7 +214,7 @@ export const deleteMail = async (req: AuthRequest, res: Response, next: NextFunc
 
 
 
-export const changeAddress = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updatedMailAddress = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.userId;
     const mailId = req.body.mailId;
     const mailAddress = req.body.mailAddress;
@@ -234,7 +232,6 @@ export const changeAddress = async (req: AuthRequest, res: Response, next: NextF
             success: true,
             mailId: mailId,
             updatedMailAddress: address,
-            isChangeAddress: true,
             message: `${mailAddress} changed to ${address}`
         };
 
