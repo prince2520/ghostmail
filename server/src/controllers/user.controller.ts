@@ -20,7 +20,12 @@ export const getUser = async (req:AuthRequest, res:Response, next:NextFunction) 
 
         res.status(StatusCodes.OK).json({
             success: true,
-            data : userFound,
+            data: {
+                id: userFound.id,
+                name: userFound.name,
+                email: userFound.email,
+                mails: userFound.mails
+              },
             token : req.body.token
         });
     } catch (err) {

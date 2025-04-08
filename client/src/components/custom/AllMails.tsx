@@ -28,7 +28,7 @@ const AllMails = () => {
   const [value, setValue] = React.useState<Mail>();
   const [open, setOpen] = React.useState<boolean>(false)
 
-  const { mails } = useSelector((state: RootState) => state.mail);
+  const { mails } = useSelector((state:RootState) => state.mail);
 
   const dispatch = useAppDispatch();
 

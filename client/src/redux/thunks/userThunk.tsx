@@ -8,10 +8,11 @@ export const getUser = createAsyncThunk(
     async ({ token }: { token: string }, { rejectWithValue }) => {
         try {
             let response = await getUserRequest(token);
+
             return {...response, token};
 
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error:any) {
+            return rejectWithValue(error.message || 'Something goes wrong!');
         }
     }
 );
@@ -25,8 +26,8 @@ export const signup = createAsyncThunk(
             let response = await signupRequest(name, email, password, confirmPassword);
             return response;
 
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error : any) {
+            return rejectWithValue(error.message || 'Something goes wrong!');
         }
     }
 );
@@ -41,7 +42,7 @@ export const login = createAsyncThunk(
             return response;
 
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue(error || 'Something goes wrong!');
         }
     }
 );
@@ -53,9 +54,10 @@ export const googleAuth = createAsyncThunk(
         try {
 
             let response = await googleAuthRequest(credentialResponse);
+            
             return response;
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Something goes wrong!');
         }
     }
 );

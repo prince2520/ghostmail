@@ -3,7 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { MailActions } from "@/redux/slices/mailSlice";
 
-import { socketInitiate, socketGetSendMessage, socketDisconnect } from "../services/socket";
+import { socketInitiate, socketGetSendMessage } from "../services/socket";
 import { RootState } from "@/redux/store";
 import { Message } from "@/types/message.d";
 

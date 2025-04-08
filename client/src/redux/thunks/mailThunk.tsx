@@ -79,7 +79,8 @@ export const deleteMessage = createAsyncThunk(
     async ({ token, mailId, messageId }: { token: string, mailId: string, messageId: string }, { rejectWithValue }) => {
 
         try {
-            let response = deleteMessageRequest(token, mailId, messageId);
+            console.log("token", token);
+            let response = await deleteMessageRequest(token, mailId, messageId);
             return { ...response, mailId, messageId };
         } catch (error) {
             return rejectWithValue(error);

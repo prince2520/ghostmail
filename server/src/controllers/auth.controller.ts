@@ -120,7 +120,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
           id: userFound.id,
           name: userFound.name,
           email: userFound.email,
-          mails: userFound.mails
+          mails: userFound.mails || []
         }
       });
     }
@@ -171,6 +171,7 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
       isAuth: true
     });
 
+    
 
     res.status(StatusCodes.OK).json({
       success: true,

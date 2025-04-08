@@ -3,6 +3,7 @@ import { User } from "@/types/user.d";
 import { getUser, googleAuth, login } from "../thunks/userThunk";
 
 const setUserState = (state: User, action: PayloadAction<{ token: string; data: User; success: boolean }>) => {
+    console.log("setUSerState",action.payload)
     state.id = action.payload.data.id;
     state.name = action.payload.data.name;
     state.email = action.payload.data.email;

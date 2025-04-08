@@ -12,6 +12,7 @@ export const MAIL_ROUTES = {
 
 export const USER_ROUTES = {
     GET_USER__ADDRESS: `${API_BASE_URL}/user/get-user`,
+    
     LOGIN__ADDRESS: `${API_BASE_URL}/auth/login`,
     SIGNUP__ADDRESS: `${API_BASE_URL}/auth/signup`,
     GOOGLE_AUTH__ADDRESS: `${API_BASE_URL}/auth/google-auth`

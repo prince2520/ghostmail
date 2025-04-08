@@ -67,7 +67,7 @@ export const deleteMessage = async (req: AuthRequest, res: Response, next : Next
 
     if (req.isAuth) {
         mailId = req.mailId;
-    } 
+    }
 
     try {
         const isDeletedMsgSuccess = await Message.destroy({where: { id : messageId, mailId : mailId}});
@@ -88,5 +88,4 @@ export const deleteMessage = async (req: AuthRequest, res: Response, next : Next
     }catch(err){
         next(err);
     }
-
 }

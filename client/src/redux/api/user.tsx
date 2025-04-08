@@ -17,7 +17,7 @@ export const getUserRequest = async (token:string) : Promise<FetchUserDataRespon
         }
     );
 
-    const result = throwError(response)
+    const result = throwError(response);
     return result;
 };
 
@@ -54,6 +54,7 @@ export const loginRequest = async (email:string, password:string) : Promise<Logi
         }),
     });
     const result = throwError(response);
+
     return result;
 }
 

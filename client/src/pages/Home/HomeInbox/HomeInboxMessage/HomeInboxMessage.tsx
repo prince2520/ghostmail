@@ -21,7 +21,6 @@ import {
 import { Message } from "@/types/message.d";
 import { RootState, useAppDispatch } from "@/redux/store";
 import { Button } from "@/components/ui/button";
-import { MailActions } from "../../../../redux/slice/mailSlice";
 import { useSelector } from "react-redux";
 import { deleteMessage } from "@/redux/thunks/mailThunk";
 
@@ -30,7 +29,7 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
 
     const { toast } = useToast();
     const dispatch = useAppDispatch();
-    const { isAuth, token } = useSelector((state: RootState) => state.user);
+    const { token } = useSelector((state: RootState) => state.user);
 
 
     //Generate random color 
