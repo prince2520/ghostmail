@@ -27,7 +27,6 @@ const HomeMailSettings = () => {
         dispatch(createNewMail({ token }))
             .unwrap()
             .then((res) => {
-                console.log(res);
                 socketJoinNewMail(res.data.id);
 
                 if (!res.isAuth) {
@@ -48,11 +47,7 @@ const HomeMailSettings = () => {
                     localStorage.setItem("expiryDate", expiryDate.toISOString());
                 }
 
-            })
-            .catch(() => {
-
             });
-
     }
 
     const copyToClipBoard = () => {

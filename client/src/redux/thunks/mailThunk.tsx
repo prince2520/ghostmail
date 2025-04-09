@@ -18,8 +18,8 @@ export const createNewMail = createAsyncThunk(
                 response = await createUnAuthorizedMailRequest();
 
             return { ...response, isAuth: state.user.isAuth };
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error:any) {
+            return rejectWithValue(error.message || "Something goes wrong!");
         }
     }
 );
@@ -32,8 +32,8 @@ export const getMail = createAsyncThunk(
         try {
             let result = await getMailRequest(token, mailId);
             return { mailId, mail: result, isAuth };
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error:any) {
+            return rejectWithValue(error.message || "Something goes wrong!");
         }
     }
 );
@@ -49,8 +49,8 @@ export const deleteMail = createAsyncThunk(
             let response = await deleteMailRequest(token, mailId, mailAddress);
             return { ...response, mailId, mailAddress };
 
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error:any) {
+            return rejectWithValue(error.message || "Something goes wrong!");
         }
     }
 );
@@ -63,11 +63,10 @@ export const updateMailAddress = createAsyncThunk(
     async ({ token, mailId, mailAddress }: { token: string, mailId?: string, mailAddress?: string }, { rejectWithValue }) => {
         try {
             let response = await updateMailAddressRequest(token, mailId, mailAddress);
-            console.log("response", response);
             return { ...response, mailId, mailAddress };
 
-        } catch (error) {
-            return rejectWithValue(error);
+        } catch (error:any) {
+            return rejectWithValue(error.message || "Something goes wrong!");
         }
     }
 );
@@ -79,7 +78,6 @@ export const deleteMessage = createAsyncThunk(
     async ({ token, mailId, messageId }: { token: string, mailId: string, messageId: string }, { rejectWithValue }) => {
 
         try {
-            console.log("token", token);
             let response = await deleteMessageRequest(token, mailId, messageId);
             return { ...response, mailId, messageId };
         } catch (error) {

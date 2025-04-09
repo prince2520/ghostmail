@@ -18,14 +18,14 @@ import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { SignUpSchema } from "../../../schema/signup";
 import { useAppDispatch } from '@/redux/store.js';
-import { useToast } from '@/hooks/use-toast.js';
 import { signup } from '@/redux/thunks/userThunk.js';
+
+import { toast } from "react-toastify";
 
 
 const AuthenticationSignUp = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { toast } = useToast();
 
     // Define your form
     const form = useForm<z.infer<typeof SignUpSchema>>({
@@ -43,17 +43,13 @@ const AuthenticationSignUp = () => {
             dispatch(signup({ name, email, password, confirmPassword }))
                 .unwrap()
                 .then((res) => {
-                    toast({
-                        title: "Success",
-                        description: res.message,
-                        variant: "success"
+                    toast(`${res.message}`, {
+                        type: "success"
                     });
                     navigate("/auth/login");
                 }).catch((err) => {
-                    toast({
-                        title: "Error",
-                        description: err.message,
-                        variant: "destructive"
+                    toast(`${err}`, {
+                        type: "error"
                     });
                 });
         },

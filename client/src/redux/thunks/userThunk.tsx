@@ -12,7 +12,7 @@ export const getUser = createAsyncThunk(
             return {...response, token};
 
         } catch (error:any) {
-            return rejectWithValue(error.message || 'Something goes wrong!');
+            return rejectWithValue(error|| 'Something goes wrong!');
         }
     }
 );

@@ -53,23 +53,7 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
     };
 
     const deleteMessageHandler = (messageId: string) => {
-        dispatch(deleteMessage({ token, mailId, messageId }))
-            .unwrap()
-            .then(res => {
-                if (res.success) {
-                    toast({
-                        title: "Success",
-                        description: res.message,
-                        variant: "success"
-                    });
-                }
-            }).catch(err => {
-                toast({
-                    title: "Error",
-                    description: err.message,
-                    variant: "destructive"
-                });
-            });
+        dispatch(deleteMessage({ token, mailId, messageId }));            
     }
 
     return (

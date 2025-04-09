@@ -19,8 +19,15 @@ import { MailActions } from './redux/slices/mailSlice';
 import { useToast } from './hooks/use-toast';
 import { getMail } from './redux/thunks/mailThunk';
 
+import { ToastContainer } from 'react-toastify';
+import { Slide } from 'react-toastify';
+
+
+
+
 
 import './App.css';
+import { useTheme } from './components/ui/theme-provider';
 
 function App() {
   const location = useLocation();
@@ -29,6 +36,8 @@ function App() {
   const dispatch = useAppDispatch();
 
   const { logout, autoLogout } = useAuth();
+
+  const {theme} = useTheme();
 
 
   useEffect(() => {
@@ -57,28 +66,35 @@ function App() {
         .then((res) => {
           socketJoinAllMail(res.data.mails)
           dispatch(MailActions.getMails(res.data.mails));
-        })
-        .catch(err => {
-          toast({
-            title: "Error",
-            description: err.message,
-            variant: "destructive"
-          });
         });
     } else {
       const mailId = localStorage.getItem("mailId") ?? "";
 
       if (mailId) {
         socketJoinNewMail(mailId);
-        dispatch(getMail( { token: localToken, mailId, isAuth: isAuth }));
+        dispatch(getMail({ token: localToken, mailId, isAuth: isAuth }));
       }
-      
+
     };
   }, []);
 
   return (
     <div className='flex  gap-y-4 flex-col my-4 md:my-6 w-full mx-2	md:mx-6 max-w-5xl'>
       <Header />
+      <ToastContainer
+        position="bottom-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        aria-label="Toast notifications container"
+        draggable
+        pauseOnHover
+        transition={Slide}
+        theme={theme !== "dark"? "dark" : "light"}
+      />
       <Routes>
         <Route path="/auth" element={<Authentication />}>
           <Route path="login" element={<AuthenticationLogin />} />

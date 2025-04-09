@@ -22,18 +22,6 @@ const GoogleAuth = ({ text }: { text: any }) => {
                     .then((res) => {
                         dispatch(MailActions.getMails(res.data.mails));
                         authTimer(res);
-                        toast({
-                            title: text,
-                            description: `${res.message} successfully!`,
-                            variant: "success",
-                            
-                        })
-                    }).catch((err) => {
-                        toast({
-                            title: "Error",
-                            description: err.message,
-                            variant: "destructive"
-                        })
                     });
             }}
             onError={() => {
