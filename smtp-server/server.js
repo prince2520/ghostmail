@@ -25,7 +25,7 @@ const server = new SMTPSERVER({
                 try {
                     // Send the parsed email data once after it's fully received
                     await fetch(
-                        `${process.env.SERVERURL}/message/save-message`,
+                        `${process.env.SERVERURL}/message/create-message`,
                         {
                             method: "POST",
                             headers: {
