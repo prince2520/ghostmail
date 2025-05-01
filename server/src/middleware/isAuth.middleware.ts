@@ -26,15 +26,14 @@ export const isAuth = (req:AuthRequest, res:Response, next:NextFunction) => {
         throwError("Not authenticated", StatusCodes.UNAUTHORIZED)
     }
 
-    const payload = decodedToken as JwtPayload & { isAuthUser: boolean, userId: string, email: string, tempMailId: string };
-
-    if (payload.isAuthUser) {
+    const payload = decodedToken as JwtPayload & { isAuth: boolean, userId: string, email: string, mailId: string };
+    if (payload.isAuth) {
         req.userId = payload.userId;
         req.email = payload.email;
     } else {
-        req.tempMailId = payload.tempMailId;
+        req.mailId = payload.mailId;
     }
 
-    req.isAuthUser = (decodedToken as JwtPayload & { isAuthUser: boolean }).isAuthUser;
+    req.isAuth = (decodedToken as JwtPayload & { isAuth: boolean }).isAuth;
     next();
 }

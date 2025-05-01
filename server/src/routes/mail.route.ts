@@ -1,22 +1,22 @@
 import express from "express";
 
 import{
-    generateNewGhostMail,
-    authorizedGenerateGhostMail,
-    getMailData,
+    createUnAuthorizedMail,
+    createAuthorizedMail,
+    getMail,
     deleteMail,
-    changeAddress
+    updatedMailAddress
 } from "../controllers/mail.controller";
 
 import {isAuth} from "../middleware/isAuth.middleware";
 
 const router = express.Router();
 
-router.get('/get-mail-data', isAuth, getMailData);
+router.get('/create-authorized-mail', isAuth, createAuthorizedMail);
+router.get('/create-unauthorized-mail', createUnAuthorizedMail);
+router.get('/get-mail', isAuth, getMail);
 router.delete('/delete-mail', isAuth, deleteMail);
-router.get('/generate-new-mail', generateNewGhostMail);
-router.patch('/change-address', isAuth, changeAddress);
-router.get('/auth-generate-new-mail', isAuth, authorizedGenerateGhostMail);
+router.patch('/update-mail-address', isAuth, updatedMailAddress);
 
 
 export default router;

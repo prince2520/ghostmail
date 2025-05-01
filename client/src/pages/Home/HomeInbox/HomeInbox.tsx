@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 
 import HomeInboxNoMails from "./HomeInboxNoMails/HomeInboxNoMails";
 import HomeInboxMessages from "./HomeInboxMessage/HomeInboxMessage";
-import { RootState } from "@/store/store";
+import { RootState } from "@/redux/store";
 
 const HomeInbox = () => {
     const mail = useSelector((state: RootState) => state.mail);

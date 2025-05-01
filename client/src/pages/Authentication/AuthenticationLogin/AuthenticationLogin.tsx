@@ -1,6 +1,5 @@
-import { useContext } from 'react';
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -15,13 +14,21 @@ import {
 } from "@/components/ui/form";
 
 
-import AuthContext from "../../../context/authContext.js";
-import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
-
 import { LoginSchema } from "../../../schema/login";
+import store, { useAppDispatch } from '@/redux/store.js';
+import { login } from '@/redux/thunks/userThunk.js';
+import { useToast } from '@/hooks/use-toast.js';
+import { resetState } from '@/redux/resetAction.js';
+import GoogleAuth from "../../../components/custom/GoogleAuth.jsx";
+import { MailActions } from "@/redux/slices/mailSlice.js";
+import { useAuth } from "@/hooks/useAuth.js";
 
 const AuthenticationLogin = () => {
-    const authCtx = useContext(AuthContext);
+    const { toast } = useToast();
+    const dispatch = useAppDispatch();
+
+    const { authTimer } = useAuth();
+
 
     // Define your form
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -34,14 +41,36 @@ const AuthenticationLogin = () => {
 
     // Submit your login form
     function onSubmit(values: z.infer<typeof LoginSchema>) {
-        authCtx.loginHandler(values.email, values.password);
+        store.dispatch(resetState());
+        localStorage.clear();
+
+        dispatch(login({
+            email: values.email,
+            password: values.password
+        }))
+            .unwrap()
+            .then(res => {
+                dispatch(MailActions.getMails(res.data.mails));
+                authTimer(res);
+                toast({
+                    title: "Login",
+                    description: `${res.message} successfully!`,
+                    variant: "success"
+                })
+            }).catch((err) => {
+                toast({
+                    title: "Error",
+                    description: err.message,
+                    variant: "destructive"
+                })
+            });
     };
 
     return (
         <div className="w-full sm:w-[90%] md:basis-1/2  max-w-5xl  flex justify-center items-center flex-col gap-y-2 ">
             <h1 className="text-xl md:text-2xl	font-bold"> Login your account </h1>
 
-            <GoogleAuth text={"signin_with"}/>
+            <GoogleAuth text={"signin_with"} />
 
             <div className="w-full relative flex items-center justify-center">
                 <span className="z-10 text-xs font-semibold	">or</span>

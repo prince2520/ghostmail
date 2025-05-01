@@ -5,9 +5,8 @@ import { db } from "../services/connectDB";
 
 const  {User, Mail}  = db;
 
-export const fetchUserData = async (req:AuthRequest, res:Response, next:NextFunction) => {
+export const getUser = async (req:AuthRequest, res:Response, next:NextFunction) => {
     const email = req.email;
-
     try {
         const userFound = await User.findOne({
             where: { email: email },
@@ -21,7 +20,13 @@ export const fetchUserData = async (req:AuthRequest, res:Response, next:NextFunc
 
         res.status(StatusCodes.OK).json({
             success: true,
-            data : userFound
+            data: {
+                id: userFound.id,
+                name: userFound.name,
+                email: userFound.email,
+                mails: userFound.mails
+              },
+            token : req.body.token
         });
     } catch (err) {
         next(err);

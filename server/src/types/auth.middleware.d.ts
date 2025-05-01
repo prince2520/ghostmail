@@ -6,7 +6,7 @@ import { JwtPayload } from "jsonwebtoken";
 export interface AuthRequest extends Request{
     email?: string,
     userId? : string,
-    tempMailId? : string,
-    isAuthUser?  : boolean | JwtPayload,
+    mailId? : string,
+    isAuth?  : boolean | JwtPayload,
     get : any
 }

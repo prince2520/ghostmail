@@ -1,7 +1,7 @@
 import { combineReducers, UnknownAction } from '@reduxjs/toolkit';
 
-import userReducer from "./slice/userSlice";
-import mailReducer from "./slice/mailSlice";
+import userReducer from "./slices/userSlice";
+import mailReducer from "./slices/mailSlice";
 
 import { resetState } from './resetAction';
 import { IMailSlice } from '@/types/mail.d';
@@ -12,7 +12,7 @@ const appReducer = combineReducers({
     mail: mailReducer,
 });
 
-const rootReducer = (state: Partial<{ user: User | undefined; mail: IMailSlice | undefined; }> | undefined, action: UnknownAction) => {
+const rootReducer = (state: Partial<{ user?: User; mail?: IMailSlice; }> | undefined, action: UnknownAction) => {
     if (action.type === resetState.type) {
         state = undefined;
     }

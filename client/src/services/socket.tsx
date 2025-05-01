@@ -1,6 +1,6 @@
 import {io } from "socket.io-client";
 
-import { SOCKET_EVENT } from "../utils/socket_event";
+import { SOCKET_EVENT } from "@/config/socket_event";
 import { Mail } from "@/types/mail.d";
 import { Message } from "@/types/message.d";
 
@@ -29,7 +29,7 @@ export const socketJoinNewMail = (mailId:string | null) => {
 };
 
 // MAIL - join multiple mail
-export const socketJoinAllMail = (mails: Mail[] |null) => {
+export const socketJoinAllMail = (mails?: Mail[] ) => {
   if (socket) {
     socket.emit(SOCKET_EVENT.JOIN_ALL_MAIL, { mails });
   }
@@ -45,9 +45,9 @@ export const socketLeaveMail = (mailId: string | null) => {
 
 // MESSAGE
 // MESSAGE - get send message
-export const socketGetSendMessage = (cb :any ) => {
+export const socketGetSendMessage = (cb: (error: null | string, data: { data: Message }) => void) => {
   if (socket) {
-    socket.on(SOCKET_EVENT.GET_SEND_MESSSAGE, ({ data  }: {data: Message}) => {
+    socket.on(SOCKET_EVENT.GET_SEND_MESSSAGE, ({ data }: { data: Message }) => {
       cb(null, { data });
     });
   }

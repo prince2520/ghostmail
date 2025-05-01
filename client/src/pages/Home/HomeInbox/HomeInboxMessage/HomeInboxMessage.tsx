@@ -1,4 +1,4 @@
-import React,  { useCallback , useContext}  from "react";
+import React, { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 import dateFormat from "dateformat";
@@ -19,18 +19,17 @@ import {
 } from "@/components/ui/dialog";
 
 import { Message } from "@/types/message.d";
-import { useAppDispatch } from "@/store/store";
+import { RootState, useAppDispatch } from "@/redux/store";
 import { Button } from "@/components/ui/button";
-import { deleteMessage } from "../../../../api/message";
-import { MailActions } from "../../../../store/slice/mailSlice";
+import { useSelector } from "react-redux";
+import { deleteMessage } from "@/redux/thunks/mailThunk";
 
-import AuthContext from "../../../../context/authContext";
 
-const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: string}) => {
-    const authCtx = useContext(AuthContext);
+const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: string }) => {
 
     const { toast } = useToast();
     const dispatch = useAppDispatch();
+    const { token } = useSelector((state: RootState) => state.user);
 
 
     //Generate random color 
@@ -42,7 +41,7 @@ const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: str
         });
     }, []);
 
-    const checkShowDateCondition = (createdAt:string, idx:number) => {
+    const checkShowDateCondition = (createdAt: string, idx: number) => {
         if (idx === 0) return true;
 
         let prevDate, currDate;
@@ -53,24 +52,8 @@ const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: str
         return prevDate !== currDate;
     };
 
-    const deleteMessageHandler = (messageId:string) => {
-        deleteMessage(authCtx.token, mailId, messageId)
-            .then(res => {
-                if (res.success) {
-                    toast({
-                        title: "Success",
-                        description: res.message,
-                        variant: "success"
-                    });
-                    dispatch(MailActions.deleteMessageFromMail(res));
-                }
-            }).catch(err => {
-                toast({
-                    title: "Error",
-                    description: err.message,
-                    variant: "destructive"
-                });
-            })
+    const deleteMessageHandler = (messageId: string) => {
+        dispatch(deleteMessage({ token, mailId, messageId }));            
     }
 
     return (
@@ -137,7 +120,7 @@ const HomeInboxMessages = ({ messages, mailId }:{messages:Message[], mailId: str
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                    </div> 
+                    </div>
                 )}
             </ScrollArea>
         </>

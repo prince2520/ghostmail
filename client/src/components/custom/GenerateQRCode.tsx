@@ -1,9 +1,14 @@
 import QRCode from 'qrcode';
+import { RootState } from '@/redux/store';
 
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const GenerateQRCode = ({ mailAddress } : { mailAddress: string | null | undefined }) => {
+const GenerateQRCode = () => {
     const [imgSrc, setImgSrc] = useState<string>();
+    const {currMailId, mails} = useSelector((state:RootState) => state.mail);
+   
+    const mailAddress =  mails.find((mail) => mail.id === currMailId)?.address;
 
     useEffect(() => {
         const mailLink = `mailto:${mailAddress}`

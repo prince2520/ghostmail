@@ -1,21 +1,21 @@
-import { useContext } from "react";
-
-import AuthContext from "../../context/authContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 import HomeMail from "./HomeMail/HomeMail";
 import HomeInbox from "./HomeInbox/HomeInbox";
-import AllMails  from "../../components/custom/AllMails";
+import AllMails from "../../components/custom/AllMails";
 import HomeMailSettings from "./HomeMailSettings/HomeMailSettings";
 
+
 const Home = () => {
-    const authCtx = useContext(AuthContext);
+    const {isAuth} = useSelector((state:RootState)=>state.user);
 
     return (
         <div className='flex flex-col gap-y-6 items-center justify-center w-full'>
-            <HomeMail/>
-            <HomeMailSettings/>
-            {authCtx.isAuth && <AllMails/>}
-            <HomeInbox/>
+            <HomeMail />
+            <HomeMailSettings />
+            {isAuth && <AllMails />}
+            <HomeInbox />
         </div>
     );
 };

@@ -14,7 +14,7 @@ import { AuthRequest } from "../types/auth.middleware";
 const io = getIO();
 
 // Save incoming message 
-export const saveMessage = async (req: AuthRequest, res:Response, next:NextFunction) => {    
+export const createMessage = async (req: AuthRequest, res:Response, next:NextFunction) => {    
     try {
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
@@ -65,9 +65,9 @@ export const deleteMessage = async (req: AuthRequest, res: Response, next : Next
     let mailId = req.body.mailId;
     const messageId = req.body.messageId;
 
-    if (req.isAuthUser) {
-        mailId = req.tempMailId;
-    } 
+    if (req.isAuth) {
+        mailId = req.mailId;
+    }
 
     try {
         const isDeletedMsgSuccess = await Message.destroy({where: { id : messageId, mailId : mailId}});
@@ -88,5 +88,4 @@ export const deleteMessage = async (req: AuthRequest, res: Response, next : Next
     }catch(err){
         next(err);
     }
-
 }

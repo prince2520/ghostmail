@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { Link } from "react-router-dom";
+import { useCallback } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -14,15 +14,19 @@ import {
     FormMessage
 } from "@/components/ui/form";
 
-import AuthContext from "../../../context/authContext.js";
 import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { SignUpSchema } from "../../../schema/signup";
+import { useAppDispatch } from '@/redux/store.js';
+import { signup } from '@/redux/thunks/userThunk.js';
+
+import { toast } from "react-toastify";
 
 
 const AuthenticationSignUp = () => {
-    const authCtx = useContext(AuthContext);
-    
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     // Define your form
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
@@ -34,16 +38,34 @@ const AuthenticationSignUp = () => {
         }
     });
 
+    const signUpHandler = useCallback(
+        (name: string, email: string, password: string, confirmPassword: string) => {
+            dispatch(signup({ name, email, password, confirmPassword }))
+                .unwrap()
+                .then((res) => {
+                    toast(`${res.message}`, {
+                        type: "success"
+                    });
+                    navigate("/auth/login");
+                }).catch((err) => {
+                    toast(`${err}`, {
+                        type: "error"
+                    });
+                });
+        },
+        [navigate]
+    );
+
     // Submit your sign up form 
     function onSubmit(values: z.infer<typeof SignUpSchema>) {
-        authCtx.signUpHandler(values.name, values.email, values.password, values.confirmPassword);
+        signUpHandler(values.name, values.email, values.password, values.confirmPassword);
     }
 
     return (
         <div className="w-full sm:w-[90%] md:basis-1/2  max-w-5xl  flex justify-center items-center flex-col gap-y-2 ">
             <h1 className="text-xl md:text-2xl	font-bold"> Create your account </h1>
 
-            <GoogleAuth text={"signup_with"}/>
+            <GoogleAuth text={"signup_with"} />
 
             <div className="w-full relative flex items-center justify-center">
                 <span className="z-10 text-xs font-semibold	">or</span>

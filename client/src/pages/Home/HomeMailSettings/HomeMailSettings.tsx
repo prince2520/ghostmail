@@ -1,216 +1,105 @@
-import { useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import { uid } from 'uid';
 import { Button } from "@/components/ui/button";
 import { Mails, Files, SquarePen, Trash } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-import AuthContext from '../../../context/authContext';
 
 import { socketJoinNewMail, socketLeaveMail } from '../../../services/socket';
-import { authorizedGenerateGhostMail, unauthorizedGenerateGhostMail } from '../../../api/mail';
+import {  RootState, useAppDispatch } from '@/redux/store';
 
-import { AppDispatch, RootState } from '@/store/store';
-import { MailActions } from '../../../store/slice/mailSlice';
-import { UserActions } from '../../../store/slice/userSlice';
-import { fetchMailDetail } from '../../../store/slice/mailSlice';
-import { deleteMail, changeMailAddress } from '../../../api/mail';
-import {  ChangeMailAddressResponse, DeleteMailResponse, Mail, NewMailResponse } from '@/types/mail.d';
+import { Mail } from '@/types/mail.d';
+import { createNewMail, deleteMail, updateMailAddress } from '@/redux/thunks/mailThunk';
 
-
-// COMPONENT FOR DISPLAYING MAIL OPTION 
-const DisplayMailOption = (
-    { 
-        title, icon, apiFunction, token, callBackFunction, tempMail, callingServer = false, disabled, tempMailAddress 
-
-    } : { title : string , icon: any, apiFunction : ((token: string, tempMail: string, tempMailAddress: string) => Promise<any>) | null, token:string, callBackFunction:(result?: any) => void, tempMail:string, callingServer:boolean, disabled:boolean, tempMailAddress:string}) => {
-    const { toast } = useToast();
-
-    return (
-        <Button
-            key={uid(8)}
-            className='text-xs md:text-sm'
-            onClick={async () => {
-                if (callingServer && apiFunction!=null ) {
-                    apiFunction!(token, tempMail, tempMailAddress).then(result => {
-                        if(result.success){
-                            toast({
-                                title: "Success",
-                                description : result.message,
-                                variant : 'success'
-                            })
-                        }
-                        callBackFunction(result);
-                    }).catch((err:any) => {
-                        toast({
-                            title: "Error",
-                            description: err.message,
-                            variant: "destructive"
-                        });
-                    });
-                } else {
-                    callBackFunction();
-                }
-
-            }}
-            disabled={disabled}
-            variant="outline">{icon}{title}</Button>
-    )
-};
 
 const HomeMailSettings = () => {
-    const dispatch: AppDispatch = useDispatch();
-
-    const authCtx = useContext(AuthContext);
-    const mail = useSelector((state:RootState) => state.mail);
-    const mailDetail = mail.mails.find((m:Mail)=> mail.currMailId === m.id);
-
     const { toast } = useToast();
+    const dispatch = useAppDispatch();
+
+    const { mails, currMailId } = useSelector((state: RootState) => state.mail);
+    const { isAuth, token } = useSelector((state: RootState) => state.user);
+
+    const mail = mails.find((m: Mail) => currMailId === m.id);
 
 
-    // CALLBACK FUNCTION - join to a room using socket and dispatch new mail to user and mail 
-    const newMailHandler = (result:NewMailResponse) => {
-        socketJoinNewMail(result.data.id);
+    const createNewMailHandler = () => {
+        dispatch(createNewMail({ token }))
+            .unwrap()
+            .then((res) => {
+                socketJoinNewMail(res.data.id);
 
-        let userMailData : {
-            id: string, address: string, isNotAuth?: boolean
-        }= {
-            id: result.data.id,
-            address: result.data.address,
-        };
+                if (!res.isAuth) {
+                    const prevMailId = localStorage.getItem("mailId");
+                    socketLeaveMail(prevMailId);
+                    localStorage.clear();
 
-        if (result.isNotAuth) {
-            const prevMailId = localStorage.getItem("mailId");
-            socketLeaveMail(prevMailId);
-            localStorage.clear();
-
-            const isNotAuth = result.isNotAuth;
-            const mailId = result.data.id;
-            const token = result.token;
-
-            if(token) localStorage.setItem("token", token);
-            if(mailId) localStorage.setItem("mailId", mailId);
-            if(isNotAuth) localStorage.setItem("isNotAuth", isNotAuth.toString());
+                    if (res.token) localStorage.setItem("token", res.token);
+                    if (res.data.id) localStorage.setItem("mailId", res.data.id);
+                    if (res.isAuth) localStorage.setItem("isAuth", res.isAuth);
 
 
-            const remainingMilliseconds = 24 * 60 * 60 * 1000;
-            const expiryDate = new Date(
-                new Date().getTime() + remainingMilliseconds
-            );
+                    const remainingMilliseconds = 24 * 60 * 60 * 1000;
+                    const expiryDate = new Date(
+                        new Date().getTime() + remainingMilliseconds
+                    );
 
-            localStorage.setItem("expiryDate", expiryDate.toISOString());
+                    localStorage.setItem("expiryDate", expiryDate.toISOString());
+                }
 
-            const argsObj : {
-                token : string | undefined , mailId : string, isNotAuth : boolean
-            } = { token: token, mailId: mailId, isNotAuth: true };
-
-            dispatch(fetchMailDetail(argsObj));
-            userMailData.isNotAuth = true;
-        } else {
-            dispatch(UserActions.addNewMail(userMailData));
-        }
+            });
     }
 
-    // CALLBACK FUNCTION - clip the current mail address 
-    const copyToClipBoardHandler = () => {
-        if(mailDetail?.address === undefined) return;
-
+    const copyToClipBoard = () => {
+        if (mail?.address === undefined) return;
+        navigator.clipboard.writeText(mail?.address);
         toast({
-            description: `${mailDetail?.address} copied to clipboard!`
+            description: `${mail?.address} copied to clipboard!`
         })
-
-        navigator.clipboard.writeText(mailDetail?.address)
     };
 
-    // CALLBACK FUNCTION - delete the current mail and leave the socket for mail 
-    const deleteMailHandler = (result:DeleteMailResponse) => {
-        if (result.success) {
-            socketLeaveMail(result.mailId);
-            dispatch(MailActions.deleteMail({ mailId: result.mailId }))
-            dispatch(UserActions.deleteMail({ mailId: result.mailId }))
-        }
-    };
-
-    // CALLBACK FUNCTION - change the mail current address
-    const changeAddressHandler = (result:ChangeMailAddressResponse) => {
-        if (result.isChangeAddress) {
-            dispatch(MailActions.changeMailAddress(result));
-            dispatch(UserActions.changeMailAddress(result));
-        }
-    };
-
-    // All mail options 
-    const mailOptions : {
-        title: string,
-        icon: any,
-        apiFunction: ((token: string, tempMail: string, tempMailAddress: string) => Promise<any>) | null,
-        token: string | null,
-        callBackFunction: (result?: any) => void,
-        tempMail: string | null,
-        tempMailAddress: string | null,
-        callingServer: boolean,
-        showAuth: boolean,
-        disabled: boolean
-    }[] = [
-        {
-            title: "New Mail",
-            icon: <Mails />,
-            apiFunction: authCtx.isAuth ? authorizedGenerateGhostMail : unauthorizedGenerateGhostMail,
-            token: authCtx.token || '',
-            callBackFunction: newMailHandler,
-            tempMail: null,
-            tempMailAddress : null,
-            callingServer: true,
-            showAuth: true,
-            disabled: false
-        },
-        {
-            title: "Copy to Clipboard",
-            icon: <Files />,
-            apiFunction: null,
-            token: null,
-            callBackFunction: copyToClipBoardHandler,
-            tempMail: null,
-            tempMailAddress : null,
-            callingServer: false,
-            showAuth: true,
-            disabled: !mail.currMailId
-        },
-        {
-            title: "Delete",
-            icon: <Trash />,
-            apiFunction: deleteMail,
-            token: authCtx.token,
-            callBackFunction: deleteMailHandler,
-            tempMail: mailDetail?.id ?? null,
-            tempMailAddress : mailDetail?.address ?? null,
-            callingServer: true,
-            showAuth: authCtx.isAuth,
-            disabled: !mail.currMailId
-        },
-        {
-            title: "Change",
-            icon: <SquarePen />,
-            apiFunction: changeMailAddress,
-            token: authCtx.token,
-            callBackFunction: changeAddressHandler,
-            tempMail: mailDetail?.id ?? null,
-            tempMailAddress : mailDetail?.address ?? null,
-            callingServer: true,
-            showAuth: authCtx.isAuth,
-            disabled: !mail.currMailId
-        }
-    ];
 
     return (
         <div className="flex gap-x-4 gap-y-4 flex-wrap">
-            {
-                mailOptions.map(option => {
-                    return option.showAuth ? <DisplayMailOption key={uid(8)} {...option} token={option.token || ''} tempMail={option.tempMail || ''} tempMailAddress={option.tempMailAddress || ''} /> : null
-                })
-            }
-        </div>
+
+            <Button
+                key={uid(8)}
+                className='text-xs md:text-sm'
+                onClick={() => createNewMailHandler()}
+                disabled={false}
+                variant="outline">
+                <Mails /> <span>New Mail</span>
+            </Button>
+
+            <Button
+                key={uid(8)}
+                className='text-xs md:text-sm'
+                onClick={() => copyToClipBoard()}
+                disabled={!currMailId ? true : false}
+                variant="outline">
+                <Files /> <span>Clip to Clipboard</span>
+            </Button>
+
+
+            {isAuth && <Button
+                key={uid(8)}
+                className='text-xs md:text-sm'
+                onClick={() => dispatch(deleteMail({ token, mailId: mail?.id, mailAddress: mail?.address }))}
+                disabled={!currMailId ? true : false}
+                variant="outline">
+                <Trash /> <span>Delete</span>
+            </Button>}
+
+            {isAuth && <Button
+                key={uid(8)}
+                className='text-xs md:text-sm'
+                onClick={() => dispatch(updateMailAddress({ token, mailId: mail?.id, mailAddress: mail?.address }))}
+                disabled={!currMailId ? true : false}
+                variant="outline">
+                <SquarePen /> <span>Change</span>
+            </Button>}
+
+        </div >
     );
 }
 
