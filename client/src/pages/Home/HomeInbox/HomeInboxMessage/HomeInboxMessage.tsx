@@ -27,7 +27,6 @@ import { deleteMessage } from "@/redux/thunks/mailThunk";
 
 const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: string }) => {
 
-    const { toast } = useToast();
     const dispatch = useAppDispatch();
     const { token } = useSelector((state: RootState) => state.user);
 
@@ -53,12 +52,12 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
     };
 
     const deleteMessageHandler = (messageId: string) => {
-        dispatch(deleteMessage({ token, mailId, messageId }));            
+        dispatch(deleteMessage({ token, mailId, messageId }));
     }
 
     return (
         <>
-            <ScrollArea className="max-h-[30rem] h-fit w-full">
+            <ScrollArea className="w-[50rem] max-h-[30rem] h-fit w-full">
                 {messages.map((msg, idx) =>
                     <div key={idx}>
                         {checkShowDateCondition(msg.createdAt, idx) && <div className="w-full flex items-center justify-center"><span className="px md:px-2 rounded-sm mb-2 font-medium text-xs bg-stone-50 dark:bg-zinc-900">{dateFormat(msg.createdAt, "ddd, dd mmm yyyy")}</span></div>}
@@ -78,7 +77,7 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
                                     </div>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent>
+                            <DialogContent className="max-w-[50rem]">
                                 <DialogHeader>
                                     <DialogTitle>Message</DialogTitle>
                                 </DialogHeader>
@@ -103,8 +102,13 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
                                                 {dateFormat(msg.createdAt, "ddd, dd mmm yyyy, hh:MMtt")}
                                             </div>
                                         </div>
-                                        <ScrollArea className="flex flex-wrap text-wrap w-full h-[200px] border px-2 py-2 rounded text-sm">
-                                            {parse(DOMPurify.sanitize(msg.text))}                                        </ScrollArea>
+                                        <ScrollArea className="flex flex-wrap text-wrap w-full max-h-[400px] border px-2 py-2 rounded text-sm">
+                                            <div
+                                                dangerouslySetInnerHTML={{ __html: msg.text }}
+                                                style={{ fontFamily: 'Arial, sans-serif' }}
+                                            />
+
+                                        </ScrollArea>
                                     </div>
 
                                 </div>

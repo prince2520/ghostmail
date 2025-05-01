@@ -19,6 +19,8 @@ export const createMessage = async (req: AuthRequest, res:Response, next:NextFun
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
 
+        console.log("message ", req.body.html);
+
         const mailFound = await Mail.findOne({ where: { address: to.address } });
 
         if (!mailFound) {
@@ -36,7 +38,7 @@ export const createMessage = async (req: AuthRequest, res:Response, next:NextFun
         const data = {
             mailId: mailFound.id,
             subject: req.body.subject,
-            text: req.body.textAsHtml,
+            text: req.body.html,
             createdAt: new Date(req.body.date),
             messageFromId: messageFromFound.id
         };
