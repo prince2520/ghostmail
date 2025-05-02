@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getMailRequest, createAuthorizedMailRequest, createUnAuthorizedMailRequest, deleteMailRequest, deleteMessageRequest, updateMailAddressRequest } from "../api/mail";
+import { getMailAPI, createAuthorizedMailAPI, createUnAuthorizedMailAPI, deleteMailAPI, deleteMessageAPI, updateMailAddressAPI } from "../api/mail";
 import { RootState } from "../store";
 
 // MIDDLEWARES
@@ -13,9 +13,9 @@ export const createNewMailThunk = createAsyncThunk(
             let state = getState() as RootState;
 
             if (state.user.isAuth)
-                response = await createAuthorizedMailRequest(token);
+                response = await createAuthorizedMailAPI(token);
             else
-                response = await createUnAuthorizedMailRequest();
+                response = await createUnAuthorizedMailAPI();
 
             return { ...response, isAuth: state.user.isAuth };
         } catch (error:any) {
@@ -30,7 +30,7 @@ export const getMailThunk = createAsyncThunk(
     'mail/getMail',
     async ({ mailId, token, isAuth }: { mailId: string, token?: string, isAuth: boolean }, { rejectWithValue }) => {
         try {
-            let result = await getMailRequest(token, mailId);
+            let result = await getMailAPI(token, mailId);
             return { mailId, mail: result, isAuth };
         } catch (error:any) {
             return rejectWithValue(error.message || "Something goes wrong!");
@@ -46,7 +46,7 @@ export const deleteMailThunk = createAsyncThunk(
     async ({ token, mailId, mailAddress }: { token?: string, mailId?: string, mailAddress?: string }, { rejectWithValue }) => {
 
         try {
-            let response = await deleteMailRequest(token, mailId, mailAddress);
+            let response = await deleteMailAPI(token, mailId, mailAddress);
             return { ...response, mailId, mailAddress };
 
         } catch (error:any) {
@@ -62,7 +62,7 @@ export const updateMailAddressThunk = createAsyncThunk(
     'mail/updateMailAddress',
     async ({ token, mailId, mailAddress }: { token: string, mailId?: string, mailAddress?: string }, { rejectWithValue }) => {
         try {
-            let response = await updateMailAddressRequest(token, mailId, mailAddress);
+            let response = await updateMailAddressAPI(token, mailId, mailAddress);
             return { ...response, mailId, mailAddress };
 
         } catch (error:any) {
@@ -78,7 +78,7 @@ export const deleteMessageThunk = createAsyncThunk(
     async ({ token, mailId, messageId }: { token: string, mailId: string, messageId: string }, { rejectWithValue }) => {
 
         try {
-            let response = await deleteMessageRequest(token, mailId, messageId);
+            let response = await deleteMessageAPI(token, mailId, messageId);
             return { ...response, mailId, messageId };
         } catch (error) {
             return rejectWithValue(error);

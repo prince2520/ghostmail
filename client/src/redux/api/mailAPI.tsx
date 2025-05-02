@@ -5,7 +5,7 @@ import { throwError } from "../../utils/throwError";
 import { MAIL_ROUTES } from "@/config/routes"; 
 
 // POST - generate a new mail for authorized user
-export const createAuthorizedMailRequest = async (token: string): Promise<CreateMailResponse> => {
+export const createAuthorizedMailAPI = async (token: string): Promise<CreateMailResponse> => {
   const response = await fetch(
     MAIL_ROUTES.CREATE_AUTHORIZED_MAIL__ADDRESS,
     {
@@ -22,7 +22,7 @@ export const createAuthorizedMailRequest = async (token: string): Promise<Create
 };
 
 // GET - generate a new mail for unauthorized user
-export const createUnAuthorizedMailRequest = async (): Promise<CreateMailResponse> => {
+export const createUnAuthorizedMailAPI = async (): Promise<CreateMailResponse> => {
   const response = await fetch(
     MAIL_ROUTES.CREATE_UNAUTHORIZED_MAIL__ADDRESS,
   );
@@ -34,7 +34,7 @@ export const createUnAuthorizedMailRequest = async (): Promise<CreateMailRespons
 
 
 // GET - MAIL DATA
-export const getMailRequest = async (token?: string, mailId?: string | null): Promise<Mail> => {
+export const getMailAPI = async (token?: string, mailId?: string | null): Promise<Mail> => {
   const response = await fetch(
     MAIL_ROUTES.GET_MAIL__ADDRESS + `?mailId=${mailId}`,
     {
@@ -52,7 +52,7 @@ export const getMailRequest = async (token?: string, mailId?: string | null): Pr
 };
 
 // GET - MAIL DATA
-export const deleteMailRequest = async (token?: string, mailId?: string, mailAddress?: string): Promise<DeleteMailResponse> => {
+export const deleteMailAPI = async (token?: string, mailId?: string, mailAddress?: string): Promise<DeleteMailResponse> => {
   const response = await fetch(
     MAIL_ROUTES.DELETE_MAIL__ADDRESS,
     {
@@ -74,7 +74,7 @@ export const deleteMailRequest = async (token?: string, mailId?: string, mailAdd
 
 
 
-export const updateMailAddressRequest = async (token: string, mailId?: string, mailAddress?: string): Promise<ChangeMailAddressResponse> => {
+export const updateMailAddressAPI = async (token: string, mailId?: string, mailAddress?: string): Promise<ChangeMailAddressResponse> => {
   const response = await fetch(
     MAIL_ROUTES.UPDATE_MAIL_ADDRESS__ADDRESS,
     {
@@ -97,7 +97,7 @@ export const updateMailAddressRequest = async (token: string, mailId?: string, m
 
 
 // DELETE - delete message
-export const deleteMessageRequest = async (token:string, mailId:string, messageId:string) : Promise<DeleteMessageResponse> => {
+export const deleteMessageAPI = async (token:string, mailId:string, messageId:string) : Promise<DeleteMessageResponse> => {
   const response = await fetch(
     MAIL_ROUTES.DELETE_MESSAGE__ADDRESS,
     {

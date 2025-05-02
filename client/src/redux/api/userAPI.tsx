@@ -5,7 +5,7 @@ import { CredentialResponse } from '@react-oauth/google';
 import { USER_ROUTES } from "@/config/routes";
 
 // POST - generate a new mail for authorized user
-export const getUserRequest = async (token:string) : Promise<FetchUserDataResponse> => {
+export const getUserAPI = async (token:string) : Promise<FetchUserDataResponse> => {
     const response = await fetch(
         USER_ROUTES.GET_USER__ADDRESS,
         {
@@ -23,7 +23,7 @@ export const getUserRequest = async (token:string) : Promise<FetchUserDataRespon
 
 
 // POST -> Sign up
-export const signupRequest = async (name:string, email:string, password:string, confirmPassword:String) : Promise<SignupResponse>  => {
+export const signupAPI = async (name:string, email:string, password:string, confirmPassword:String) : Promise<SignupResponse>  => {
     const response = await fetch(USER_ROUTES.SIGNUP__ADDRESS, {
         method: "POST",
         headers: {
@@ -42,7 +42,7 @@ export const signupRequest = async (name:string, email:string, password:string, 
 };
 
 // POST -> Login
-export const loginRequest = async (email:string, password:string) : Promise<LoginResponse> => {
+export const loginAPI = async (email:string, password:string) : Promise<LoginResponse> => {
     const response = await fetch(USER_ROUTES.LOGIN__ADDRESS, {
         method: "POST",
         headers: {
@@ -60,7 +60,7 @@ export const loginRequest = async (email:string, password:string) : Promise<Logi
 
 
 // POST -> Google Login
-export const googleAuthRequest = async ( credentialResponse : CredentialResponse) : Promise<LoginResponse>=> {
+export const googleAuthAPI = async ( credentialResponse : CredentialResponse) : Promise<LoginResponse>=> {
     const response = await fetch(USER_ROUTES.GOOGLE_AUTH__ADDRESS, {
         method: "POST",
         headers: {

@@ -3,8 +3,7 @@ import { User } from "@/types/user.d";
 import { getUserThunk, googleAuthThunk, loginThunk } from "../thunks/userThunk";
 import { toast } from "react-toastify";
 
-const setUserState = (state: User, action: PayloadAction<{ token: string; data: User; success: boolean }>) => {
-    console.log("setUserState ", action.payload)
+export const getUserReducer = (state: User, action: PayloadAction<{ token: string; data: User; success: boolean }>) => {
     state.id = action.payload.data.id;
     state.name = action.payload.data.name;
     state.email = action.payload.data.email;
@@ -39,7 +38,7 @@ const UserSlice = createSlice({
 
     extraReducers: (builder) => {
         builder
-            .addCase(loginThunk.fulfilled, setUserState)
+            .addCase(loginThunk.fulfilled, getUserReducer)
             .addCase(loginThunk.rejected, (_, action) => {
                 toast(`${action.payload}, {
                     type: "error"
@@ -48,7 +47,7 @@ const UserSlice = createSlice({
 
 
         builder
-            .addCase(googleAuthThunk.fulfilled, setUserState)
+            .addCase(googleAuthThunk.fulfilled, getUserReducer)
             .addCase(googleAuthThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
@@ -57,7 +56,7 @@ const UserSlice = createSlice({
 
         builder
 
-            .addCase(getUserThunk.fulfilled, setUserState)
+            .addCase(getUserThunk.fulfilled, getUserReducer)
             .addCase(getUserThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"

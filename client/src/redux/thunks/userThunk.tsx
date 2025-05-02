@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserRequest, googleAuthRequest, loginRequest, signupRequest } from "../api/user";
+import { getUserAPI, googleAuthAPI, loginAPI, signupAPI } from "../api/user";
 import { CredentialResponse } from "@react-oauth/google";
 import { MailActions } from "../slices/mailSlice";
 
@@ -8,7 +8,7 @@ export const getUserThunk = createAsyncThunk(
     'user/getUser',
     async ({ token }: { token: string }, {dispatch,  rejectWithValue }) => {
         try {
-            let response = await getUserRequest(token);
+            let response = await getUserAPI(token);
             dispatch(MailActions.getMails(response.data.mails));
             return { ...response, token };
 
@@ -24,7 +24,7 @@ export const signupThunk = createAsyncThunk(
     'user/signup',
     async ({ name, email, password, confirmPassword }: { name: string, email: string, password: string, confirmPassword: string }, { rejectWithValue }) => {
         try {
-            let response = await signupRequest(name, email, password, confirmPassword);
+            let response = await signupAPI(name, email, password, confirmPassword);
             return response;
 
         } catch (error: any) {
@@ -39,7 +39,7 @@ export const loginThunk = createAsyncThunk(
     async ({ email, password }: { email: string, password: string }, { dispatch, rejectWithValue }) => {
         try {
 
-            let response = await loginRequest(email, password);
+            let response = await loginAPI(email, password);
             dispatch(MailActions.getMails(response.data.mails));
             return response;
 
@@ -55,7 +55,7 @@ export const googleAuthThunk = createAsyncThunk(
     async ({ credentialResponse }: { credentialResponse: CredentialResponse }, { rejectWithValue }) => {
         try {
 
-            let response = await googleAuthRequest(credentialResponse);
+            let response = await googleAuthAPI(credentialResponse);
 
             return response;
         } catch (error: any) {
