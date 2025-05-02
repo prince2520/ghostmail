@@ -6,7 +6,8 @@ import { StatusCodes } from "http-status-codes";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response, NextFunction } from 'express';
 import { throwError } from "../utils/throwError";
-import { GoogleToken} from "../types/controllers/auth";
+import { GoogleToken } from "../types/controllers/auth";
+import { Message, MessageFrom } from "../models/message.model";
 
 const { Mail, User } = db;
 
@@ -38,7 +39,7 @@ const generateToken = ({
 
 
 // CONTROLLER - SIGNUP
-export const signup   = async (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, confirmPassword } = req.body;
 
   try {
@@ -87,7 +88,15 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       include:
       {
         model: Mail,
-        required: false
+        required: false,
+        include: {
+          model: Message,
+          required: false,
+          include: {
+            model: MessageFrom,
+            required: false
+          }
+        }
       }
     });
 
@@ -171,17 +180,33 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
       isAuth: true
     });
 
-    
+    const user = await User.findOne({
+      where: { email: email },
+      include:
+      {
+        model: Mail,
+        required: false,
+        include: {
+          model: Message,
+          required: false,
+          include: {
+            model: MessageFrom,
+            required: false
+          }
+        }
+      }
+    });
+
 
     res.status(StatusCodes.OK).json({
       success: true,
       token: token,
       message: "Login Successfull!",
       data: {
-        id: userFound.id,
-        name: userFound.name,
-        email: userFound.email,
-        mails: userFound.mails || []
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mails: user.mails || []
       }
     });
 
