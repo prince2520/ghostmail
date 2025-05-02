@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserAPI, googleAuthAPI, loginAPI, signupAPI } from "../api/user";
+import { getUserAPI, googleAuthAPI, loginAPI, signupAPI } from "../api/userAPI";
 import { CredentialResponse } from "@react-oauth/google";
 import { MailActions } from "../slices/mailSlice";
 

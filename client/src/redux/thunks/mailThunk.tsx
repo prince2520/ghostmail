@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getMailAPI, createAuthorizedMailAPI, createUnAuthorizedMailAPI, deleteMailAPI, deleteMessageAPI, updateMailAddressAPI } from "../api/mail";
+import { getMailAPI, createAuthorizedMailAPI, createUnAuthorizedMailAPI, deleteMailAPI, deleteMessageAPI, updateMailAddressAPI } from "../api/mailAPI";
 import { RootState } from "../store";
 
 // MIDDLEWARES
