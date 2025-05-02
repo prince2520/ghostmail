@@ -12,27 +12,20 @@ import Home from './pages/Home/Home';
 
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
-import { getUser } from './redux/thunks/userThunk';
+import { getUserThunk } from './redux/thunks/userThunk';
 import { useAppDispatch } from './redux/store';
 import { socketJoinAllMail, socketJoinNewMail } from './services/socket';
-import { MailActions } from './redux/slices/mailSlice';
-import { useToast } from './hooks/use-toast';
-import { getMail } from './redux/thunks/mailThunk';
+import { getMailThunk } from './redux/thunks/mailThunk';
 
 import { ToastContainer } from 'react-toastify';
 import { Slide } from 'react-toastify';
-
-
-
-
+import { useTheme } from './components/ui/theme-provider';
 
 import './App.css';
-import { useTheme } from './components/ui/theme-provider';
 
 function App() {
   const location = useLocation();
 
-  const { toast } = useToast();
   const dispatch = useAppDispatch();
 
   const { logout, autoLogout } = useAuth();
@@ -61,18 +54,17 @@ function App() {
     const isAuth = localStorage.getItem("isAuth") == "true" ? true : false;
 
     if (isAuth) {
-      dispatch(getUser({ token: localToken }))
+      dispatch(getUserThunk({ token: localToken }))
         .unwrap()
         .then((res) => {
           socketJoinAllMail(res.data.mails)
-          dispatch(MailActions.getMails(res.data.mails));
         });
     } else {
       const mailId = localStorage.getItem("mailId") ?? "";
 
       if (mailId) {
         socketJoinNewMail(mailId);
-        dispatch(getMail({ token: localToken, mailId, isAuth: isAuth }));
+        dispatch(getMailThunk({ token: localToken, mailId, isAuth: isAuth }));
       }
 
     };

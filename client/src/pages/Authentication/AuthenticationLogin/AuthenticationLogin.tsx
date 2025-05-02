@@ -16,15 +16,13 @@ import {
 
 import { LoginSchema } from "../../../schema/login";
 import store, { useAppDispatch } from '@/redux/store.js';
-import { login } from '@/redux/thunks/userThunk.js';
+import { loginThunk } from '@/redux/thunks/userThunk.js';
 import { useToast } from '@/hooks/use-toast.js';
 import { resetState } from '@/redux/resetAction.js';
 import GoogleAuth from "../../../components/custom/GoogleAuth.jsx";
-import { MailActions } from "@/redux/slices/mailSlice.js";
 import { useAuth } from "@/hooks/useAuth.js";
 
 const AuthenticationLogin = () => {
-    const { toast } = useToast();
     const dispatch = useAppDispatch();
 
     const { authTimer } = useAuth();
@@ -44,26 +42,14 @@ const AuthenticationLogin = () => {
         store.dispatch(resetState());
         localStorage.clear();
 
-        dispatch(login({
+        dispatch(loginThunk({
             email: values.email,
             password: values.password
         }))
             .unwrap()
             .then(res => {
-                dispatch(MailActions.getMails(res.data.mails));
                 authTimer(res);
-                toast({
-                    title: "Login",
-                    description: `${res.message} successfully!`,
-                    variant: "success"
-                })
-            }).catch((err) => {
-                toast({
-                    title: "Error",
-                    description: err.message,
-                    variant: "destructive"
-                })
-            });
+            }).catch((err) => console.log(err));
     };
 
     return (

@@ -4,7 +4,7 @@ import { RootState } from "../store";
 
 // MIDDLEWARES
 // REDUX THUNK - create a new mail
-export const createNewMail = createAsyncThunk(
+export const createNewMailThunk = createAsyncThunk(
     'mail/createNewMail',
     async ({ token }: { token: string }, { getState, rejectWithValue }) => {
         try {
@@ -26,7 +26,7 @@ export const createNewMail = createAsyncThunk(
 
 
 // REDUX THUNK -  get the mail 
-export const getMail = createAsyncThunk(
+export const getMailThunk = createAsyncThunk(
     'mail/getMail',
     async ({ mailId, token, isAuth }: { mailId: string, token?: string, isAuth: boolean }, { rejectWithValue }) => {
         try {
@@ -41,7 +41,7 @@ export const getMail = createAsyncThunk(
 
 
 // REDUX THUNK - delete a mail
-export const deleteMail = createAsyncThunk(
+export const deleteMailThunk = createAsyncThunk(
     'mail/deleteMail',
     async ({ token, mailId, mailAddress }: { token?: string, mailId?: string, mailAddress?: string }, { rejectWithValue }) => {
 
@@ -58,8 +58,8 @@ export const deleteMail = createAsyncThunk(
 
 
 // REDUX THUNK - update a mail
-export const updateMailAddress = createAsyncThunk(
-    'mail/updateMail',
+export const updateMailAddressThunk = createAsyncThunk(
+    'mail/updateMailAddress',
     async ({ token, mailId, mailAddress }: { token: string, mailId?: string, mailAddress?: string }, { rejectWithValue }) => {
         try {
             let response = await updateMailAddressRequest(token, mailId, mailAddress);
@@ -73,7 +73,7 @@ export const updateMailAddress = createAsyncThunk(
 
 
 // REDUX THUNK - delete a message
-export const deleteMessage = createAsyncThunk(
+export const deleteMessageThunk = createAsyncThunk(
     'mail/deleteMessage',
     async ({ token, mailId, messageId }: { token: string, mailId: string, messageId: string }, { rejectWithValue }) => {
 

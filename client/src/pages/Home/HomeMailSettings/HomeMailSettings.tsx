@@ -10,7 +10,7 @@ import { socketJoinNewMail, socketLeaveMail } from '../../../services/socket';
 import {  RootState, useAppDispatch } from '@/redux/store';
 
 import { Mail } from '@/types/mail.d';
-import { createNewMail, deleteMail, updateMailAddress } from '@/redux/thunks/mailThunk';
+import { createNewMailThunk, deleteMailThunk, updateMailAddressThunk } from '@/redux/thunks/mailThunk';
 
 
 const HomeMailSettings = () => {
@@ -24,7 +24,7 @@ const HomeMailSettings = () => {
 
 
     const createNewMailHandler = () => {
-        dispatch(createNewMail({ token }))
+        dispatch(createNewMailThunk({ token }))
             .unwrap()
             .then((res) => {
                 socketJoinNewMail(res.data.id);
@@ -84,7 +84,7 @@ const HomeMailSettings = () => {
             {isAuth && <Button
                 key={uid(8)}
                 className='text-xs md:text-sm'
-                onClick={() => dispatch(deleteMail({ token, mailId: mail?.id, mailAddress: mail?.address }))}
+                onClick={() => dispatch(deleteMailThunk({ token, mailId: mail?.id, mailAddress: mail?.address }))}
                 disabled={!currMailId ? true : false}
                 variant="outline">
                 <Trash /> <span>Delete</span>
@@ -93,7 +93,7 @@ const HomeMailSettings = () => {
             {isAuth && <Button
                 key={uid(8)}
                 className='text-xs md:text-sm'
-                onClick={() => dispatch(updateMailAddress({ token, mailId: mail?.id, mailAddress: mail?.address }))}
+                onClick={() => dispatch(updateMailAddressThunk({ token, mailId: mail?.id, mailAddress: mail?.address }))}
                 disabled={!currMailId ? true : false}
                 variant="outline">
                 <SquarePen /> <span>Change</span>

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { Mail } from "@/types/mail.d";
-import { createNewMail, deleteMail, deleteMessage, getMail, updateMailAddress } from "../thunks/mailThunk";
+import { createNewMailThunk, deleteMailThunk, deleteMessageThunk, getMailThunk, updateMailAddressThunk } from "../thunks/mailThunk";
 import { toast } from "react-toastify";
 
 
@@ -35,7 +35,7 @@ const MailSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(createNewMail.fulfilled, (state, action) => {
+            .addCase(createNewMailThunk.fulfilled, (state, action) => {
                 if (!action.payload.isAuth) {
                     state.currMailId = action.payload.data.id;
                     state.mails.length = 0;
@@ -47,25 +47,25 @@ const MailSlice = createSlice({
                     type: "success"
                 })
             })
-            .addCase(createNewMail.rejected, (_, action) => {
+            .addCase(createNewMailThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
                 });
             })
 
         builder
-            .addCase(getMail.fulfilled, (state, action) => {
+            .addCase(getMailThunk.fulfilled, (state, action) => {
                 state.currMailId = action.payload.mailId;
                 state.mails.push(action.payload.mail);
             })
-            .addCase(getMail.rejected, (_, action) => {
+            .addCase(getMailThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
                 });
             })
 
         builder
-            .addCase(deleteMail.fulfilled, (state, action) => {
+            .addCase(deleteMailThunk.fulfilled, (state, action) => {
                 state.currMailId = "";
 
                 toast(`${action.payload.mailAddress} deleted successfully!`, {
@@ -74,7 +74,7 @@ const MailSlice = createSlice({
 
                 state.mails = state.mails.filter((mail: Mail) => mail.id != action.payload.mailId);
             })
-            .addCase(deleteMail.rejected, (_, action) => {
+            .addCase(deleteMailThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
                 });
@@ -83,7 +83,7 @@ const MailSlice = createSlice({
 
 
         builder
-            .addCase(updateMailAddress.fulfilled, (state, action) => {
+            .addCase(updateMailAddressThunk.fulfilled, (state, action) => {
                 state.mails.map((mail) => {
                     if (mail.id === action.payload.mailId) {
                         toast(`${mail.address} updated to ${action.payload.updatedMailAddress}!`, {
@@ -95,7 +95,7 @@ const MailSlice = createSlice({
                 })
 
             })
-            .addCase(updateMailAddress.rejected, (_, action) => {
+            .addCase(updateMailAddressThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
                 });
@@ -103,7 +103,7 @@ const MailSlice = createSlice({
 
 
         builder
-            .addCase(deleteMessage.fulfilled, (state, action) => {
+            .addCase(deleteMessageThunk.fulfilled, (state, action) => {
                 state.mails.map((mail) => {
                     if (mail.id == action.payload.mailId) {
                         toast(`${action}`, {
@@ -114,7 +114,7 @@ const MailSlice = createSlice({
                     return mail;
                 })
             })
-            .addCase(deleteMessage.rejected, (_, action) => {
+            .addCase(deleteMessageThunk.rejected, (_, action) => {
                 toast(`${action.payload}`, {
                     type: "error"
                 });

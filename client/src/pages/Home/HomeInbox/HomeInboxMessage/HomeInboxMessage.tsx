@@ -1,10 +1,7 @@
 import React, { useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
-
 import dateFormat from "dateformat";
 import randomColor from 'randomcolor';
-import parse from 'html-react-parser';
-import DOMPurify from 'dompurify';
+
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -22,7 +19,7 @@ import { Message } from "@/types/message.d";
 import { RootState, useAppDispatch } from "@/redux/store";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
-import { deleteMessage } from "@/redux/thunks/mailThunk";
+import { deleteMessageThunk } from "@/redux/thunks/mailThunk";
 
 
 const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: string }) => {
@@ -52,7 +49,7 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
     };
 
     const deleteMessageHandler = (messageId: string) => {
-        dispatch(deleteMessage({ token, mailId, messageId }));
+        dispatch(deleteMessageThunk({ token, mailId, messageId }));
     }
 
     return (
@@ -107,7 +104,6 @@ const HomeInboxMessages = ({ messages, mailId }: { messages: Message[], mailId: 
                                                 dangerouslySetInnerHTML={{ __html: msg.text }}
                                                 style={{ fontFamily: 'Arial, sans-serif' }}
                                             />
-
                                         </ScrollArea>
                                     </div>
 

@@ -18,7 +18,7 @@ import GoogleAuth from "../../../components/custom/GoogleAuth.jsx"
 
 import { SignUpSchema } from "../../../schema/signup";
 import { useAppDispatch } from '@/redux/store.js';
-import { signup } from '@/redux/thunks/userThunk.js';
+import { signupThunk } from '@/redux/thunks/userThunk.js';
 
 import { toast } from "react-toastify";
 
@@ -40,7 +40,7 @@ const AuthenticationSignUp = () => {
 
     const signUpHandler = useCallback(
         (name: string, email: string, password: string, confirmPassword: string) => {
-            dispatch(signup({ name, email, password, confirmPassword }))
+            dispatch(signupThunk({ name, email, password, confirmPassword }))
                 .unwrap()
                 .then((res) => {
                     toast(`${res.message}`, {

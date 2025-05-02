@@ -7,9 +7,8 @@ import { OAuth2Client } from 'google-auth-library';
 import { Request, Response, NextFunction } from 'express';
 import { throwError } from "../utils/throwError";
 import { GoogleToken } from "../types/controllers/auth";
-import { Message, MessageFrom } from "../models/message.model";
 
-const { Mail, User } = db;
+const { Mail, User, Message, MessageFrom } = db;
 
 const client = new OAuth2Client();
 
@@ -89,9 +88,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       {
         model: Mail,
         required: false,
+
         include: {
           model: Message,
           required: false,
+
           include: {
             model: MessageFrom,
             required: false
@@ -159,10 +160,21 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
 
     let userFound = await User.findOne({
       where: { email: email, isGoogleAuth: true },
+      attributes: ['id', 'name', 'email'],
       include:
       {
         model: Mail,
-        required: false
+        required: false,
+
+        include: {
+          model: Message,
+          required: false,
+
+          include: {
+            model: MessageFrom,
+            required: false
+          }
+        }
       }
     });
 
@@ -180,22 +192,6 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
       isAuth: true
     });
 
-    const user = await User.findOne({
-      where: { email: email },
-      include:
-      {
-        model: Mail,
-        required: false,
-        include: {
-          model: Message,
-          required: false,
-          include: {
-            model: MessageFrom,
-            required: false
-          }
-        }
-      }
-    });
 
 
     res.status(StatusCodes.OK).json({
@@ -203,10 +199,10 @@ export const googleAuthentication = async (req: Request, res: Response, next: Ne
       token: token,
       message: "Login Successfull!",
       data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        mails: user.mails || []
+        id: userFound.id,
+        name: userFound.name,
+        email: userFound.email,
+        mails: userFound.mails || []
       }
     });
 

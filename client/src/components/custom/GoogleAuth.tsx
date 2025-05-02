@@ -1,7 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { GoogleLogin } from '@react-oauth/google';
 import store, { useAppDispatch } from '@/redux/store';
-import { googleAuth } from "@/redux/thunks/userThunk";
+import { googleAuthThunk } from "@/redux/thunks/userThunk";
 import { MailActions } from "@/redux/slices/mailSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { resetState } from "@/redux/resetAction";
@@ -17,7 +17,7 @@ const GoogleAuth = ({ text }: { text: any }) => {
             onSuccess={credentialResponse => {
                 store.dispatch(resetState());
                 localStorage.clear();
-                dispatch(googleAuth({ credentialResponse }))
+                dispatch(googleAuthThunk({ credentialResponse }))
                     .unwrap()
                     .then((res) => {
                         dispatch(MailActions.getMails(res.data.mails));
