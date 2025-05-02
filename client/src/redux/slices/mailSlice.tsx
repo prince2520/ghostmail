@@ -104,7 +104,6 @@ const MailSlice = createSlice({
 
         builder
             .addCase(deleteMessageThunk.fulfilled, (state, action) => {
-                console.log("delete Message -> ", action.payload);
                 state.mails.map((mail) => {
                     if (mail.id == action.payload.mailId) {
                         toast(`${action.payload.message}`, {

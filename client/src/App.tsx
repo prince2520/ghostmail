@@ -34,7 +34,6 @@ function App() {
 
 
   useEffect(() => {
-    console.log("Hello")
     const localToken = localStorage.getItem("token") ?? "";
     const localExpiryDate = localStorage.getItem("expiryDate");
 

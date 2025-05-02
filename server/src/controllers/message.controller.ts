@@ -19,7 +19,6 @@ export const createMessage = async (req: AuthRequest, res:Response, next:NextFun
         const from = { ...req.body.from.value[0] };
         const to = { ...req.body.to.value[0] };
 
-        console.log("message ", req.body.html);
 
         const mailFound = await Mail.findOne({ where: { address: to.address } });
 
@@ -31,15 +30,15 @@ export const createMessage = async (req: AuthRequest, res:Response, next:NextFun
             where: { address: from.address },
             defaults: {
                 address: from.address,
-                name: from.name
+                name: from?.name
             }
         });
 
         const data = {
             mailId: mailFound.id,
-            subject: req.body.subject,
-            text: req.body.html,
-            createdAt: new Date(req.body.date),
+            subject: req.body?.subject ?? "[ No Subject ]",
+            text: req.body?.html,
+            createdAt: new Date(req.body?.date),
             messageFromId: messageFromFound.id
         };
 
@@ -53,8 +52,7 @@ export const createMessage = async (req: AuthRequest, res:Response, next:NextFun
             }
         });
         
-        io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data :getMessage });
-
+        io.to(mailFound.id).emit(SOCKET_EVENT.GET_SEND_MESSSAGE, { data: getMessage });
     } catch (err) {
         next(err);
     }

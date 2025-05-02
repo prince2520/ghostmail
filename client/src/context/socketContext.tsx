@@ -23,12 +23,19 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
 
     useEffect(() => {
         socketGetSendMessage((_: any, { data }: { data: Message }) => {
-            toast({
-                title: "New Message",
-                description: `${data.messageFrom.name} sended you a message!`
-            })
+            if (data) {
+                toast({
+                    title: "New Message",
+                    description: `${data.messageFrom.name} sended you a message!`
+                })
 
-            dispatch(MailActions.createMessage(data));
+                dispatch(MailActions.createMessage(data));
+            } else {
+                toast({
+                    title: "Error",
+                    description: `Something goes wrong!`
+                })
+            }
         });
     }, [userId])
 
