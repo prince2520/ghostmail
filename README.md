@@ -49,36 +49,39 @@ Ghostmail provides a free, secure, and anonymous disposable email address, desig
 
 ## Built With
 #### Frontend
+* [HTML](https://www.w3schools.com/Html/)
+* [CSS](https://www.w3schools.com/css/)
+* [Typescript](https://www.typescriptlang.org/)
+* [Tailwind](https://tailwindcss.com/)
 * [React](https://react.dev/)
+* [React Router](https://reactrouter.com/)
+* [Redux](https://redux.js.org/)
+* [Redux Thunk](https://redux.js.org/usage/writing-logic-thunks)
+* [Redux Toolkit](https://redux-toolkit.js.org/)
+* [Shadcn](https://ui.shadcn.com/docs)
+* [Google OAuth](https://developers.google.com/identity/protocols/oauth2)
+* [Socket Client](https://www.npmjs.com/package/socket.io-client) 
+* [Zod](https://www.npmjs.com/package/zod)
 * [Vite](https://vite.dev/)
 * [Figma](https://www.figma.com/)
-* [Redux](https://redux.js.org/)
-* [Redux Toolkit](https://redux-toolkit.js.org/)
-* [Tailwind](https://tailwindcss.com/)
-* [Lottie React](https://lottiereact.com/)
-* [Lucide React](https://lucide.dev/guide/packages/lucide-react)
-* [QR Code](https://www.npmjs.com/package/qrcode)
-* [Zod](https://www.npmjs.com/package/zod)
-* [Shadcn](https://ui.shadcn.com/docs/components/accordion)
-* [React Oauth](https://www.npmjs.com/package/@react-oauth/google)
-* [React Hook Form](https://redux-toolkit.js.org/)
-* [Socket Client](https://react-hook-form.com/) 
 
 #### Backend
-* [Express.js](https://expressjs.com/)
-* [Google Auth Library](https://www.npmjs.com/package/google-auth-library)
-* [Jwt](https://jwt.io/)
-* [Bcryptjs](https://www.npmjs.com/package/bcrypt)
+* [Typescript](https://www.typescriptlang.org/)
 * [Node.js](https://nodejs.org/en)
+* [Express.js](https://expressjs.com/)
 * [MySQL](https://www.mysql.com/)
 * [Sequelize](https://sequelize.org/)
+* [Supabase](https://supabase.com/)
+* [Jwt](https://jwt.io/)
+* [Bcryptjs](https://www.npmjs.com/package/bcrypt)
 * [Socket](https://www.npmjs.com/package/socket.io)
-
-
+  
 #### SMTP SERVER
+* [Javascript](https://www.w3schools.com/js/)
 * [SMTP Server](https://www.npmjs.com/package/smtp-server)
-* [Dotenv](https://www.npmjs.com/package/dotenv)
 * [Mailparser](https://mailparser.io/)
+* [AWS](https://aws.amazon.com/)
+ 
 
 ## Getting Started  
 
