@@ -25,12 +25,18 @@ const HomeMailSettings = () => {
     const [loading, setLoading] = useState({
         isLoading: false,
         loadingMsg: "Loading ..."
-    })
+    });
+
+    const [disableNewMail, setDisableNewMAil] = useState(false);
+    const [disableDeleteMail, setDisableDeleteMail] = useState(false);
+    const [disableUpdateMailAddress, setDisableUpdateMailAddress] = useState(false);
+
 
     const mail = mails.find((m: Mail) => currMailId === m.id);
 
 
     const createNewMailHandler = () => {
+        setDisableNewMAil(true);
         setLoading({
             isLoading: true,
             loadingMsg: "Generating New Mail..."
@@ -62,6 +68,7 @@ const HomeMailSettings = () => {
             .catch(err => {
                 console.log("Error ", err);
             }).finally(() => {
+                setDisableNewMAil(false);
                 setLoading({
                     isLoading: false,
                     loadingMsg: "Loading ..."
@@ -86,7 +93,7 @@ const HomeMailSettings = () => {
                     key={uid(8)}
                     className='text-xs md:text-sm'
                     onClick={() => createNewMailHandler()}
-                    disabled={false}
+                    disabled={disableNewMail}
                     variant="outline">
                     <Mails /> <span>New Mail</span>
                 </Button>
@@ -105,18 +112,20 @@ const HomeMailSettings = () => {
                     key={uid(8)}
                     className='text-xs md:text-sm'
                     onClick={() => {
+                        setDisableDeleteMail(true);
                         setLoading({
                             isLoading: true,
                             loadingMsg: "Deleting Mail ..."
                         });
                         dispatch(deleteMailThunk({ token, mailId: mail?.id, mailAddress: mail?.address })).unwrap().finally(() => {
+                            setDisableDeleteMail(false);
                             setLoading({
                                 isLoading: false,
                                 loadingMsg: "Loading..."
                             });
                         })
                     }}
-                    disabled={!currMailId ? true : false}
+                    disabled={!currMailId ? true : false || disableDeleteMail}
                     variant="outline">
                     <Trash /> <span>Delete</span>
                 </Button>}
@@ -125,6 +134,7 @@ const HomeMailSettings = () => {
                     key={uid(8)}
                     className='text-xs md:text-sm'
                     onClick={() => {
+                        setDisableUpdateMailAddress(true);
                         setLoading({
                             isLoading: true,
                             loadingMsg: "Changing Mail Address..."
@@ -134,9 +144,10 @@ const HomeMailSettings = () => {
                                 isLoading: false,
                                 loadingMsg: "Loading..."
                             });
+                            setDisableUpdateMailAddress(false);
                         })
                     }}
-                    disabled={!currMailId ? true : false}
+                    disabled={!currMailId? true : false || disableUpdateMailAddress}
                     variant="outline">
                     <SquarePen /> <span>Change</span>
                 </Button>}
