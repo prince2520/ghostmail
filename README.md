@@ -151,26 +151,28 @@ npm install
 
 ```
 # add .env file to root directory
-# Add your MySql credentials here
 
 // MYSQL CREDENTIAL 
 DB_HOST=localhost
 DB_USERNAME=root
-DB_PASSWORD=**** 
-DB_NAME=ghostmail
+DB_PASSWORD=****
+DB_NAME=****
 DB_DIALECT=mysql
 
 JWT_SECRET_KEY=****
-SESSION_KEY=***
-
 MAIL_DOMAIN_ADDRESS=ghostmails.site
+
+CLIENT_URL=http://localhost:5173 // Default 
+SMTP_SERVER_URL=****
+
+SUPABASE_DB_URL=****
 ```
 
 <p><b>Step 9 -</b> Run backend server locally.</p>
 
 ``` 
-npm start // For normal start
-nodemon start // for sync you changes in bckend
+npm run build
+npm start 
 ```
 
 
