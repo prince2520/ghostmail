@@ -1,7 +1,7 @@
 ![Github Cover](https://github.com/user-attachments/assets/b93e3f12-8f50-4860-86db-5d9998290b30)
 
 <p align = "center">
-Ghostmail: Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secure, and anonymous disposable email address to keep your inbox clean and safe.
+Ghostmail is a service that allows users to create disposable email addresses. These addresses can be used temporarily to protect users' primary inboxes from spam or unwanted messages. The service is designed to be secure, anonymous, and easy to use.
 </p>
 
 <p align="center" width="50%">
@@ -23,7 +23,6 @@ Ghostmail: Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secur
 <a href="https://aws.amazon.com/" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"/></a>
 <a href="https://vercel.com/" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" alt="vercel"/></a>
 <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white" alt="figma"/></a>
-
 </p>
 
 </br>
@@ -31,6 +30,7 @@ Ghostmail: Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secur
 
 ## Table Of Contents
 * [About the Project](#about-the-project)
+* [Features](#features)
 * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
@@ -45,7 +45,39 @@ Ghostmail: Say goodbye to spam, ads, and hackers. Ghostmail offers a free, secur
 ![Ghostmail](https://github.com/user-attachments/assets/0a750417-b659-488d-be4f-3474f33e52d7)
 
 <p align="left">
-Ghostmail provides a free, secure, and anonymous disposable email address, designed to help you maintain a clean and safe inbox. Perfect for protecting your personal email from spam and unwanted communications, Ghostmail ensures your privacy while managing online sign-ups and interactions.
+Ghostmail is a service that allows users to create disposable email addresses. These addresses can be used temporarily to protect users' primary inboxes from spam or unwanted messages. The service is designed to be secure, anonymous, and easy to use.
+
+## Features
+
+### 1. Disposable Email Creation:
+- **Authenticated Users**: Can create up to **10 disposable email addresses** at a time.
+- **Unauthorized Users (Guests)**: Can create **1 disposable email address** at a time.
+- Emails are **temporary** and **anonymous**, protecting users' privacy.
+
+### 2. Real-Time Email Reception:
+- Users are notified instantly when they receive new emails via **WebSockets**.
+- No need for manual refresh — inboxes are updated in real time.
+
+### 3. Email Deletion:
+- Users can **delete individual emails** or clear their entire inbox.
+- **Guests** have all their emails deleted automatically after **24 hours**.
+
+### 4. Email Address Change:
+- Authenticated users can **rename or change** their disposable email address while keeping the inbox and messages intact.
+
+### 5. Email Expiry for Guests:
+- **Guest emails** are automatically deleted after **24 hours**, ensuring cleanup and resource management.
+
+### 6. GitHub Actions for Cron Jobs:
+- Periodic cleanup of **expired guest email addresses** and their messages using **GitHub Actions**.
+
+### 7. Real-Time Updates:
+- Email inboxes for users are updated instantly with new incoming emails using **WebSocket** technology.
+
+### 8. Limits:
+- **Authenticated Users** can create up to **10 disposable emails**.
+- **Unauthenticated Users** can create **1 disposable email** at a time.
+
 
 ## Built With
 #### Frontend
