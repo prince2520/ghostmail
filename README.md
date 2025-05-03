@@ -219,10 +219,10 @@ Wanna contribute to Ghostmail ?
 
 ## Code of conduct
 
-Developers are requested to go through our <a href="https://github.com/prince2520/chitchat/blob/main/CODE_OF_CONDUCT.md">code of conduct</a> thoroughly to maintain a peaceful environment within our project.
+Developers are requested to go through our <a href="https://github.com/prince2520/ghostmail/blob/main/CODE_OF_CONDUCT.md">code of conduct</a> thoroughly to maintain a peaceful environment within our project.
 
 ## License
-Distributed under the MIT License. See [LICENSE](https://github.com/prince2520/chitchat/blob/main/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/prince2520/ghostmail/blob/main/LICENSE) for more information.
 
 ## Project Links
 <p align="left">
