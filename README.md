@@ -266,4 +266,6 @@ Distributed under the MIT License. See [LICENSE](https://github.com/prince2520/g
 <p align="left">
 <a href="https://ghostmail.vercel.app/home" target="_blank" rel="noreferrer"> <img src="https://github.com/prince2520/animesuper/assets/68547999/56ca3f30-2eb8-48fb-a669-2cadd5fc3297" alt="website" height="30"/> </a>
 <a href="https://www.youtube.com/watch?v=rkjIEatycIw" target="_blank" rel="noreferrer"> <img src="https://github.com/prince2520/animesuper/assets/68547999/fc73f01d-9043-4756-a8fd-b9b029b20c39" alt="hou"  height="30"/> </a>
-<a href="https://www.figma.com/design/EkxXdxsvDlXKSoGhVVzZiW/Ghostmail?node-id=5-3&t=ROMRg56hrnvNXxkj-1" alt="figma" height="30"/></a>
+<a href="https://www.figma.com/design/EkxXdxsvDlXKSoGhVVzZiW/Ghostmail?node-id=5-3&t=ROMRg56hrnvNXxkj-1"  target="_blank" rel="noreferrer"/>
+  <img src="https://github.com/prince2520/animesuper/assets/68547999/a973c973-0031-4712-a573-07189646f6d5" alt="figma" height="30"/>
+</a>
