@@ -25,6 +25,7 @@ import './App.css';
 import {  useSelector } from 'react-redux';
 import { useToast } from './hooks/use-toast';
 import { MailActions } from './redux/slices/mailSlice';
+import { Message } from './types/message.d';
 
 function App() {
   const location = useLocation();
@@ -46,7 +47,7 @@ function App() {
   }, [userId]);
 
   useEffect(() => {
-    socketGetSendMessage((_: any, { data }: { data: Message }) => {
+    socketGetSendMessage((_: any, { data }: { data: Message}) => {
       if (data) {
         toast({
           title: "New Message",
