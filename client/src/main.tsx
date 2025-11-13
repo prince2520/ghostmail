@@ -7,8 +7,6 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from "@/components/ui/theme-provider.tsx";
 
-import { SocketContextProvider } from "./context/socketContext.js";
-
 import store from "./redux/store.js";
 
 import App from './App.tsx'
@@ -20,11 +18,9 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_API_GOOGLE_CLIENT_ID}>
         <Provider store={store}>
-          <SocketContextProvider>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
               <App />
             </ThemeProvider >
-          </SocketContextProvider>
           <Toaster/>
         </Provider>
       </GoogleOAuthProvider>

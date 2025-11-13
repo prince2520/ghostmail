@@ -13,8 +13,8 @@ import Home from './pages/Home/Home';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { getUserThunk } from './redux/thunks/userThunk';
-import { useAppDispatch } from './redux/store';
-import { socketJoinAllMail, socketJoinNewMail } from './services/socket';
+import { RootState, useAppDispatch } from './redux/store';
+import { socketDisconnect, socketGetSendMessage, socketInitiate, socketJoinAllMail, socketJoinNewMail } from './services/socket';
 import { getMailThunk } from './redux/thunks/mailThunk';
 
 import { ToastContainer } from 'react-toastify';
@@ -22,6 +22,9 @@ import { Slide } from 'react-toastify';
 import { useTheme } from './components/ui/theme-provider';
 
 import './App.css';
+import {  useSelector } from 'react-redux';
+import { useToast } from './hooks/use-toast';
+import { MailActions } from './redux/slices/mailSlice';
 
 function App() {
   const location = useLocation();
@@ -30,10 +33,39 @@ function App() {
 
   const { logout, autoLogout } = useAuth();
 
-  const {theme} = useTheme();
+  const { theme } = useTheme();
+
+  const { toast } = useToast();
+  const userId = useSelector((state: RootState) => state.user.id);
+
+  useEffect(() => {
+    socketInitiate();
+    return () => {
+      socketDisconnect();
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    socketGetSendMessage((_: any, { data }: { data: Message }) => {
+      if (data) {
+        toast({
+          title: "New Message",
+          description: `${data.messageFrom.name} sended you a message!`
+        })
+
+        dispatch(MailActions.createMessage(data));
+      } else {
+        toast({
+          title: "Error",
+          description: `Something goes wrong!`
+        })
+      }
+    });
+  }, [userId])
 
 
   useEffect(() => {
+
     const localToken = localStorage.getItem("token") ?? "";
     const localExpiryDate = localStorage.getItem("expiryDate");
 
@@ -85,7 +117,7 @@ function App() {
         draggable
         pauseOnHover
         transition={Slide}
-        theme={theme !== "dark"? "dark" : "light"}
+        theme={theme !== "dark" ? "dark" : "light"}
       />
       <Routes>
         <Route path="/auth" element={<Authentication />}>

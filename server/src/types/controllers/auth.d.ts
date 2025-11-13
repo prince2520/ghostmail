@@ -1,7 +1,6 @@
 import { AuthRequest } from "../auth.middleware";
 
 
-
 export interface GoogleAuthRequest extends AuthRequest {
   body: {
     credential: string;
